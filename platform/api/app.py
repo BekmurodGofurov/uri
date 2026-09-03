@@ -1,11 +1,14 @@
+from collections.abc import Generator
 from platform.database.connection import get_session
 from platform.database.models import Prediction, Product, Review
+from platform.ingest.pipeline import score_and_store_batch
 from typing import Annotated, Any
 
+import httpx
 from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from sqlalchemy import func, select
+from pydantic import BaseModel, Field
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from shared.contracts import Sentiment
@@ -23,6 +26,11 @@ app.add_middleware(
 
 def get_db():
     yield from get_session()
+
+
+def get_ml_clients() -> Generator[tuple[httpx.Client, httpx.Client], None, None]:
+    with httpx.Client(timeout=10.0) as sent_c, httpx.Client(timeout=10.0) as asp_c:
+        yield sent_c, asp_c
 
 
 class SentimentSummary(BaseModel):
@@ -283,4 +291,102 @@ def get_product_reviews(
         limit=limit,
         offset=offset,
         reviews=items,
+    )
+
+
+class ScoreItemRequest(BaseModel):
+    id: str
+    text: str = Field(min_length=1, max_length=5000)
+    rating: int | None = Field(default=None, ge=1, le=5)
+    product_id: str | None = "prod_1"
+
+
+class GatewayScoreRequest(BaseModel):
+    reviews: list[ScoreItemRequest] = Field(min_length=1, max_length=64)
+
+
+class ScoreItemResult(BaseModel):
+    id: int
+    review_id: str
+    sentiment_label: Sentiment
+    sentiment_confidence: float
+    aspects: list[dict[str, Any]]
+    model_version: str
+
+
+class GatewayScoreResponse(BaseModel):
+    scored_count: int
+    predictions: list[ScoreItemResult]
+
+
+@app.post("/api/score", response_model=GatewayScoreResponse)
+def score_reviews_endpoint(
+    req: GatewayScoreRequest,
+    db: Annotated[Session, Depends(get_db)],
+    ml_clients: Annotated[tuple[httpx.Client, httpx.Client], Depends(get_ml_clients)],
+) -> GatewayScoreResponse:
+    sent_client, asp_client = ml_clients
+
+    reviews_to_score: list[Review] = []
+    rev_ids = [item.id for item in req.reviews]
+
+    # Clear previous predictions for these reviews if re-scoring
+    if rev_ids:
+        db.execute(delete(Prediction).where(Prediction.review_id.in_(rev_ids)))
+
+    for item in req.reviews:
+        prod_id = item.product_id or "prod_1"
+        prod = db.get(Product, prod_id)
+        if not prod:
+            prod = Product(id=prod_id, title=f"Product {prod_id}")
+            db.add(prod)
+            db.flush()
+
+        review = db.get(Review, item.id)
+        if not review:
+            review = Review(
+                id=item.id,
+                text=item.text,
+                rating=item.rating,
+                product_id=prod_id,
+            )
+            db.add(review)
+            db.flush()
+        else:
+            review.text = item.text
+            if item.rating is not None:
+                review.rating = item.rating
+            if item.product_id:
+                review.product_id = item.product_id
+
+        reviews_to_score.append(review)
+
+    try:
+        saved_preds = score_and_store_batch(
+            session=db,
+            reviews=reviews_to_score,
+            sentiment_client=sent_client,
+            aspect_client=asp_client,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to score reviews via ML services: {e}",
+        )
+
+    results = [
+        ScoreItemResult(
+            id=p.id,
+            review_id=p.review_id,
+            sentiment_label=p.sentiment_label,  # type: ignore
+            sentiment_confidence=p.sentiment_confidence,
+            aspects=p.aspects or [],
+            model_version=p.model_version,
+        )
+        for p in saved_preds
+    ]
+
+    return GatewayScoreResponse(
+        scored_count=len(results),
+        predictions=results,
     )
