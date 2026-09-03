@@ -2,8 +2,11 @@ import os
 from collections.abc import Generator
 from platform.database.models import Base
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
+load_dotenv()
 
 DEFAULT_DATABASE_URL = "sqlite:///./uzum_reviews.db"
 

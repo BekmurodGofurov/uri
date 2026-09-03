@@ -49,6 +49,32 @@ def ingest_reviews_batch(session: Session, items: list[dict[str, Any]]) -> int:
     return count
 
 
+RATING_MAP = {
+    "very poor": 1,
+    "poor": 2,
+    "fair": 3,
+    "good": 4,
+    "excellent": 5,
+}
+
+
+def parse_rating(val: Any) -> int | None:
+    if val is None:
+        return None
+    if isinstance(val, int):
+        return val
+    str_val = str(val).strip().lower()
+    if str_val in RATING_MAP:
+        return RATING_MAP[str_val]
+    try:
+        num = int(str_val)
+        if 1 <= num <= 5:
+            return num
+    except ValueError:
+        pass
+    return None
+
+
 def load_from_huggingface(limit: int = 1000) -> None:
     """Load reviews directly from HuggingFace dataset."""
     from platform.database.connection import get_session
@@ -68,7 +94,7 @@ def load_from_huggingface(limit: int = 1000) -> None:
                 {
                     "id": f"hf_{idx}",
                     "text": row["normalized_review_text"],
-                    "rating": int(row["rating"]) if "rating" in row else None,
+                    "rating": parse_rating(row.get("rating")),
                     "product_id": f"prod_{(idx % 20) + 1}",
                 }
             )
