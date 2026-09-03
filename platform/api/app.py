@@ -1,12 +1,14 @@
 from platform.database.connection import get_session
 from platform.database.models import Prediction, Product, Review
-from typing import Annotated
+from typing import Annotated, Any
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+
+from shared.contracts import Sentiment
 
 app = FastAPI(title="Uzum Review Intelligence Gateway", version="1.0.0")
 
@@ -196,4 +198,89 @@ def get_product_detail(
         sentiment_over_time=sentiment_over_time,
         aspect_breakdown=aspect_breakdown,
         active_model_versions=sorted(model_versions),
+    )
+
+
+class ReviewPredictionItem(BaseModel):
+    id: int
+    sentiment_label: Sentiment
+    sentiment_confidence: float
+    aspects: list[dict[str, Any]]
+    model_version: str
+    created_at: str
+
+
+class ProductReviewItem(BaseModel):
+    id: str
+    text: str
+    rating: int | None
+    created_at: str
+    prediction: ReviewPredictionItem | None
+
+
+class ProductReviewsResponse(BaseModel):
+    product_id: str
+    total: int
+    limit: int
+    offset: int
+    reviews: list[ProductReviewItem]
+
+
+@app.get("/api/products/{product_id}/reviews", response_model=ProductReviewsResponse)
+def get_product_reviews(
+    product_id: str,
+    db: Annotated[Session, Depends(get_db)],
+    limit: Annotated[int, Query(ge=1, le=100)] = 50,
+    offset: Annotated[int, Query(ge=0)] = 0,
+    sentiment: Annotated[Sentiment | None, Query()] = None,
+) -> ProductReviewsResponse:
+    product = db.get(Product, product_id)
+    if not product:
+        raise HTTPException(status_code=404, detail=f"Product '{product_id}' not found")
+
+    stmt = select(Review).where(Review.product_id == product_id)
+    if sentiment:
+        stmt = stmt.join(Prediction, Review.id == Prediction.review_id).where(
+            Prediction.sentiment_label == sentiment
+        )
+
+    total_count = db.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+    stmt = stmt.order_by(Review.created_at.desc(), Review.id.desc()).offset(offset).limit(limit)
+    reviews = list(db.scalars(stmt).all())
+
+    rev_ids = [r.id for r in reviews]
+    pred_stmt = select(Prediction).where(Prediction.review_id.in_(rev_ids))
+    preds = list(db.scalars(pred_stmt).all()) if rev_ids else []
+    pred_map = {p.review_id: p for p in preds}
+
+    items: list[ProductReviewItem] = []
+    for r in reviews:
+        pred = pred_map.get(r.id)
+        pred_item = None
+        if pred:
+            pred_item = ReviewPredictionItem(
+                id=pred.id,
+                sentiment_label=pred.sentiment_label,  # type: ignore
+                sentiment_confidence=pred.sentiment_confidence,
+                aspects=pred.aspects or [],
+                model_version=pred.model_version,
+                created_at=pred.created_at.isoformat(),
+            )
+
+        items.append(
+            ProductReviewItem(
+                id=r.id,
+                text=r.text,
+                rating=r.rating,
+                created_at=r.created_at.isoformat(),
+                prediction=pred_item,
+            )
+        )
+
+    return ProductReviewsResponse(
+        product_id=product_id,
+        total=total_count,
+        limit=limit,
+        offset=offset,
+        reviews=items,
     )
