@@ -90,3 +90,62 @@ def test_list_products_with_data(client):
     assert p["sentiment_summary"]["positive"] == 1
     assert p["sentiment_summary"]["negative"] == 1
     assert p["sentiment_summary"]["neutral"] == 0
+
+
+def test_get_product_detail_not_found(client):
+    test_client, _ = client
+    res = test_client.get("/api/products/non_existing_prod")
+    assert res.status_code == 404
+    assert "not found" in res.json()["detail"].lower()
+
+
+def test_get_product_detail_success(client):
+    test_client, db = client
+
+    prod = Product(id="prod_phone", title="Smartfon X", category="Telefonlar")
+    db.add(prod)
+    db.commit()
+
+    rev1 = Review(id="rev_p1", product_id="prod_phone", text="Sifati juda yaxshi", rating=5)
+    rev2 = Review(id="rev_p2", product_id="prod_phone", text="Yetkazib berish kechikdi", rating=2)
+    db.add_all([rev1, rev2])
+    db.commit()
+
+    pred1 = Prediction(
+        review_id="rev_p1",
+        sentiment_label="positive",
+        sentiment_confidence=0.95,
+        aspects=[{"aspect": "quality", "polarity": "positive", "confidence": 0.92}],
+        model_version="stub-model-v1",
+    )
+    pred2 = Prediction(
+        review_id="rev_p2",
+        sentiment_label="negative",
+        sentiment_confidence=0.89,
+        aspects=[{"aspect": "delivery", "polarity": "negative", "confidence": 0.85}],
+        model_version="stub-model-v1",
+    )
+    db.add_all([pred1, pred2])
+    db.commit()
+
+    res = test_client.get("/api/products/prod_phone")
+    assert res.status_code == 200
+    data = res.json()
+
+    assert data["id"] == "prod_phone"
+    assert data["title"] == "Smartfon X"
+    assert data["review_count"] == 2
+    assert data["avg_rating"] == 3.5
+    assert data["sentiment_summary"]["positive"] == 1
+    assert data["sentiment_summary"]["negative"] == 1
+    assert data["sentiment_summary"]["neutral"] == 0
+
+    assert len(data["sentiment_over_time"]) >= 1
+    assert "stub-model-v1" in data["active_model_versions"]
+
+    # Verify aspect breakdown
+    aspect_dict = {a["aspect"]: a for a in data["aspect_breakdown"]}
+    assert "quality" in aspect_dict
+    assert aspect_dict["quality"]["positive"] == 1
+    assert "delivery" in aspect_dict
+    assert aspect_dict["delivery"]["negative"] == 1
