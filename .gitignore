@@ -1,0 +1,23 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.venv/
+venv/
+ENV/
+
+# Node
+node_modules/
+dist/
+.dist/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
