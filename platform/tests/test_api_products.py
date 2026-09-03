@@ -1,5 +1,7 @@
-from platform.api.app import app, get_db
+from platform.api.app import app, get_db, get_ml_clients
 from platform.database.models import Base, Prediction, Product, Review
+from platform.stubs.aspect_stub import app as asp_app
+from platform.stubs.sentiment_stub import app as sent_app
 
 import pytest
 from fastapi.testclient import TestClient
@@ -234,3 +236,66 @@ def test_get_product_reviews_with_predictions_and_filter(client):
     assert len(data_page["reviews"]) == 1
     assert data_page["limit"] == 1
     assert data_page["offset"] == 1
+
+
+def test_post_score_empty_rejected(client):
+    test_client, _ = client
+    res = test_client.post("/api/score", json={"reviews": []})
+    assert res.status_code == 422
+
+
+def test_post_score_success(client):
+    test_client, db = client
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+
+    payload = {
+        "reviews": [
+            {
+                "id": "new_rev_1",
+                "text": "Juda zo'r xarid bo'ldi, tavsiya qilaman!",
+                "rating": 5,
+                "product_id": "prod_phone_1",
+            },
+            {
+                "id": "new_rev_2",
+                "text": "Yetkazib berish juda sekin, buzilib keldi.",
+                "rating": 1,
+                "product_id": "prod_phone_1",
+            },
+        ]
+    }
+
+    res = test_client.post("/api/score", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["scored_count"] == 2
+    assert len(data["predictions"]) == 2
+
+    prod = db.get(Product, "prod_phone_1")
+    assert prod is not None
+
+    rev1 = db.get(Review, "new_rev_1")
+    assert rev1 is not None
+    assert rev1.rating == 5
+
+    preds = list(
+        db.query(Prediction).filter(Prediction.review_id.in_(["new_rev_1", "new_rev_2"])).all()
+    )
+    assert len(preds) == 2
+
+
+def test_post_score_ml_failure(client):
+    test_client, _ = client
+
+    class FailingClient:
+        def post(self, *args, **kwargs):
+            raise RuntimeError("ML service unreachable")
+
+    app.dependency_overrides[get_ml_clients] = lambda: (FailingClient(), FailingClient())
+
+    payload = {"reviews": [{"id": "fail_1", "text": "Testing failure"}]}
+    res = test_client.post("/api/score", json=payload)
+    assert res.status_code == 502
+    assert "failed to score" in res.json()["detail"].lower()
