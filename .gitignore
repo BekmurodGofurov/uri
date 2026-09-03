@@ -10,6 +10,10 @@ __pycache__/
 *.venv/
 venv/
 ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
 
 # Node
 node_modules/
