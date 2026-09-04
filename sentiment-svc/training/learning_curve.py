@@ -39,7 +39,7 @@ def plot(train_path, val_path):
 
         train_f1s.append(f1_score(subset["label"], pipe.predict(subset["clean"]), average="macro"))
         val_f1s.append(f1_score(val_df["label"], pipe.predict(val_df["clean"]), average="macro"))
-        print(f"  {int(frac*100):3d}% → train={train_f1s[-1]:.3f}, val={val_f1s[-1]:.3f}")
+        print(f"  {int(frac * 100):3d}% → train={train_f1s[-1]:.3f}, val={val_f1s[-1]:.3f}")
 
     sizes = [int(f * len(train_df)) for f in fractions]
     plt.figure(figsize=(8, 5))

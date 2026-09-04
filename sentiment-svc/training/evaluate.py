@@ -73,7 +73,7 @@ def run(model_path, test_path, model_type):
         if preds[i] != labels[i]
     ]
     for k, (_, text, true, pred) in enumerate(errors[:3]):
-        print(f"\n[{k+1}] Text:      {text}")
+        print(f"\n[{k + 1}] Text:      {text}")
         print(f"      True:      {true}")
         print(f"      Predicted: {pred}")
 
