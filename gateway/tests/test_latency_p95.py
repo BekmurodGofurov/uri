@@ -16,16 +16,17 @@ a realistic measure of processing time excluding actual network overhead.
 
 import statistics
 import time
-from gateway.api.app import app
-from gateway.database.models import Base
-from gateway.stubs.aspect_stub import app as aspect_app
-from gateway.stubs.sentiment_stub import app as sentiment_app
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+
+from gateway.api.app import app
+from gateway.database.models import Base
+from gateway.stubs.aspect_stub import app as aspect_app
+from gateway.stubs.sentiment_stub import app as sentiment_app
 
 P95_THRESHOLD_MS = 300.0  # hard limit from requirements
 BATCH_SIZE = 32  # reviews per call (matches requirement)

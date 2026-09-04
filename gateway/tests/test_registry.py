@@ -13,9 +13,10 @@ is written to the real model_registry/ on disk.
 from __future__ import annotations
 
 from pathlib import Path
-from gateway.registry.manager import ModelRegistry, RegistryError
 
 import pytest
+
+from gateway.registry.manager import ModelRegistry, RegistryError
 
 # ── fixtures ──────────────────────────────────────────────────────────────────
 
@@ -221,6 +222,7 @@ def test_cli_rollback_command(
     """
     import sys
     from io import StringIO
+
     from gateway.registry.cli import build_parser, cmd_rollback
 
     # Set the registry root to our temp registry via env var

@@ -1,9 +1,9 @@
-from gateway.database.connection import get_database_url, get_session, init_db
-from gateway.database.models import Prediction, Product, Review
-
 import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session, sessionmaker
+
+from gateway.database.connection import get_database_url, get_session, init_db
+from gateway.database.models import Prediction, Product, Review
 
 
 @pytest.fixture

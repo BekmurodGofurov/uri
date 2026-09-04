@@ -1,13 +1,13 @@
-from gateway.api.app import app, get_db, get_ml_clients
-from gateway.database.models import Base, Prediction, Product, Review
-from gateway.stubs.aspect_stub import app as asp_app
-from gateway.stubs.sentiment_stub import app as sent_app
-
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+
+from gateway.api.app import app, get_db, get_ml_clients
+from gateway.database.models import Base, Prediction, Product, Review
+from gateway.stubs.aspect_stub import app as asp_app
+from gateway.stubs.sentiment_stub import app as sent_app
 
 
 @pytest.fixture

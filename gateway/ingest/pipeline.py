@@ -1,12 +1,12 @@
 import logging
 import os
-from gateway.database.models import Prediction, Review
 from typing import Any
 
 import httpx
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from gateway.database.models import Prediction, Review
 from shared.contracts import AspectResponse, ReviewIn, ScoreRequest, SentimentResponse
 
 logger = logging.getLogger(__name__)
