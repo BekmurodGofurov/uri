@@ -1,5 +1,5 @@
-from platform.database.connection import get_database_url, get_session, init_db
-from platform.database.models import Prediction, Product, Review
+from gateway.database.connection import get_database_url, get_session, init_db
+from gateway.database.models import Prediction, Product, Review
 
 import pytest
 from sqlalchemy import create_engine, select

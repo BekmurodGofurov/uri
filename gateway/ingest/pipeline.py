@@ -1,6 +1,6 @@
 import logging
 import os
-from platform.database.models import Prediction, Review
+from gateway.database.models import Prediction, Review
 from typing import Any
 
 import httpx

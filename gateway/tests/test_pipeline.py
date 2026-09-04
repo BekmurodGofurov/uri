@@ -1,8 +1,8 @@
-from platform.database.models import Base, Prediction, Product, Review
-from platform.ingest.loader import ingest_reviews_batch
-from platform.ingest.pipeline import process_unscored_reviews, score_and_store_batch
-from platform.stubs.aspect_stub import app as aspect_app
-from platform.stubs.sentiment_stub import app as sentiment_app
+from gateway.database.models import Base, Prediction, Product, Review
+from gateway.ingest.loader import ingest_reviews_batch
+from gateway.ingest.pipeline import process_unscored_reviews, score_and_store_batch
+from gateway.stubs.aspect_stub import app as aspect_app
+from gateway.stubs.sentiment_stub import app as sentiment_app
 
 import pytest
 from sqlalchemy import create_engine, select

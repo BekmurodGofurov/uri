@@ -16,10 +16,10 @@ a realistic measure of processing time excluding actual network overhead.
 
 import statistics
 import time
-from platform.api.app import app
-from platform.database.models import Base
-from platform.stubs.aspect_stub import app as aspect_app
-from platform.stubs.sentiment_stub import app as sentiment_app
+from gateway.api.app import app
+from gateway.database.models import Base
+from gateway.stubs.aspect_stub import app as aspect_app
+from gateway.stubs.sentiment_stub import app as sentiment_app
 
 import pytest
 from fastapi.testclient import TestClient
@@ -38,7 +38,7 @@ def gateway_client():
     Spin up the gateway against an in-memory SQLite DB and stub ML services.
     Dependency overrides ensure no real network or disk I/O.
     """
-    from platform.api.app import get_db, get_ml_clients
+    from gateway.api.app import get_db, get_ml_clients
 
     # Isolated in-memory SQLite DB with all tables created
     engine = create_engine(

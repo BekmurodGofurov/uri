@@ -1,7 +1,7 @@
 from collections.abc import Generator
-from platform.database.connection import get_session
-from platform.database.models import Prediction, Product, Review
-from platform.ingest.pipeline import score_and_store_batch
+from gateway.database.connection import get_session
+from gateway.database.models import Prediction, Product, Review
+from gateway.ingest.pipeline import score_and_store_batch
 from typing import Annotated, Any
 
 import httpx
