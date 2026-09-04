@@ -12,12 +12,10 @@ is written to the real model_registry/ on disk.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
-
-import pytest
 from platform.registry.manager import ModelRegistry, RegistryError
 
+import pytest
 
 # ── fixtures ──────────────────────────────────────────────────────────────────
 
@@ -227,7 +225,6 @@ def test_cli_rollback_command(
     """
     import sys
     from io import StringIO
-
     from platform.registry.cli import build_parser, cmd_rollback
 
     # Set the registry root to our temp registry via env var

@@ -16,14 +16,13 @@ a realistic measure of processing time excluding actual network overhead.
 
 import statistics
 import time
-from unittest.mock import MagicMock
-
-import pytest
-from fastapi.testclient import TestClient
 from platform.api.app import app
 from platform.database.models import Base
 from platform.stubs.aspect_stub import app as aspect_app
 from platform.stubs.sentiment_stub import app as sentiment_app
+
+import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
