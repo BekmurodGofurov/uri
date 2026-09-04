@@ -14,4 +14,4 @@ select = ["E", "F", "I", "W"]
 [tool.pytest.ini_options]
 testpaths = ["platform/tests"]
 pythonpath = ["."]
-addopts = "-v --cov=shared --cov=platform --cov-report=term-missing"
+addopts = "-v --cov=shared --cov=platform --cov-report=term-missing --cov-report=xml:coverage.xml --cov-report=html:coverage_html"
