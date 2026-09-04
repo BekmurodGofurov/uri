@@ -1,7 +1,9 @@
 import logging
+
 from fastapi import FastAPI
-from app.routes import router
+
 from app.model_loader import load_model
+from app.routes import router
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,5 +17,6 @@ app = FastAPI(
 @app.on_event("startup")
 def startup_event():
     load_model()
+
 
 app.include_router(router)

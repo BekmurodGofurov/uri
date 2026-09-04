@@ -1,19 +1,21 @@
+from unittest.mock import MagicMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
 
 
 @pytest.fixture
 def client(monkeypatch):
-    monkeypatch.setenv("MODEL_TYPE",    "tfidf")
+    monkeypatch.setenv("MODEL_TYPE", "tfidf")
     monkeypatch.setenv("MODEL_VERSION", "sentiment-test-v1")
-    monkeypatch.setenv("MODEL_PATH",    "models/tfidf_v1.joblib")
+    monkeypatch.setenv("MODEL_PATH", "models/tfidf_v1.joblib")
 
     mock = MagicMock()
     mock.predict_proba.side_effect = lambda texts: [[0.05, 0.10, 0.85]] * len(texts)
 
     with patch("app.model_loader._model", mock):
         from app.main import app
+
         yield TestClient(app)
 
 
@@ -23,7 +25,7 @@ def test_score_200(client):
 
 
 def test_score_fields(client):
-    r    = client.post("/v1/score", json={"reviews": [{"id": "r1", "text": "Yaxshi"}]})
+    r = client.post("/v1/score", json={"reviews": [{"id": "r1", "text": "Yaxshi"}]})
     data = r.json()
     assert "results" in data
     assert "model_version" in data
@@ -58,11 +60,14 @@ def test_model_info(client):
 
 
 def test_multiple_reviews(client):
-    r = client.post("/v1/score", json={
-        "reviews": [
-            {"id": "r1", "text": "Yaxshi"},
-            {"id": "r2", "text": "Yomon"},
-        ]
-    })
+    r = client.post(
+        "/v1/score",
+        json={
+            "reviews": [
+                {"id": "r1", "text": "Yaxshi"},
+                {"id": "r2", "text": "Yomon"},
+            ]
+        },
+    )
     assert r.status_code == 200
     assert len(r.json()["results"]) == 2

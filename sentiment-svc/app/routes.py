@@ -1,10 +1,14 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas import (
-    ScoreRequest, ScoreResponse, PredictionResult,
-    HealthResponse, ModelInfoResponse,
-)
+
 from app.inference import predict
-from app.model_loader import get_version, get_type, get_model
+from app.model_loader import get_model, get_type, get_version
+from app.schemas import (
+    HealthResponse,
+    ModelInfoResponse,
+    PredictionResult,
+    ScoreRequest,
+    ScoreResponse,
+)
 
 router = APIRouter()
 
@@ -12,7 +16,7 @@ router = APIRouter()
 @router.post("/v1/score", response_model=ScoreResponse)
 def score(request: ScoreRequest) -> ScoreResponse:
     texts = [r.text for r in request.reviews]  # <--- make sure 'texts' is defined here
-    ids   = [r.id for r in request.reviews]
+    ids = [r.id for r in request.reviews]
 
     try:
         predictions = predict(texts)
@@ -45,6 +49,6 @@ def model_info() -> ModelInfoResponse:
     return ModelInfoResponse(
         model_version=get_version(),
         model_type=get_type(),
-        training_data='2026-09-04',
-        heading_metrics='macro-f2: 0.6241',
+        training_data="2026-09-04",
+        heading_metrics="macro-f2: 0.6241",
     )

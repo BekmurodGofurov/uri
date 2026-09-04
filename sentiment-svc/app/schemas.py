@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
 from typing import Literal
+
+from pydantic import BaseModel, Field
+
 
 class ReviewItem(BaseModel):
     id: str = Field(..., description="Unique review ID")
@@ -30,7 +32,7 @@ class HealthResponse(BaseModel):
 class ModelInfoResponse(BaseModel):
     model_version: str
     model_type: str
-    training_data: str = '2026-09-04'
-    heading_metrics: str = 'macro-f2: 0.6241'
+    training_data: str = "2026-09-04"
+    heading_metrics: str = "macro-f2: 0.6241"
     num_classes: int = 3
     labels: list[str] = ["negative", "neutral", "positive"]

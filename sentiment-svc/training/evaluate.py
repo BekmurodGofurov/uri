@@ -7,34 +7,42 @@ Usage (tfidf):
 Usage (transformer):
   python training/evaluate.py --model models/bert_v1/ --test data/test.csv --type transformer
 """
+
 import argparse
 import json
+
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.metrics import classification_report, f1_score, confusion_matrix
 from preprocessing.normalizer import normalize
+from sklearn.metrics import classification_report, confusion_matrix, f1_score
 
 
 def evaluate_tfidf(model_path, test_df):
     pipeline = joblib.load(model_path)
-    preds    = pipeline.predict(test_df["clean"])
+    preds = pipeline.predict(test_df["clean"])
     return preds
 
 
 def evaluate_transformer(model_path, test_df):
     import torch
-    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+    from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
     LABELS = ["negative", "neutral", "positive"]
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tok    = AutoTokenizer.from_pretrained(model_path)
-    model  = AutoModelForSequenceClassification.from_pretrained(model_path).to(device)
+    tok = AutoTokenizer.from_pretrained(model_path)
+    model = AutoModelForSequenceClassification.from_pretrained(model_path).to(device)
     model.eval()
 
     preds = []
     for text in test_df["clean"].tolist():
-        enc = tok(text, return_tensors="pt", truncation=True, max_length=128, padding="max_length").to(device)
+        enc = tok(
+            text, 
+            return_tensors="pt", 
+            truncation=True, 
+            max_length=128, 
+            padding="max_length"
+        ).to(device)
         with torch.no_grad():
             logits = model(**enc).logits
         probs = torch.softmax(logits, dim=1).cpu().numpy()[0]
@@ -51,7 +59,7 @@ def run(model_path, test_path, model_type):
     else:
         preds = evaluate_transformer(model_path, test_df)
 
-    labels   = test_df["label"].tolist()
+    labels = test_df["label"].tolist()
     macro_f1 = f1_score(labels, preds, average="macro")
 
     print("=" * 50)
@@ -63,8 +71,11 @@ def run(model_path, test_path, model_type):
     print(confusion_matrix(labels, preds))
 
     print("\n--- 3 Interesting Misclassifications ---")
-    errors = [(i, test_df["text"].iloc[i], labels[i], preds[i])
-              for i in range(len(preds)) if preds[i] != labels[i]]
+    errors = [
+        (i, test_df["text"].iloc[i], labels[i], preds[i])
+        for i in range(len(preds))
+        if preds[i] != labels[i]
+    ]
     for k, (_, text, true, pred) in enumerate(errors[:3]):
         print(f"\n[{k+1}] Text:      {text}")
         print(f"      True:      {true}")
@@ -78,7 +89,7 @@ def run(model_path, test_path, model_type):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True)
-    parser.add_argument("--test",  required=True)
-    parser.add_argument("--type",  required=True, choices=["tfidf", "transformer"])
+    parser.add_argument("--test", required=True)
+    parser.add_argument("--type", required=True, choices=["tfidf", "transformer"])
     args = parser.parse_args()
     run(args.model, args.test, args.type)

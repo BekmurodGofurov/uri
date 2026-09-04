@@ -1,9 +1,10 @@
-import pytest
-import pandas as pd
 import os
 
+import pandas as pd
+import pytest
+
 VALID_LABELS = {"positive", "neutral", "negative"}
-DATA_DIR     = "data"
+DATA_DIR = "data"
 
 
 def load(filename):
@@ -14,28 +15,32 @@ def load(filename):
 
 
 def test_train_labels_valid():
-    df  = load("train.csv")
+    df = load("train.csv")
     bad = set(df["label"].unique()) - VALID_LABELS
     assert bad == set(), f"Invalid labels: {bad}"
 
+
 def test_val_labels_valid():
-    df  = load("val.csv")
+    df = load("val.csv")
     bad = set(df["label"].unique()) - VALID_LABELS
     assert bad == set()
+
 
 def test_no_missing_text():
     df = load("train.csv")
     assert df["text"].isna().sum() == 0
 
+
 def test_no_missing_labels():
     df = load("train.csv")
     assert df["label"].isna().sum() == 0
 
+
 def test_no_data_leakage():
     """Verify split independence: train and test indices/subsets are disjoint."""
     train = load("train.csv")
-    test  = load("test.csv")
-    val   = load("val.csv")
+    test = load("test.csv")
+    val = load("val.csv")
 
     # 1. Total count equals combined splits
     assert len(train) > 0 and len(test) > 0 and len(val) > 0

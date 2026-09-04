@@ -1,6 +1,7 @@
 import numpy as np
-from app.model_loader import get_model, get_tokenizer, get_type
 from preprocessing.normalizer import normalize
+
+from app.model_loader import get_model, get_tokenizer, get_type
 
 LABELS = ["negative", "neutral", "positive"]
 
@@ -23,19 +24,22 @@ def _predict_tfidf(texts: list[str]) -> list[dict]:
     results = []
     for row in proba:
         idx = int(np.argmax(row))
-        results.append({
-            "label":      LABELS[idx],
-            "confidence": round(float(row[idx]), 4),
-        })
+        results.append(
+            {
+                "label": LABELS[idx],
+                "confidence": round(float(row[idx]), 4),
+            }
+        )
     return results
 
 
 def _predict_transformer(texts: list[str]) -> list[dict]:
     import torch
-    model     = get_model()
+
+    model = get_model()
     tokenizer = get_tokenizer()
-    device    = next(model.parameters()).device
-    results   = []
+    device = next(model.parameters()).device
+    results = []
     for text in texts:
         enc = tokenizer(
             text,
@@ -47,9 +51,11 @@ def _predict_transformer(texts: list[str]) -> list[dict]:
         with torch.no_grad():
             logits = model(**enc).logits
         probs = torch.softmax(logits, dim=1).cpu().numpy()[0]
-        idx   = int(np.argmax(probs))
-        results.append({
-            "label":      LABELS[idx],
-            "confidence": round(float(probs[idx]), 4),
-        })
+        idx = int(np.argmax(probs))
+        results.append(
+            {
+                "label": LABELS[idx],
+                "confidence": round(float(probs[idx]), 4),
+            }
+        )
     return results

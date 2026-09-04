@@ -1,20 +1,23 @@
 """
 Usage:
-  python training/train_transformer.py --train data/train.csv --val data/val.csv --out models/bert_v1/
+  python training/train_transformer.py --train data/train.csv \
+    --val data/val.csv --out models/bert_v1/
 """
+
 import argparse
+
 import pandas as pd
 import torch
-from torch.utils.data import Dataset, DataLoader
+from preprocessing.normalizer import normalize
+from sklearn.metrics import f1_score
+from torch.utils.data import DataLoader, Dataset
 from transformers import (
-    AutoTokenizer,
     AutoModelForSequenceClassification,
+    AutoTokenizer,
     get_linear_schedule_with_warmup,
 )
-from sklearn.metrics import f1_score
-from preprocessing.normalizer import normalize
 
-LABELS   = ["negative", "neutral", "positive"]
+LABELS = ["negative", "neutral", "positive"]
 LABEL2ID = {lbl: i for i, lbl in enumerate(LABELS)}
 ID2LABEL = {i: lbl for i, lbl in enumerate(LABELS)}
 MODEL_NAME = "tahrirchi/tahrirchi-bert-small"
@@ -22,9 +25,9 @@ MODEL_NAME = "tahrirchi/tahrirchi-bert-small"
 
 class ReviewDataset(Dataset):
     def __init__(self, df: pd.DataFrame, tokenizer, max_len: int = 128):
-        self.texts  = df["clean"].tolist()
+        self.texts = df["clean"].tolist()
         self.labels = [LABEL2ID[lbl] for lbl in df["label"].tolist()]
-        self.tok    = tokenizer
+        self.tok = tokenizer
         self.max_len = max_len
 
     def __len__(self):
@@ -39,9 +42,9 @@ class ReviewDataset(Dataset):
             return_tensors="pt",
         )
         return {
-            "input_ids":      enc["input_ids"].squeeze(),
+            "input_ids": enc["input_ids"].squeeze(),
             "attention_mask": enc["attention_mask"].squeeze(),
-            "label":          torch.tensor(self.labels[idx], dtype=torch.long),
+            "label": torch.tensor(self.labels[idx], dtype=torch.long),
         }
 
 
@@ -50,21 +53,23 @@ def train(train_path, val_path, out_path, epochs=3, batch_size=16, lr=2e-5):
     print(f"Device: {device}")
 
     train_df = pd.read_csv(train_path)
-    val_df   = pd.read_csv(val_path)
+    val_df = pd.read_csv(val_path)
     train_df["clean"] = train_df["text"].apply(normalize)
-    val_df["clean"]   = val_df["text"].apply(normalize)
+    val_df["clean"] = val_df["text"].apply(normalize)
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model = AutoModelForSequenceClassification.from_pretrained(
         MODEL_NAME, num_labels=3, id2label=ID2LABEL, label2id=LABEL2ID
     ).to(device)
 
-    train_loader = DataLoader(ReviewDataset(train_df, tokenizer), batch_size=batch_size, shuffle=True)
-    val_loader   = DataLoader(ReviewDataset(val_df,   tokenizer), batch_size=batch_size)
+    train_loader = DataLoader(
+        ReviewDataset(train_df, tokenizer), batch_size=batch_size, shuffle=True
+    )
+    val_loader = DataLoader(ReviewDataset(val_df, tokenizer), batch_size=batch_size)
 
-    optimizer   = torch.optim.AdamW(model.parameters(), lr=lr)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
     total_steps = len(train_loader) * epochs
-    scheduler   = get_linear_schedule_with_warmup(optimizer, total_steps // 10, total_steps)
+    scheduler = get_linear_schedule_with_warmup(optimizer, total_steps // 10, total_steps)
 
     best_f1 = 0.0
 
@@ -72,7 +77,7 @@ def train(train_path, val_path, out_path, epochs=3, batch_size=16, lr=2e-5):
         model.train()
         total_loss = 0.0
         for batch in train_loader:
-            out  = model(
+            out = model(
                 input_ids=batch["input_ids"].to(device),
                 attention_mask=batch["attention_mask"].to(device),
                 labels=batch["label"].to(device),
@@ -96,7 +101,8 @@ def train(train_path, val_path, out_path, epochs=3, batch_size=16, lr=2e-5):
                 all_labels.extend(batch["label"].numpy())
 
         macro_f1 = f1_score(all_labels, all_preds, average="macro")
-        print(f"Epoch {epoch}/{epochs} | loss={total_loss/len(train_loader):.4f} | val macro-F1={macro_f1:.4f}")
+        avg_loss = total_loss / len(train_loader)
+        print(f"Epoch {epoch}/{epochs} | loss={avg_loss:.4f} | val macro-F1={macro_f1:.4f}")
 
         if macro_f1 > best_f1:
             best_f1 = macro_f1
@@ -109,11 +115,11 @@ def train(train_path, val_path, out_path, epochs=3, batch_size=16, lr=2e-5):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--train",  required=True)
-    parser.add_argument("--val",    required=True)
-    parser.add_argument("--out",    required=True)
-    parser.add_argument("--epochs", type=int,   default=3)
-    parser.add_argument("--batch",  type=int,   default=16)
-    parser.add_argument("--lr",     type=float, default=2e-5)
+    parser.add_argument("--train", required=True)
+    parser.add_argument("--val", required=True)
+    parser.add_argument("--out", required=True)
+    parser.add_argument("--epochs", type=int, default=3)
+    parser.add_argument("--batch", type=int, default=16)
+    parser.add_argument("--lr", type=float, default=2e-5)
     args = parser.parse_args()
     train(args.train, args.val, args.out, args.epochs, args.batch, args.lr)
