@@ -16,21 +16,20 @@ a realistic measure of processing time excluding actual network overhead.
 
 import statistics
 import time
-from unittest.mock import MagicMock
-
-import pytest
-from fastapi.testclient import TestClient
 from platform.api.app import app
 from platform.database.models import Base
 from platform.stubs.aspect_stub import app as aspect_app
 from platform.stubs.sentiment_stub import app as sentiment_app
+
+import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-P95_THRESHOLD_MS = 300.0   # hard limit from requirements
-BATCH_SIZE = 32             # reviews per call (matches requirement)
-NUM_ITERATIONS = 50         # number of batches to measure
+P95_THRESHOLD_MS = 300.0  # hard limit from requirements
+BATCH_SIZE = 32  # reviews per call (matches requirement)
+NUM_ITERATIONS = 50  # number of batches to measure
 
 
 @pytest.fixture(scope="module")
@@ -122,18 +121,17 @@ def test_p95_latency_under_300ms(gateway_client: TestClient):
 
     # Always print — visible in CI logs regardless of pass/fail
     print(
-        f"\n{'='*55}\n"
+        f"\n{'=' * 55}\n"
         f"  Latency benchmark — batch_size={BATCH_SIZE}, n={NUM_ITERATIONS}\n"
-        f"{'='*55}\n"
+        f"{'=' * 55}\n"
         f"  Mean  : {mean:6.1f} ms\n"
         f"  p50   : {p50:6.1f} ms\n"
         f"  p95   : {p95:6.1f} ms  (threshold: {P95_THRESHOLD_MS} ms)\n"
         f"  p99   : {p99:6.1f} ms\n"
         f"  Max   : {max_ms:6.1f} ms\n"
-        f"{'='*55}"
+        f"{'=' * 55}"
     )
 
     assert p95 < P95_THRESHOLD_MS, (
-        f"p95 latency {p95:.1f}ms exceeds {P95_THRESHOLD_MS}ms threshold "
-        f"(batch_size={BATCH_SIZE})"
+        f"p95 latency {p95:.1f}ms exceeds {P95_THRESHOLD_MS}ms threshold (batch_size={BATCH_SIZE})"
     )
