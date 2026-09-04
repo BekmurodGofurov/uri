@@ -37,11 +37,7 @@ def evaluate_transformer(model_path, test_df):
     preds = []
     for text in test_df["clean"].tolist():
         enc = tok(
-            text,
-            return_tensors="pt",
-            truncation=True,
-            max_length=128,
-            padding="max_length"
+            text, return_tensors="pt", truncation=True, max_length=128, padding="max_length"
         ).to(device)
         with torch.no_grad():
             logits = model(**enc).logits
