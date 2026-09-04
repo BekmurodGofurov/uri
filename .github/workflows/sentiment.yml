@@ -36,4 +36,4 @@ jobs:
       - name: Run tests with coverage
         env:
           PYTHONPATH: .
-        run: pytest tests/ --cov=app --cov=preprocessing --cov-report=term-missing --cov-fail-under=60
+        run: pytest -c /dev/null -o addopts="" tests/ --cov=app --cov=preprocessing --cov-report=term-missing --cov-fail-under=60
