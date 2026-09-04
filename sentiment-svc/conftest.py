@@ -9,12 +9,9 @@ if sentiment_dir not in sys.path:
 # sentiment-svc/app to'g'ri import bo'lishi uchun keshni tozalaymiz
 app_mod = sys.modules.get("app")
 if app_mod is not None:
-
-
     mod_path = getattr(app_mod, "__file__", "") or (
         getattr(app_mod, "__path__", [""])[0] if hasattr(app_mod, "__path__") else ""
     )
-
 
     if not mod_path.startswith(sentiment_dir):
         for mod_name in list(sys.modules.keys()):
