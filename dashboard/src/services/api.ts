@@ -1,0 +1,106 @@
+import {
+  ProductListItem,
+  ProductDetailResponse,
+  ProductReviewsResponse,
+  GatewayScoreResponse,
+  Sentiment,
+} from '../types/api';
+
+const BASE_URL = import.meta.env.VITE_API_URL || '';
+
+export interface ApiStatus {
+  online: boolean;
+  service?: string;
+  error?: string;
+}
+
+export async function checkGatewayHealth(): Promise<ApiStatus> {
+  try {
+    const res = await fetch(`${BASE_URL}/api/health`, {
+      headers: { Accept: 'application/json' },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return {
+        online: true,
+        service: data.service,
+      };
+    }
+    return {
+      online: false,
+      error: `Gateway status error: ${res.status}`,
+    };
+  } catch (err: any) {
+    return {
+      online: false,
+      error: err?.message || 'Gateway API ga ulanib bo‘lmadi',
+    };
+  }
+}
+
+export async function fetchProducts(): Promise<ProductListItem[]> {
+  const res = await fetch(`${BASE_URL}/api/products`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Mahsulotlarni yuklashda xatolik (${res.status}): ${errText}`);
+  }
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
+}
+
+export async function fetchProductDetail(productId: string): Promise<ProductDetailResponse> {
+  const res = await fetch(`${BASE_URL}/api/products/${encodeURIComponent(productId)}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Mahsulot tafsilotini yuklashda xatolik (${res.status}): ${errText}`);
+  }
+  return res.json();
+}
+
+export async function fetchProductReviews(
+  productId: string,
+  params?: { limit?: number; offset?: number; sentiment?: Sentiment }
+): Promise<ProductReviewsResponse> {
+  const query = new URLSearchParams();
+  if (params?.limit) query.set('limit', String(params.limit));
+  if (params?.offset) query.set('offset', String(params.offset));
+  if (params?.sentiment) query.set('sentiment', params.sentiment);
+
+  const url = `${BASE_URL}/api/products/${encodeURIComponent(productId)}/reviews?${query.toString()}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Sharhlarni yuklashda xatolik (${res.status}): ${errText}`);
+  }
+  return res.json();
+}
+
+export async function scoreReviewInteractive(
+  reviewText: string,
+  rating?: number,
+  productId?: string
+): Promise<GatewayScoreResponse> {
+  const reqPayload = {
+    reviews: [
+      {
+        id: `rev_${Date.now()}`,
+        text: reviewText,
+        rating: rating ?? 5,
+        product_id: productId || 'uzum-prod-1',
+      },
+    ],
+  };
+
+  const res = await fetch(`${BASE_URL}/api/score`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reqPayload),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Tahlil qilishda xatolik (${res.status}): ${errText}`);
+  }
+
+  return res.json();
+}
