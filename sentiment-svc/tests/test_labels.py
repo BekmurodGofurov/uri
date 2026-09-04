@@ -3,8 +3,9 @@ import os
 import pandas as pd
 import pytest
 
+_sentiment_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DATA_DIR = os.path.join(_sentiment_dir, "data")
 VALID_LABELS = {"positive", "neutral", "negative"}
-DATA_DIR = "data"
 
 
 def load(filename):

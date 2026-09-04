@@ -1,6 +1,4 @@
 """
-⚠️  Run ONLY on Day 6. Do NOT touch test.csv before then.
-
 Usage (tfidf):
   python training/evaluate.py --model models/tfidf_v1.joblib --test data/test.csv --type tfidf
 

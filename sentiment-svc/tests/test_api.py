@@ -1,7 +1,16 @@
-from unittest.mock import MagicMock, patch
+import os
+import sys
+from unittest.mock import MagicMock
 
 import pytest
 from fastapi.testclient import TestClient
+
+_sentiment_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _sentiment_dir not in sys.path:
+    sys.path.insert(0, _sentiment_dir)
+
+from app import model_loader  # noqa: E402
+from app.main import app  # noqa: E402
 
 
 @pytest.fixture
@@ -13,10 +22,8 @@ def client(monkeypatch):
     mock = MagicMock()
     mock.predict_proba.side_effect = lambda texts: [[0.05, 0.10, 0.85]] * len(texts)
 
-    with patch("app.model_loader._model", mock):
-        from app.main import app
-
-        yield TestClient(app)
+    monkeypatch.setattr(model_loader, "_model", mock)
+    yield TestClient(app)
 
 
 def test_score_200(client):

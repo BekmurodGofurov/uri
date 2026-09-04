@@ -1,5 +1,15 @@
-import pytest
-from preprocessing.normalizer import normalize
+import os
+import sys
+
+_sentiment_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+
+if _sentiment_dir not in sys.path:
+    sys.path.insert(0, _sentiment_dir)
+
+
+import pytest  # noqa: E402
+from preprocessing.normalizer import normalize  # noqa: E402
 
 
 def test_basic_latin():
