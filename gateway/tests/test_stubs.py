@@ -1,8 +1,7 @@
-from platform.stubs.aspect_stub import app as aspect_app
-from platform.stubs.sentiment_stub import app as sentiment_app
-
 from fastapi.testclient import TestClient
 
+from gateway.stubs.aspect_stub import app as aspect_app
+from gateway.stubs.sentiment_stub import app as sentiment_app
 from shared.contracts import AspectResponse, ScoreRequest, SentimentResponse
 
 

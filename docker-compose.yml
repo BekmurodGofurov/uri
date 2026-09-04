@@ -11,7 +11,7 @@ services:
       - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./platform/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./gateway/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d uzum_reviews"]
       interval: 5s
@@ -47,7 +47,7 @@ services:
     image: uri-aspect-svc:latest
     container_name: uri-aspect-svc
     restart: unless-stopped
-    command: ["uvicorn", "platform.stubs.aspect_stub:app", "--host", "0.0.0.0", "--port", "8002"]
+    command: ["uvicorn", "gateway.stubs.aspect_stub:app", "--host", "0.0.0.0", "--port", "8002"]
     ports:
       - "${ASPECT_PORT:-8002}:8002"
     healthcheck:

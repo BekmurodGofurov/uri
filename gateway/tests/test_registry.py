@@ -13,9 +13,10 @@ is written to the real model_registry/ on disk.
 from __future__ import annotations
 
 from pathlib import Path
-from platform.registry.manager import ModelRegistry, RegistryError
 
 import pytest
+
+from gateway.registry.manager import ModelRegistry, RegistryError
 
 # ── fixtures ──────────────────────────────────────────────────────────────────
 
@@ -221,7 +222,8 @@ def test_cli_rollback_command(
     """
     import sys
     from io import StringIO
-    from platform.registry.cli import build_parser, cmd_rollback
+
+    from gateway.registry.cli import build_parser, cmd_rollback
 
     # Set the registry root to our temp registry via env var
     monkeypatch.setenv("REGISTRY_ROOT", str(registry.root))
@@ -249,7 +251,7 @@ def test_cli_rollback_unknown_version_exits_nonzero(
     dummy_artifact: Path,
     monkeypatch: pytest.MonkeyPatch,
 ):
-    from platform.registry.cli import build_parser, cmd_rollback
+    from gateway.registry.cli import build_parser, cmd_rollback
 
     monkeypatch.setenv("REGISTRY_ROOT", str(registry.root))
     registry.register("sentiment-v1", "svc", "tfidf", dummy_artifact)

@@ -38,7 +38,7 @@ from pathlib import Path
 # Allow running as `python -m platform.registry` from the repo root.
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from platform.registry.manager import DEFAULT_REGISTRY_ROOT, ModelRegistry, RegistryError
+from gateway.registry.manager import DEFAULT_REGISTRY_ROOT, ModelRegistry, RegistryError
 
 
 def _get_registry() -> ModelRegistry:

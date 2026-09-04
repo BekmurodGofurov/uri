@@ -1,7 +1,4 @@
 from collections.abc import Generator
-from platform.database.connection import get_session
-from platform.database.models import Prediction, Product, Review
-from platform.ingest.pipeline import score_and_store_batch
 from typing import Annotated, Any
 
 import httpx
@@ -11,6 +8,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
+from gateway.database.connection import get_session
+from gateway.database.models import Prediction, Product, Review
+from gateway.ingest.pipeline import score_and_store_batch
 from shared.contracts import Sentiment
 
 app = FastAPI(title="Uzum Review Intelligence Gateway", version="1.0.0")

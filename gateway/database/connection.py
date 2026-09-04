@@ -1,10 +1,11 @@
 import os
 from collections.abc import Generator
-from platform.database.models import Base
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
+from gateway.database.models import Base
 
 load_dotenv()
 

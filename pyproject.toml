@@ -12,6 +12,6 @@ exclude = [
 select = ["E", "F", "I", "W"]
 
 [tool.pytest.ini_options]
-testpaths = ["platform/tests"]
+testpaths = ["gateway/tests"]
 pythonpath = ["."]
-addopts = "-v --cov=shared --cov=platform --cov-report=term-missing --cov-report=xml:coverage.xml --cov-report=html:coverage_html"
+addopts = "-v --cov=shared --cov=gateway --cov-report=term-missing --cov-report=xml:coverage.xml --cov-report=html:coverage_html"

@@ -1,10 +1,11 @@
 import argparse
 import logging
-from platform.database.connection import get_engine, init_db
-from platform.database.models import Product, Review
 from typing import Any
 
 from sqlalchemy.orm import Session
+
+from gateway.database.connection import get_engine, init_db
+from gateway.database.models import Product, Review
 
 logger = logging.getLogger(__name__)
 
@@ -77,9 +78,9 @@ def parse_rating(val: Any) -> int | None:
 
 def load_from_huggingface(limit: int = 1000) -> None:
     """Load reviews directly from HuggingFace dataset."""
-    from platform.database.connection import get_session
-
     from datasets import load_dataset
+
+    from gateway.database.connection import get_session
 
     print(f"Loading dataset from HuggingFace (limit={limit})...")
     ds = load_dataset("risqaliyevds/uzbek-sentiment-analysis", split="train")
