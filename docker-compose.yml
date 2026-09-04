@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-uzum_reviews}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./platform/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
@@ -19,26 +19,70 @@ services:
       retries: 5
 
   sentiment-svc:
+    build:
+      context: ./sentiment-svc
+      dockerfile: Dockerfile
     image: ${SENTIMENT_IMAGE:-sentiment-svc:v1}
     container_name: uri-sentiment-svc
     restart: unless-stopped
-    profiles:
-      - ml
-      - all
     ports:
       - "${SENTIMENT_PORT:-8001}:8001"
     environment:
-      MODEL_PATH: ${MODEL_PATH:-/app/models}
+      MODEL_PATH: ${MODEL_PATH:-models/tfidf_v1.joblib}
       MODEL_TYPE: ${MODEL_TYPE:-tfidf}
-      MODEL_VERSION: ${MODEL_VERSION:-v1.0.0}
+      MODEL_VERSION: ${MODEL_VERSION:-sentiment-v1}
     volumes:
       - ./sentiment-svc/models:/app/models
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:8001/health || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8001/health\")' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 10s
+
+  aspect-svc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: uri-aspect-svc:latest
+    container_name: uri-aspect-svc
+    restart: unless-stopped
+    command: ["uvicorn", "platform.stubs.aspect_stub:app", "--host", "0.0.0.0", "--port", "8002"]
+    ports:
+      - "${ASPECT_PORT:-8002}:8002"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8002/health\")' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: uri-gateway:latest
+    container_name: uri-gateway
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-uzum_reviews}
+      SENTIMENT_SVC_URL: http://sentiment-svc:8001
+      ASPECT_SVC_URL: http://aspect-svc:8002
+    depends_on:
+      postgres:
+        condition: service_healthy
+      sentiment-svc:
+        condition: service_started
+      aspect-svc:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/api/health\")' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
 
 volumes:
   postgres_data:
