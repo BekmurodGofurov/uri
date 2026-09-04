@@ -70,9 +70,7 @@ def test_register_sets_current_by_default(registry: ModelRegistry, dummy_artifac
 
 
 def test_register_no_current_flag(registry: ModelRegistry, dummy_artifact: Path):
-    registry.register(
-        "sentiment-v1", "sentiment-svc", "tfidf", dummy_artifact, set_current=False
-    )
+    registry.register("sentiment-v1", "sentiment-svc", "tfidf", dummy_artifact, set_current=False)
     assert registry.current() is None
 
 
@@ -184,9 +182,7 @@ def test_rollback_artifact_bytes_intact(
     assert current_artifact.read_bytes() == b"fake-model-bytes-v1"
 
 
-def test_rollback_unknown_version_raises(
-    registry: ModelRegistry, dummy_artifact: Path
-):
+def test_rollback_unknown_version_raises(registry: ModelRegistry, dummy_artifact: Path):
     """Trying to roll back to a non-existent version must raise RegistryError."""
     registry.register("sentiment-v1", "svc", "tfidf", dummy_artifact)
 

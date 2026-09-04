@@ -174,8 +174,7 @@ class ModelRegistry:
         if not self._version_dir(version).exists():
             available = self.list_versions()
             raise RegistryError(
-                f"Version '{version}' is not registered. "
-                f"Available versions: {available}"
+                f"Version '{version}' is not registered. Available versions: {available}"
             )
         self._set_current(version)
 
@@ -209,9 +208,7 @@ class ModelRegistry:
         try:
             return json.loads(meta_path.read_text())
         except json.JSONDecodeError as exc:
-            raise RegistryError(
-                f"Corrupt meta.json for version '{version}': {exc}"
-            ) from exc
+            raise RegistryError(f"Corrupt meta.json for version '{version}': {exc}") from exc
 
     def list_versions(self) -> list[str]:
         """
@@ -240,9 +237,7 @@ class ModelRegistry:
         meta = self.get_meta(version)
         path = Path(meta["artifact_path"])
         if not path.exists():
-            raise RegistryError(
-                f"Artifact for '{version}' not found at {path}."
-            )
+            raise RegistryError(f"Artifact for '{version}' not found at {path}.")
         return path
 
     # ── internal ──────────────────────────────────────────────────────────────
