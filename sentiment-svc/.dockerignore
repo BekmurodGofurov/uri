@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+.env
+data/
+*.joblib
+models/tahrirchi_v1/
+.pytest_cache/
+*.png
+evaluation_result.json
