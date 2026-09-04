@@ -18,5 +18,27 @@ services:
       timeout: 5s
       retries: 5
 
+  sentiment-svc:
+    image: ${SENTIMENT_IMAGE:-sentiment-svc:v1}
+    container_name: uri-sentiment-svc
+    restart: unless-stopped
+    profiles:
+      - ml
+      - all
+    ports:
+      - "${SENTIMENT_PORT:-8001}:8001"
+    environment:
+      MODEL_PATH: ${MODEL_PATH:-/app/models}
+      MODEL_TYPE: ${MODEL_TYPE:-tfidf}
+      MODEL_VERSION: ${MODEL_VERSION:-v1.0.0}
+    volumes:
+      - ./sentiment-svc/models:/app/models
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8001/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 volumes:
   postgres_data:
