@@ -14,6 +14,7 @@ import { AspectPolaritySummary } from '../types/api';
 
 interface AspectBreakdownProps {
   aspects: AspectPolaritySummary[];
+  activeModelVersions?: string[];
 }
 
 const ASPECT_CONFIG: Record<
@@ -52,7 +53,14 @@ const ASPECT_CONFIG: Record<
   },
 };
 
-export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({ aspects }) => {
+export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
+  aspects,
+  activeModelVersions = [],
+}) => {
+  const isStubbed = activeModelVersions.some(
+    (v) => v.toLowerCase().includes('stub-aspect') || v.toLowerCase().includes('stub')
+  );
+
   if (!aspects || aspects.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
@@ -67,7 +75,7 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({ aspects }) => 
 
   return (
     <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-xl bg-uzum-50 text-uzum-600 border border-uzum-100">
             <BarChart3 className="w-4 h-4" />
@@ -81,6 +89,12 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({ aspects }) => 
             </p>
           </div>
         </div>
+
+        {isStubbed && (
+          <span className="text-xs px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-semibold border border-amber-200 self-start sm:self-auto shrink-0">
+            ⚠️ Demo ma'lumot — aspect model hali tayyor emas
+          </span>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-2">

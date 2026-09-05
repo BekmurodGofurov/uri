@@ -1,6 +1,6 @@
 """
-platform/registry/manager.py
-─────────────────────────────
+gateway/registry/manager.py
+────────────────────────────
 Versioned model registry using a directory tree + pointer file.
 
 Layout on disk
@@ -23,16 +23,16 @@ testable in-process. A versioned directory + pointer file is explicitly
 listed as an acceptable approach in the project requirements.
 
 Rollback is one command:
-    python -m platform.registry rollback <version>
+    python -m gateway.registry rollback <version>
 
-The one-command constraint is satisfied by the CLI in platform/registry/cli.py.
+The one-command constraint is satisfied by the CLI in gateway/registry/cli.py.
 """
 
 from __future__ import annotations
 
 import json
 import shutil
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 DEFAULT_REGISTRY_ROOT = Path(__file__).parent.parent.parent / "model_registry"
@@ -141,7 +141,7 @@ class ModelRegistry:
             "version": version,
             "service": service,
             "model_type": model_type,
-            "registered_at": datetime.now(timezone.utc).isoformat(),
+            "registered_at": datetime.now(UTC).isoformat(),
             "headline_metric": headline_metric,
             "artifact_path": str(dest),
             "notes": notes,

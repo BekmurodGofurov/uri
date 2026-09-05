@@ -1,30 +1,30 @@
 """
-platform/registry/cli.py
-─────────────────────────
+gateway/registry/cli.py
+───────────────────────
 One-command CLI for the model registry.
 
 Usage
 ─────
     # Show current active version
-    python -m platform.registry current
+    python -m gateway.registry current
 
     # List all registered versions
-    python -m platform.registry list
+    python -m gateway.registry list
 
     # Register a new model artifact
-    python -m platform.registry register \\
-        --version  sentiment-v2 \\
-        --service  sentiment-svc \\
-        --type     tfidf \\
-        --artifact sentiment-svc/models/tfidf_v2.joblib \\
-        --metric   "macro-f1: 0.65" \\
+    python -m gateway.registry register \
+        --version  sentiment-v2 \
+        --service  sentiment-svc \
+        --type     tfidf \
+        --artifact sentiment-svc/models/tfidf_v2.joblib \
+        --metric   "macro-f1: 0.65" \
         --notes    "Trained with balanced class weights"
 
     # Roll back to a previous version  ← the one-command rollback
-    python -m platform.registry rollback sentiment-v1
+    python -m gateway.registry rollback sentiment-v1
 
     # Show metadata for a specific version
-    python -m platform.registry info sentiment-v1
+    python -m gateway.registry info sentiment-v1
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ import os
 import sys
 from pathlib import Path
 
-# Allow running as `python -m platform.registry` from the repo root.
+# Allow running as `python -m gateway.registry` from the repo root.
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from gateway.registry.manager import DEFAULT_REGISTRY_ROOT, ModelRegistry, RegistryError
@@ -126,7 +126,7 @@ def cmd_info(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="python -m platform.registry",
+        prog="python -m gateway.registry",
         description="Uzum Review Intelligence — model registry CLI",
     )
     sub = parser.add_subparsers(dest="command", required=True)

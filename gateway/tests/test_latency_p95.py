@@ -1,17 +1,19 @@
 """
-p95 Latency Benchmark — platform/tests/test_latency_p95.py
+Gateway In-Process Overhead Benchmark — gateway/tests/test_latency_p95.py
 
-Requirement (Section 7): p95 latency under 300ms for a batch of 32 reviews,
-measured and recorded.
+NOTE ON SCOPE:
+  This test measures the gateway's internal framework overhead:
+    ✓ FastAPI routing and dependency injection
+    ✓ Pydantic request & response validation / serialization
+    ✓ JSON serialization/deserialization
 
-This test:
-  1. Sends 50 batches of 32 reviews to the gateway /api/score endpoint.
-  2. Calculates the p95 of the response times.
-  3. Asserts p95 < 300ms.
-  4. Prints a summary table to stdout (always visible in CI logs).
+  This test DOES NOT measure:
+    ✗ Real network latency (in-process TestClient is used)
+    ✗ Real ML model inference time (fast in-process stubs are used)
+    ✗ Production PostgreSQL latency (in-memory SQLite is used)
 
-The test uses the in-process FastAPI TestClient (no network), which gives
-a realistic measure of processing time excluding actual network overhead.
+For end-to-end latency benchmarks with real models and network overhead,
+refer to BENCHMARKS.md and run benchmarks against the full docker compose stack.
 """
 
 import statistics
@@ -86,10 +88,10 @@ def _build_batch(batch_idx: int) -> dict:
     }
 
 
-def test_p95_latency_under_300ms(gateway_client: TestClient):
+def test_gateway_overhead_p95(gateway_client: TestClient):
     """
     Sends NUM_ITERATIONS batches of BATCH_SIZE reviews and asserts that
-    the p95 wall-clock time per batch is below P95_THRESHOLD_MS.
+    the gateway overhead p95 wall-clock time per batch is below P95_THRESHOLD_MS.
     """
     latencies_ms: list[float] = []
 
@@ -110,18 +112,17 @@ def test_p95_latency_under_300ms(gateway_client: TestClient):
         )
         latencies_ms.append(elapsed_ms)
 
-    # Stats
-    sorted_lat = sorted(latencies_ms)
+    # Stats using statistics.quantiles (mathematically defensible percentile)
     p50 = statistics.median(latencies_ms)
-    p95 = sorted_lat[int(len(latencies_ms) * 0.95)]
-    p99 = sorted_lat[min(int(len(latencies_ms) * 0.99), len(latencies_ms) - 1)]
+    p95 = statistics.quantiles(latencies_ms, n=100)[94]
+    p99 = statistics.quantiles(latencies_ms, n=100)[98]
     mean = statistics.mean(latencies_ms)
     max_ms = max(latencies_ms)
 
     # Always print — visible in CI logs regardless of pass/fail
     print(
         f"\n{'=' * 55}\n"
-        f"  Latency benchmark — batch_size={BATCH_SIZE}, n={NUM_ITERATIONS}\n"
+        f"  Gateway Overhead benchmark — batch_size={BATCH_SIZE}, n={NUM_ITERATIONS}\n"
         f"{'=' * 55}\n"
         f"  Mean  : {mean:6.1f} ms\n"
         f"  p50   : {p50:6.1f} ms\n"

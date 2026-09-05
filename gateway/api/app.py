@@ -41,6 +41,9 @@ def get_ml_clients() -> Generator[tuple[httpx.Client, httpx.Client], None, None]
         yield sent_c, asp_c
 
 
+DEFAULT_PRODUCT_ID = "prod_1"
+
+
 class SentimentSummary(BaseModel):
     positive: int = 0
     neutral: int = 0
@@ -64,30 +67,40 @@ def health_check():
 @app.get("/api/products", response_model=list[ProductListItem])
 def list_products(db: Annotated[Session, Depends(get_db)]) -> list[ProductListItem]:
     products = list(db.scalars(select(Product).order_by(Product.id)).all())
+    if not products:
+        return []
+
+    # 1 query for all review counts and averages, grouped by product (resolves N+1)
+    stats = db.execute(
+        select(Review.product_id, func.count(Review.id), func.avg(Review.rating))
+        .where(Review.product_id.is_not(None))
+        .group_by(Review.product_id)
+    ).all()
+    stats_map = {pid: (cnt, avg) for pid, cnt, avg in stats}
+
+    # 1 query for all sentiment counts, grouped by product and label
+    sentiment_rows = db.execute(
+        select(Review.product_id, Prediction.sentiment_label, func.count(Prediction.id))
+        .join(Prediction, Prediction.review_id == Review.id)
+        .where(Review.product_id.is_not(None))
+        .group_by(Review.product_id, Prediction.sentiment_label)
+    ).all()
+    sent_map: dict[str, dict[str, int]] = {}
+    for pid, label, count in sentiment_rows:
+        if pid not in sent_map:
+            sent_map[pid] = {}
+        sent_map[pid][label] = count
 
     items: list[ProductListItem] = []
     for prod in products:
-        # Reviews stats
-        rev_count = (
-            db.scalar(select(func.count(Review.id)).where(Review.product_id == prod.id)) or 0
-        )
-        avg_rat = db.scalar(select(func.avg(Review.rating)).where(Review.product_id == prod.id))
+        rev_count, avg_rat = stats_map.get(prod.id, (0, None))
         rounded_avg = round(float(avg_rat), 2) if avg_rat is not None else None
-
-        # Sentiment counts
-        sent_counts = dict(
-            db.execute(
-                select(Prediction.sentiment_label, func.count(Prediction.id))
-                .join(Review, Prediction.review_id == Review.id)
-                .where(Review.product_id == prod.id)
-                .group_by(Prediction.sentiment_label)
-            ).all()
-        )
+        prod_sent = sent_map.get(prod.id, {})
 
         summary = SentimentSummary(
-            positive=sent_counts.get("positive", 0),
-            neutral=sent_counts.get("neutral", 0),
-            negative=sent_counts.get("negative", 0),
+            positive=prod_sent.get("positive", 0),
+            neutral=prod_sent.get("neutral", 0),
+            negative=prod_sent.get("negative", 0),
         )
 
         items.append(
@@ -140,25 +153,27 @@ def get_product_detail(
     if not product:
         raise HTTPException(status_code=404, detail=f"Product '{product_id}' not found")
 
-    reviews = list(
-        db.scalars(
-            select(Review).where(Review.product_id == product_id).order_by(Review.created_at)
-        ).all()
-    )
-    rev_count = len(reviews)
-    ratings_list = [r.rating for r in reviews if r.rating is not None]
-    avg_rat = round(sum(ratings_list) / len(ratings_list), 2) if ratings_list else None
+    # Aggregate stats directly in DB (avoids unbounded memory usage)
+    rev_stats = db.execute(
+        select(func.count(Review.id), func.avg(Review.rating)).where(
+            Review.product_id == product_id
+        )
+    ).first()
+    rev_count = rev_stats[0] if rev_stats else 0
+    avg_rat = round(float(rev_stats[1]), 2) if rev_stats and rev_stats[1] is not None else None
 
-    # Get predictions for these reviews
-    review_ids = [r.id for r in reviews]
-    predictions = (
-        list(db.scalars(select(Prediction).where(Prediction.review_id.in_(review_ids))).all())
-        if review_ids
-        else []
-    )
-
-    # Review created_at lookup for time grouping
-    review_date_map = {r.id: r.created_at.strftime("%Y-%m-%d") for r in reviews}
+    # Load only lightweight prediction and timestamp data — no Review.text!
+    pred_rows = db.execute(
+        select(
+            Review.created_at,
+            Prediction.sentiment_label,
+            Prediction.aspects,
+            Prediction.model_version,
+        )
+        .join(Review, Prediction.review_id == Review.id)
+        .where(Review.product_id == product_id)
+        .order_by(Review.created_at)
+    ).all()
 
     # Sentiment over time & summary
     sent_counts = {"positive": 0, "neutral": 0, "negative": 0}
@@ -166,18 +181,22 @@ def get_product_detail(
     aspect_tallies: dict[str, dict[str, int]] = {}
     model_versions: set[str] = set()
 
-    for pred in predictions:
-        if pred.sentiment_label in sent_counts:
-            sent_counts[pred.sentiment_label] += 1
+    for rev_created_at, sentiment_label, aspects, model_version in pred_rows:
+        if sentiment_label in sent_counts:
+            sent_counts[sentiment_label] += 1
 
-        dt = review_date_map.get(pred.review_id, "unknown")
+        dt = (
+            rev_created_at.strftime("%Y-%m-%d")
+            if hasattr(rev_created_at, "strftime")
+            else str(rev_created_at)[:10]
+        )
         if dt not in time_points:
             time_points[dt] = {"positive": 0, "neutral": 0, "negative": 0}
-        if pred.sentiment_label in time_points[dt]:
-            time_points[dt][pred.sentiment_label] += 1
+        if sentiment_label in time_points[dt]:
+            time_points[dt][sentiment_label] += 1
 
-        if isinstance(pred.aspects, list):
-            for hit in pred.aspects:
+        if isinstance(aspects, list):
+            for hit in aspects:
                 asp = hit.get("aspect")
                 pol = hit.get("polarity", "neutral")
                 if asp:
@@ -186,8 +205,8 @@ def get_product_detail(
                     if pol in aspect_tallies[asp]:
                         aspect_tallies[asp][pol] += 1
 
-        if pred.model_version:
-            model_versions.add(pred.model_version)
+        if model_version:
+            model_versions.add(model_version)
 
     sentiment_over_time = [
         SentimentTimePoint(date=d, **counts) for d, counts in sorted(time_points.items())
@@ -306,7 +325,7 @@ class ScoreItemRequest(BaseModel):
     id: str | None = None  # Optional — server generates if missing
     text: str = Field(min_length=1, max_length=5000)
     rating: int | None = Field(default=None, ge=1, le=5)
-    product_id: str | None = "prod_1"
+    product_id: str | None = DEFAULT_PRODUCT_ID
 
 
 class GatewayScoreRequest(BaseModel):
@@ -389,9 +408,10 @@ def _verify_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
     When ``API_KEY`` is not configured (e.g. local dev), the check is skipped
     so existing workflows are not broken.
     """
-    if API_KEY is None:
+    configured_key = os.getenv("API_KEY") or API_KEY
+    if configured_key is None:
         return  # no key configured — allow (dev mode)
-    if x_api_key != API_KEY:
+    if x_api_key != configured_key:
         raise HTTPException(status_code=403, detail="Invalid or missing API key")
 
 
@@ -421,7 +441,7 @@ def score_reviews_endpoint(
                 detail=f"Review '{review_id}' already exists. Use a unique ID.",
             )
 
-        prod_id = item.product_id or "prod_1"
+        prod_id = item.product_id or DEFAULT_PRODUCT_ID
         prod = db.get(Product, prod_id)
         if not prod:
             prod = Product(id=prod_id, title=f"Product {prod_id}")
