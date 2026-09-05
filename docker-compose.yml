@@ -42,11 +42,10 @@ services:
   aspect-svc:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: uri-aspect-svc:latest
+      dockerfile: aspect-svc/Dockerfile
+    image: uri-aspect-svc:v1
     container_name: uri-aspect-svc
     restart: unless-stopped
-    command: ["uvicorn", "gateway.stubs.aspect_stub:app", "--host", "0.0.0.0", "--port", "8002"]
     ports:
       - "${ASPECT_PORT:-8002}:8002"
     healthcheck:
@@ -70,7 +69,7 @@ services:
       SENTIMENT_SVC_URL: http://sentiment-svc:8001
       ASPECT_SVC_URL: http://aspect-svc:8002
       API_KEY: ${API_KEY:-changeme-your-secret-key-here}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
     depends_on:
       postgres:
         condition: service_healthy
