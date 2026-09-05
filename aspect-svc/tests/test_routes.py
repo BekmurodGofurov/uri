@@ -14,7 +14,6 @@ def client(monkeypatch):
         yield c
 
 
-
 def test_score_200(client):
     r = client.post(
         "/v1/score", json={"reviews": [{"id": "r1", "text": "Yetkazib berish tez edi."}]}
@@ -54,8 +53,6 @@ def test_multiple_reviews_scored_independently(client):
     assert {res["id"] for res in results} == {"r1", "r2"}
 
 
-
-
 def test_review_can_have_multiple_aspects(client):
     text = "Yetkazib berish yomon edi, narx juda qimmat edi."
     r = client.post("/v1/score", json={"reviews": [{"id": "r1", "text": text}]})
@@ -69,8 +66,6 @@ def test_no_keyword_match_falls_back_to_other(client):
     r = client.post("/v1/score", json={"reviews": [{"id": "r1", "text": "Bu oddiy sharh matni."}]})
     aspects = {hit["aspect"] for hit in r.json()["results"][0]["aspects"]}
     assert aspects == {"other"}
-
-
 
 
 def test_empty_reviews_rejected(client):
@@ -98,8 +93,6 @@ def test_batch_over_64_rejected(client):
     reviews = [{"id": str(i), "text": "matn"} for i in range(65)]
     r = client.post("/v1/score", json={"reviews": reviews})
     assert r.status_code == 422
-
-
 
 
 def test_health(client):

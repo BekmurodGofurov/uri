@@ -20,11 +20,10 @@ def load_model():
 
     if _type == "keyword_stub":
         logger.info("Loading keyword-rule stub aspect model (no artifact needed).")
-    
+
         _model = "keyword_stub"
         logger.info("Stub aspect model ready.")
     elif _type == "multilabel":
-       
         raise NotImplementedError("multilabel model loader hali yozilmagan (4-kun ishi)")
     else:
         raise ValueError(f"Unsupported MODEL_TYPE: {_type}")

@@ -1,4 +1,5 @@
 from models.model_loader import get_type
+
 from shared.contracts import AspectHit
 
 _KEYWORDS = {
@@ -10,7 +11,14 @@ _KEYWORDS = {
 }
 
 _NEGATIVE_MARKERS = [
-    "yomon", "buzil", "kechik", "qimmat", "ishlamay", "yoril", "ezil", "javob ber",
+    "yomon",
+    "buzil",
+    "kechik",
+    "qimmat",
+    "ishlamay",
+    "yoril",
+    "ezil",
+    "javob ber",
 ]
 _POSITIVE_MARKERS = ["zo'r", "yaxshi", "tez", "arzon", "mustahkam", "tavsiya", "yoqdi"]
 
