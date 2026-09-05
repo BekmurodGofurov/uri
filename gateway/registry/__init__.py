@@ -1,5 +1,5 @@
 """
-platform/registry/__init__.py
+gateway/registry/__init__.py
 
 Public surface for the model registry.
 """

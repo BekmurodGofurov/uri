@@ -83,8 +83,8 @@ The platform is designed following modular microservices principles, orchestrate
 
 - **Ingest & Storage Layer:** Batches raw reviews into PostgreSQL with relational schemas (`products`, `reviews`, `predictions`) and index optimizations.
 - **Microservices (`sentiment-svc` & `aspect-svc`):** Decoupled inference services operating over strictly frozen Pydantic contracts (`shared/contracts.py`).
-- **Gateway API (`platform/api/app.py`):** Central aggregation layer exposing REST endpoints, aggregating analytical metrics, and proxying scoring requests.
-- **Model Registry (`platform/registry`):** Immutable model storage with plain-text pointer management for one-command operational rollback.
+- **Gateway API (`gateway/api/app.py`):** Central aggregation layer exposing REST endpoints, aggregating analytical metrics, and proxying scoring requests.
+- **Model Registry (`gateway/registry`):** Immutable model storage with plain-text pointer management for one-command operational rollback.
 - **Dashboard UI (`dashboard/`):** React 18 single-page application visualizing sentiment trajectories, aspect polarities, and model provenance.
 
 ---
@@ -221,7 +221,7 @@ If running against PostgreSQL or an in-process SQLite instance:
 ```bash
 # SQLite quick-start:
 export DATABASE_URL="sqlite:///./uzum_reviews.db"
-python3 -m platform.database.connection
+python3 -c "from gateway.database.connection import init_db; init_db()"
 ```
 
 #### 3. Run Backend Services:
@@ -236,14 +236,14 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
 **Terminal 2 — Aspect Service (Port 8002):**
 ```bash
 # From project root:
-uvicorn platform.stubs.aspect_stub:app --host 0.0.0.0 --port 8002 --reload
+uvicorn gateway.stubs.aspect_stub:app --host 0.0.0.0 --port 8002 --reload
 ```
 
 **Terminal 3 — Gateway API (Port 8000):**
 ```bash
 # From project root:
 SENTIMENT_SVC_URL=http://localhost:8001 ASPECT_SVC_URL=http://localhost:8002 \
-uvicorn platform.api.app:app --host 0.0.0.0 --port 8000 --reload
+uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 **Terminal 4 — Dashboard UI (Port 5173):**
@@ -352,7 +352,7 @@ model_registry/
 ### One-Command Rollback CLI:
 ```bash
 # Roll back production model to sentiment-v1:
-python3 -m platform.registry rollback sentiment-v1
+python3 -m gateway.registry rollback sentiment-v1
 ```
 
 Output:
@@ -364,13 +364,13 @@ Active version is now: sentiment-v1
 ### Registry CLI Commands:
 ```bash
 # Inspect the active production model:
-python3 -m platform.registry current
+python3 -m gateway.registry current
 
 # List all registered versions and their metrics:
-python3 -m platform.registry list
+python3 -m gateway.registry list
 
 # Register a new model version:
-python3 -m platform.registry register \
+python3 -m gateway.registry register \
     --version  sentiment-v2 \
     --service  sentiment-svc \
     --type     tfidf \
@@ -379,7 +379,7 @@ python3 -m platform.registry register \
     --notes    "Retrained with neutral class oversampling"
 
 # Inspect version metadata:
-python3 -m platform.registry info sentiment-v1
+python3 -m gateway.registry info sentiment-v1
 ```
 
 ---
@@ -387,9 +387,9 @@ python3 -m platform.registry info sentiment-v1
 ## 10. Testing, Quality Assurance & CI
 
 High engineering rigor was enforced from day one:
-- **Test Suite:** **48 automated tests** spanning API endpoints, contracts, database models, pipeline ingestion, registry operations, and latency benchmarks.
-- **Code Coverage:** **90% line coverage** on non-UI Python code (exceeding the 60% requirement).
-- **Latency Benchmark:** Measured and guaranteed **p95 latency under 300ms** for batches of 32 reviews (`platform/tests/test_latency_p95.py`).
+- **Test Suite:** **54 automated tests** spanning API endpoints, contracts, database models, pipeline ingestion, registry operations, and latency benchmarks.
+- **Code Coverage:** **91% line coverage** on non-UI Python code (exceeding the 60% requirement).
+- **Latency Benchmark:** Measured and guaranteed **p95 latency under 300ms** for batches of 32 reviews (`gateway/tests/test_latency_p95.py`).
 
 ### Executing Tests:
 ```bash
@@ -414,13 +414,13 @@ uri/
 ├── requirements-dev.txt            # Development, testing, and CI dependencies
 ├── shared/                         # Frozen data contracts
 │   └── contracts.py                # Pydantic schemas (ReviewIn, ScoreRequest, etc.)
-├── platform/                       # Platform core services (Owned by Bekmurod)
+├── gateway/                        # Gateway and platform core services (Owned by Bekmurod)
 │   ├── api/app.py                  # FastAPI Gateway routing & business logic
 │   ├── database/                   # Schema migrations, engine, and ORM models
 │   ├── ingest/                     # Review loading and scoring pipelines
 │   ├── registry/                   # Model registry manager & one-command rollback CLI
 │   ├── stubs/                      # Service stubs for isolated integration testing
-│   └── tests/                      # 48 comprehensive unit & integration tests
+│   └── tests/                      # 54 comprehensive unit & integration tests
 ├── sentiment-svc/                  # Sentiment classification service (Owned by Hayotbek)
 │   ├── app/                        # FastAPI microservice and inference logic
 │   ├── models/                     # Trained TF-IDF serialization artifacts

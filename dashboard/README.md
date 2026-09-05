@@ -1,7 +1,7 @@
 # Uzum Review Intelligence (URI) — Dashboard UI
 
 O'zbek tili sharhlari uchun sentiment tahlili va jihatlar (aspect extraction) bo'yicha tahliliy dashboard.
-FastAPI Gateway API (`platform/api/app.py`) bilan integratsiya qilingan.
+FastAPI Gateway API (`gateway/api/app.py`) bilan integratsiya qilingan.
 
 ---
 
@@ -37,7 +37,7 @@ FastAPI Gateway API (`platform/api/app.py`) bilan integratsiya qilingan.
    - **Har bir sharh kartochkasida** aynan qaysi model versiyasi ushbu xulosani bergani alohida nishon (badge) bilan aniq ko'rsatiladi.
 
 6. **Jonli AI Tahlil (Live Scorer Modal):**
-   - Istalgan yangi o'zbekcha sharhni yozib, Gateway API (`POST /api/score`) orqali test qilish va real vaqtda natija olish imkoniyati.
+   - Istalgan yangi o'zbekcha sharhni yozib, Gateway API (`POST /api/score/preview`) orqali test qilish va real vaqtda natija olish imkoniyati.
 
 ---
 
@@ -48,11 +48,11 @@ FastAPI Gateway API (`platform/api/app.py`) bilan integratsiya qilingan.
 # Loyiha ildizida (root directory):
 source .venv/bin/activate
 
-# Namunaviy ma'lumotlarni bazaga kiritish (agar baza bo'sh bo'lsa):
-PYTHONPATH=. DATABASE_URL=sqlite:///./uzum_reviews.db python3 -m platform.database.seed
+# Baza jadvallarini yaratish (agar kerak bo'lsa):
+python3 -c "from gateway.database.connection import init_db; init_db()"
 
 # Gateway API serverini ishga tushirish:
-DATABASE_URL=sqlite:///./uzum_reviews.db uvicorn platform.api.app:app --host 0.0.0.0 --port 8000 --reload
+DATABASE_URL=sqlite:///./uzum_reviews.db uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 2. Dashboard UI ni ishga tushirish:
@@ -66,7 +66,7 @@ npm install
 npm run dev
 ```
 
-Brauzerda ochish: `http://localhost:3000`
+Brauzerda ochish: `http://localhost:5173`
 
 ### 3. Production Build:
 ```bash
