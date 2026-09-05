@@ -70,6 +70,8 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-uzum_reviews}
       SENTIMENT_SVC_URL: http://sentiment-svc:8001
       ASPECT_SVC_URL: http://aspect-svc:8002
+      API_KEY: ${API_KEY:-changeme-your-secret-key-here}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173}
     depends_on:
       postgres:
         condition: service_healthy
