@@ -94,6 +94,20 @@ export interface GatewayScoreResponse {
   predictions: ScoreItemResult[];
 }
 
+export interface PreviewItemResult {
+  review_id: string;
+  text: string;
+  sentiment_label: Sentiment;
+  sentiment_confidence: number;
+  aspects: AspectHit[];
+  model_version: string;
+}
+
+export interface PreviewScoreResponse {
+  scored_count: number;
+  predictions: PreviewItemResult[];
+}
+
 export interface HealthResponse {
   status: string;
   service: string;
