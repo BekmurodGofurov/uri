@@ -37,11 +37,34 @@ def init_db(engine=None) -> None:
     Base.metadata.create_all(bind=target_engine)
 
 
-def get_session(database_url: str | None = None) -> Generator[Session, None, None]:
-    engine = get_engine(database_url)
-    session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    session = session_local()
+def get_session() -> Generator[Session, None, None]:
+    """Yield a database session backed by a **shared** engine singleton.
+
+    The engine and session factory are created once (on first call) and reused
+    for the lifetime of the process, avoiding the cost — and connection-pool
+    leak — of calling ``create_engine()`` on every HTTP request.
+    """
+    session = _get_session_factory()()
     try:
         yield session
     finally:
         session.close()
+
+
+# ---------------------------------------------------------------------------
+# Module-level singleton for the SQLAlchemy engine / session factory.
+# Tests never touch these directly — they override ``get_db`` via
+# ``app.dependency_overrides`` which is the canonical FastAPI pattern.
+# ---------------------------------------------------------------------------
+_engine = None
+_SessionLocal = None
+
+
+def _get_session_factory():
+    """Return (and lazily create) the shared ``sessionmaker``."""
+    global _engine, _SessionLocal
+    if _SessionLocal is None:
+        _engine = get_engine()
+        _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
+    return _SessionLocal
+
