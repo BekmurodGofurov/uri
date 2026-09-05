@@ -67,4 +67,3 @@ def _get_session_factory():
         _engine = get_engine()
         _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
     return _SessionLocal
-

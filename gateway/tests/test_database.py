@@ -98,4 +98,3 @@ def test_get_session(monkeypatch):
     # Trigger generator cleanup
     with pytest.raises(StopIteration):
         next(generator)
-
