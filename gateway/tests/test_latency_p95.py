@@ -74,14 +74,12 @@ def gateway_client():
 
 
 def _build_batch(batch_idx: int) -> dict:
-    """Build a /api/score payload with BATCH_SIZE reviews."""
+    """Build a /api/score/preview payload with BATCH_SIZE reviews."""
     return {
         "reviews": [
             {
-                "id": f"lat_{batch_idx}_{i}",
                 "text": f"Mahsulot {batch_idx}-{i} haqida fikr: a'lo sifat, tez yetkazildi.",
                 "rating": (i % 5) + 1,
-                "product_id": f"prod_{i % 5 + 1}",
             }
             for i in range(BATCH_SIZE)
         ]
@@ -97,14 +95,14 @@ def test_p95_latency_under_300ms(gateway_client: TestClient):
 
     # Warm-up: 3 calls to avoid cold-start skew
     for w in range(3):
-        r = gateway_client.post("/api/score", json=_build_batch(batch_idx=9900 + w))
+        r = gateway_client.post("/api/score/preview", json=_build_batch(batch_idx=9900 + w))
         assert r.status_code == 200, f"Warm-up call failed: {r.text}"
 
     # Measured runs
     for i in range(NUM_ITERATIONS):
         payload = _build_batch(batch_idx=i)
         t0 = time.perf_counter()
-        response = gateway_client.post("/api/score", json=payload)
+        response = gateway_client.post("/api/score/preview", json=payload)
         elapsed_ms = (time.perf_counter() - t0) * 1000
 
         assert response.status_code == 200, (

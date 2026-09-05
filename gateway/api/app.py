@@ -1,26 +1,34 @@
+import logging
+import os
+import uuid
 from collections.abc import Generator
 from typing import Annotated, Any
 
 import httpx
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from sqlalchemy import delete, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from gateway.database.connection import get_session
 from gateway.database.models import Prediction, Product, Review
-from gateway.ingest.pipeline import score_and_store_batch
+from gateway.ingest.pipeline import score_and_store_batch, score_only_batch
 from shared.contracts import Sentiment
+
+logger = logging.getLogger(__name__)
+
+# API key for protecting write endpoints (read from .env / environment)
+API_KEY: str | None = os.getenv("API_KEY")
 
 app = FastAPI(title="Uzum Review Intelligence Gateway", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173").split(","),
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 
@@ -295,7 +303,7 @@ def get_product_reviews(
 
 
 class ScoreItemRequest(BaseModel):
-    id: str
+    id: str | None = None  # Optional — server generates if missing
     text: str = Field(min_length=1, max_length=5000)
     rating: int | None = Field(default=None, ge=1, le=5)
     product_id: str | None = "prod_1"
@@ -319,22 +327,100 @@ class GatewayScoreResponse(BaseModel):
     predictions: list[ScoreItemResult]
 
 
+# ── Preview result (no DB id, lighter schema) ────────────────────────────────
+
+
+class PreviewItemResult(BaseModel):
+    review_id: str
+    text: str
+    sentiment_label: Sentiment
+    sentiment_confidence: float
+    aspects: list[dict[str, Any]]
+    model_version: str
+
+
+class PreviewScoreResponse(BaseModel):
+    scored_count: int
+    predictions: list[PreviewItemResult]
+
+
+# ── /api/score/preview — demo endpoint, saves NOTHING to DB ──────────────────
+
+
+@app.post("/api/score/preview", response_model=PreviewScoreResponse)
+def preview_score(
+    req: GatewayScoreRequest,
+    ml_clients: Annotated[tuple[httpx.Client, httpx.Client], Depends(get_ml_clients)],
+) -> PreviewScoreResponse:
+    """Score review text and return results. Nothing is saved to the database.
+
+    This is the endpoint the dashboard Live Scorer uses so that demo
+    sentences do not pollute the production reviews table.
+    """
+    sent_client, asp_client = ml_clients
+
+    review_dicts = [
+        {"id": item.id or f"preview_{uuid.uuid4().hex[:12]}", "text": item.text}
+        for item in req.reviews
+    ]
+
+    try:
+        results = score_only_batch(
+            reviews=review_dicts,
+            sentiment_client=sent_client,
+            aspect_client=asp_client,
+        )
+    except Exception:
+        logger.exception("Preview scoring failed for %d reviews", len(req.reviews))
+        raise HTTPException(status_code=502, detail="Scoring service unavailable") from None
+
+    return PreviewScoreResponse(
+        scored_count=len(results),
+        predictions=[PreviewItemResult(**r) for r in results],
+    )
+
+
+# ── API key dependency ────────────────────────────────────────────────────────
+
+
+def _verify_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
+    """Reject the request unless the caller provides a valid API key.
+
+    When ``API_KEY`` is not configured (e.g. local dev), the check is skipped
+    so existing workflows are not broken.
+    """
+    if API_KEY is None:
+        return  # no key configured — allow (dev mode)
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=403, detail="Invalid or missing API key")
+
+
+# ── /api/score — protected, writes to DB ─────────────────────────────────────
+
+
 @app.post("/api/score", response_model=GatewayScoreResponse)
 def score_reviews_endpoint(
     req: GatewayScoreRequest,
     db: Annotated[Session, Depends(get_db)],
     ml_clients: Annotated[tuple[httpx.Client, httpx.Client], Depends(get_ml_clients)],
+    _key: Annotated[None, Depends(_verify_api_key)] = None,
 ) -> GatewayScoreResponse:
     sent_client, asp_client = ml_clients
 
     reviews_to_score: list[Review] = []
-    rev_ids = [item.id for item in req.reviews]
-
-    # Clear previous predictions for these reviews if re-scoring
-    if rev_ids:
-        db.execute(delete(Prediction).where(Prediction.review_id.in_(rev_ids)))
 
     for item in req.reviews:
+        # Server generates the review ID — never trust the client
+        review_id = item.id or f"rev_{uuid.uuid4().hex}"
+
+        # Reject if a review with this ID already exists (no silent overwrite)
+        existing = db.get(Review, review_id)
+        if existing:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Review '{review_id}' already exists. Use a unique ID.",
+            )
+
         prod_id = item.product_id or "prod_1"
         prod = db.get(Product, prod_id)
         if not prod:
@@ -342,23 +428,14 @@ def score_reviews_endpoint(
             db.add(prod)
             db.flush()
 
-        review = db.get(Review, item.id)
-        if not review:
-            review = Review(
-                id=item.id,
-                text=item.text,
-                rating=item.rating,
-                product_id=prod_id,
-            )
-            db.add(review)
-            db.flush()
-        else:
-            review.text = item.text
-            if item.rating is not None:
-                review.rating = item.rating
-            if item.product_id:
-                review.product_id = item.product_id
-
+        review = Review(
+            id=review_id,
+            text=item.text,
+            rating=item.rating,
+            product_id=prod_id,
+        )
+        db.add(review)
+        db.flush()
         reviews_to_score.append(review)
 
     try:
@@ -368,11 +445,10 @@ def score_reviews_endpoint(
             sentiment_client=sent_client,
             aspect_client=asp_client,
         )
-    except Exception as e:
-        raise HTTPException(
-            status_code=502,
-            detail=f"Failed to score reviews via ML services: {e}",
-        )
+    except Exception:
+        logger.exception("Scoring failed for batch of %d reviews", len(reviews_to_score))
+        db.rollback()
+        raise HTTPException(status_code=502, detail="Scoring service unavailable") from None
 
     results = [
         ScoreItemResult(
