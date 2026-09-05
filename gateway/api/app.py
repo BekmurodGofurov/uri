@@ -2,6 +2,7 @@ import logging
 import os
 import uuid
 from collections.abc import Generator
+from contextlib import asynccontextmanager
 from typing import Annotated, Any
 
 import httpx
@@ -21,7 +22,23 @@ logger = logging.getLogger(__name__)
 # API key for protecting write endpoints (read from .env / environment)
 API_KEY: str | None = os.getenv("API_KEY")
 
-app = FastAPI(title="Uzum Review Intelligence Gateway", version="1.0.0")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    from gateway.database.connection import init_db
+
+    try:
+        init_db()
+    except Exception as exc:
+        logger.warning("Could not auto-initialize DB on startup: %s", exc)
+    yield
+
+
+app = FastAPI(
+    title="Uzum Review Intelligence Gateway",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -153,7 +170,7 @@ def get_product_detail(
     if not product:
         raise HTTPException(status_code=404, detail=f"Product '{product_id}' not found")
 
-    # Aggregate stats directly in DB (avoids unbounded memory usage)
+    # 1. Aggregate review count and avg rating directly in DB
     rev_stats = db.execute(
         select(func.count(Review.id), func.avg(Review.rating)).where(
             Review.product_id == product_id
@@ -162,39 +179,53 @@ def get_product_detail(
     rev_count = rev_stats[0] if rev_stats else 0
     avg_rat = round(float(rev_stats[1]), 2) if rev_stats and rev_stats[1] is not None else None
 
-    # Load only lightweight prediction and timestamp data — no Review.text!
-    pred_rows = db.execute(
+    # 2. Sentiment summary — aggregated in SQL via GROUP BY
+    sent_rows = db.execute(
+        select(Prediction.sentiment_label, func.count(Prediction.id))
+        .join(Review, Prediction.review_id == Review.id)
+        .where(Review.product_id == product_id)
+        .group_by(Prediction.sentiment_label)
+    ).all()
+    sent_counts = {label: count for label, count in sent_rows}
+
+    # 3. Sentiment over time — aggregated in SQL via date GROUP BY
+    time_rows = db.execute(
         select(
-            Review.created_at,
+            func.date(Review.created_at),
             Prediction.sentiment_label,
-            Prediction.aspects,
-            Prediction.model_version,
+            func.count(Prediction.id),
         )
         .join(Review, Prediction.review_id == Review.id)
         .where(Review.product_id == product_id)
-        .order_by(Review.created_at)
+        .group_by(func.date(Review.created_at), Prediction.sentiment_label)
+        .order_by(func.date(Review.created_at))
     ).all()
-
-    # Sentiment over time & summary
-    sent_counts = {"positive": 0, "neutral": 0, "negative": 0}
     time_points: dict[str, dict[str, int]] = {}
+    for dt, label, count in time_rows:
+        dt_str = str(dt) if dt else "unknown"
+        if dt_str not in time_points:
+            time_points[dt_str] = {"positive": 0, "neutral": 0, "negative": 0}
+        if label in time_points[dt_str]:
+            time_points[dt_str][label] = count
+
+    # 4. Active model versions — DISTINCT in SQL
+    model_versions = list(
+        db.scalars(
+            select(Prediction.model_version)
+            .join(Review, Prediction.review_id == Review.id)
+            .where(Review.product_id == product_id)
+            .distinct()
+        ).all()
+    )
+
+    # 5. Aspect breakdown — load ONLY the aspects JSON column
+    aspect_lists = db.scalars(
+        select(Prediction.aspects)
+        .join(Review, Prediction.review_id == Review.id)
+        .where(Review.product_id == product_id)
+    ).all()
     aspect_tallies: dict[str, dict[str, int]] = {}
-    model_versions: set[str] = set()
-
-    for rev_created_at, sentiment_label, aspects, model_version in pred_rows:
-        if sentiment_label in sent_counts:
-            sent_counts[sentiment_label] += 1
-
-        dt = (
-            rev_created_at.strftime("%Y-%m-%d")
-            if hasattr(rev_created_at, "strftime")
-            else str(rev_created_at)[:10]
-        )
-        if dt not in time_points:
-            time_points[dt] = {"positive": 0, "neutral": 0, "negative": 0}
-        if sentiment_label in time_points[dt]:
-            time_points[dt][sentiment_label] += 1
-
+    for aspects in aspect_lists:
         if isinstance(aspects, list):
             for hit in aspects:
                 asp = hit.get("aspect")
@@ -204,9 +235,6 @@ def get_product_detail(
                         aspect_tallies[asp] = {"positive": 0, "neutral": 0, "negative": 0}
                     if pol in aspect_tallies[asp]:
                         aspect_tallies[asp][pol] += 1
-
-        if model_version:
-            model_versions.add(model_version)
 
     sentiment_over_time = [
         SentimentTimePoint(date=d, **counts) for d, counts in sorted(time_points.items())
@@ -229,7 +257,11 @@ def get_product_detail(
         category=product.category,
         review_count=rev_count,
         avg_rating=avg_rat,
-        sentiment_summary=SentimentSummary(**sent_counts),
+        sentiment_summary=SentimentSummary(
+            positive=sent_counts.get("positive", 0),
+            neutral=sent_counts.get("neutral", 0),
+            negative=sent_counts.get("negative", 0),
+        ),
         sentiment_over_time=sentiment_over_time,
         aspect_breakdown=aspect_breakdown,
         active_model_versions=sorted(model_versions),

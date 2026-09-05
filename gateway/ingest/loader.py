@@ -80,13 +80,13 @@ def load_from_huggingface(limit: int = 1000) -> None:
     """Load reviews directly from HuggingFace dataset."""
     from datasets import load_dataset
 
-    from gateway.database.connection import get_session
+    from gateway.database.connection import _get_session_factory
 
     print(f"Loading dataset from HuggingFace (limit={limit})...")
     ds = load_dataset("risqaliyevds/uzbek-sentiment-analysis", split="train")
 
     init_db()
-    with next(get_session()) as session:
+    with _get_session_factory()() as session:
         batch = []
         for idx, row in enumerate(ds):
             if idx >= limit:

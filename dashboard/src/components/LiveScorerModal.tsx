@@ -6,8 +6,8 @@ import {
   Bot,
   Star,
 } from 'lucide-react';
-import { DEFAULT_PRODUCT_ID, scoreReviewInteractive } from '../services/api';
-import { ScoreItemResult } from '../types/api';
+import { DEFAULT_PRODUCT_ID, errorMessage, scoreReviewInteractive } from '../services/api';
+import { PreviewItemResult } from '../types/api';
 
 interface LiveScorerModalProps {
   isOpen: boolean;
@@ -41,7 +41,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
   const [rating, setRating] = useState<number>(5);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<ScoreItemResult | null>(null);
+  const [result, setResult] = useState<PreviewItemResult | null>(null);
 
   if (!isOpen) return null;
 
@@ -58,9 +58,12 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
         setResult(resp.predictions[0]);
         if (onSuccess) onSuccess();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(
-        err.message || "Gateway API ga ulanishda xatolik yuz berdi. Backend ishlayotganligini tekshiring."
+        errorMessage(
+          err,
+          "Gateway API ga ulanishda xatolik yuz berdi. Backend ishlayotganligini tekshiring."
+        )
       );
     } finally {
       setIsLoading(false);
