@@ -81,8 +81,18 @@ def test_prediction_creation_and_cascade_delete(db_session: Session):
     assert len(deleted_preds) == 0
 
 
-def test_get_session():
-    generator = get_session("sqlite:///:memory:")
+def test_get_session(monkeypatch):
+    """get_session() yields a usable Session and cleans up on close."""
+    import gateway.database.connection as conn_mod
+
+    engine = create_engine("sqlite:///:memory:")
+    test_session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    # Inject test engine/factory so the singleton path is exercised
+    monkeypatch.setattr(conn_mod, "_engine", engine)
+    monkeypatch.setattr(conn_mod, "_SessionLocal", test_session_local)
+
+    generator = get_session()
     session = next(generator)
     assert isinstance(session, Session)
     # Trigger generator cleanup
