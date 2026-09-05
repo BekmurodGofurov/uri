@@ -6,6 +6,8 @@ COPY aspect-svc/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY aspect-svc/app ./app
+COPY aspect-svc/models ./models
+COPY aspect-svc/training ./training
 COPY shared/ ./shared/
 
 ENV PYTHONPATH=/app \
