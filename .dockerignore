@@ -1,0 +1,11 @@
+.git
+.venv
+node_modules
+__pycache__
+*.pyc
+.coverage
+coverage_html
+coverage.xml
+.env
+dashboard/dist
+dashboard/node_modules

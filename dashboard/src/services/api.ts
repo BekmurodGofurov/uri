@@ -6,7 +6,14 @@ import {
   Sentiment,
 } from '../types/api';
 
-const BASE_URL = import.meta.env.VITE_API_URL || '';
+export const BASE_URL = import.meta.env.VITE_API_URL || '';
+export const DEFAULT_PRODUCT_ID = 'prod_1';
+
+export function errorMessage(err: unknown, fallback: string): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === 'string') return err;
+  return fallback;
+}
 
 export interface ApiStatus {
   online: boolean;
@@ -30,10 +37,10 @@ export async function checkGatewayHealth(): Promise<ApiStatus> {
       online: false,
       error: `Gateway status error: ${res.status}`,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       online: false,
-      error: err?.message || 'Gateway API ga ulanib bo‘lmadi',
+      error: errorMessage(err, 'Gateway API ga ulanib bo‘lmadi'),
     };
   }
 }
@@ -85,7 +92,7 @@ export async function scoreReviewInteractive(
       {
         text: reviewText,
         rating: rating ?? 5,
-        product_id: productId || 'prod_1',
+        product_id: productId || DEFAULT_PRODUCT_ID,
       },
     ],
   };

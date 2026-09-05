@@ -3,6 +3,6 @@ from gateway.ingest.pipeline import process_unscored_reviews, score_and_store_ba
 
 __all__ = [
     "ingest_reviews_batch",
-    "score_and_store_batch",
     "process_unscored_reviews",
+    "score_and_store_batch",
 ]

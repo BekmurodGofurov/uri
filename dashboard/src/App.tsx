@@ -3,7 +3,14 @@ import { Header } from './components/Header';
 import { ProductList } from './components/ProductList';
 import { ProductDetail } from './components/ProductDetail';
 import { LiveScorerModal } from './components/LiveScorerModal';
-import { checkGatewayHealth, fetchProducts, ApiStatus } from './services/api';
+import {
+  checkGatewayHealth,
+  fetchProducts,
+  ApiStatus,
+  BASE_URL,
+  DEFAULT_PRODUCT_ID,
+  errorMessage,
+} from './services/api';
 import { ProductListItem } from './types/api';
 import { ShieldCheck } from 'lucide-react';
 
@@ -27,15 +34,15 @@ export const App: React.FC = () => {
 
       if (!health.online) {
         setApiError(
-          "Gateway API ga ulanib bo'lmadi (http://localhost:8000). Iltimos, backend xizmatini ishga tushiring."
+          `Gateway API ga ulanib bo'lmadi (${BASE_URL || 'http://localhost:8000'}). Iltimos, backend xizmatini ishga tushiring.`
         );
       }
 
       const prods = await fetchProducts();
       setProducts(prods);
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error('Failed to load dashboard data:', e);
-      setApiError(e.message || "Mahsulotlarni Gateway API'dan yuklab bo'lmadi");
+      setApiError(errorMessage(e, "Mahsulotlarni Gateway API'dan yuklab bo'lmadi"));
     } finally {
       setIsLoadingProducts(false);
       setIsRefreshing(false);
@@ -139,7 +146,7 @@ export const App: React.FC = () => {
       <LiveScorerModal
         isOpen={isLiveScorerOpen}
         onClose={() => setIsLiveScorerOpen(false)}
-        productId={selectedProductId || products[0]?.id || 'uzum-phone-redmi13'}
+        productId={selectedProductId || products[0]?.id || DEFAULT_PRODUCT_ID}
         onSuccess={loadData}
       />
     </div>
