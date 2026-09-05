@@ -20,13 +20,11 @@ def load_model():
 
     if _type == "keyword_stub":
         logger.info("Loading keyword-rule stub aspect model (no artifact needed).")
-        _model = "keyword_stub"  # placeholder — haqiqiy modelga o'tganda joblib/torch obyekti bo'ladi
+    
+        _model = "keyword_stub"
         logger.info("Stub aspect model ready.")
     elif _type == "multilabel":
-        # TODO (4-kun): haqiqiy multi-label klassifikatorni shu yerda yuklang.
-        # Masalan:
-        #   import joblib
-        #   _model = joblib.load(os.getenv("MODEL_PATH", "models/aspect_v1.joblib"))
+       
         raise NotImplementedError("multilabel model loader hali yozilmagan (4-kun ishi)")
     else:
         raise ValueError(f"Unsupported MODEL_TYPE: {_type}")

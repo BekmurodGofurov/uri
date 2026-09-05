@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException
-
 from app.schemas import HealthResponse, ModelInfoResponse
+from fastapi import APIRouter, HTTPException
 from models.model_loader import get_aspects, get_macro_f1, get_model, get_type, get_version
-from shared.contracts import AspectResponse, AspectResult, ScoreRequest
 from training.inference import predict
+
+from shared.contracts import AspectResponse, AspectResult, ScoreRequest
 
 router = APIRouter()
 
@@ -16,10 +16,10 @@ def score(request: ScoreRequest) -> AspectResponse:
     try:
         predictions = predict(texts)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
     results = [
-        AspectResult(id=id_, aspects=hits) for id_, hits in zip(ids, predictions)
+        AspectResult(id=id_, aspects=hits) for id_, hits in zip(ids, predictions, strict=True)
     ]
     return AspectResponse(results=results, model_version=get_version())
 
