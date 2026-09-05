@@ -408,9 +408,10 @@ def _verify_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
     When ``API_KEY`` is not configured (e.g. local dev), the check is skipped
     so existing workflows are not broken.
     """
-    if API_KEY is None:
+    configured_key = os.getenv("API_KEY") or API_KEY
+    if configured_key is None:
         return  # no key configured — allow (dev mode)
-    if x_api_key != API_KEY:
+    if x_api_key != configured_key:
         raise HTTPException(status_code=403, detail="Invalid or missing API key")
 
 
