@@ -405,16 +405,18 @@ def test_preview_does_not_require_api_key(client, monkeypatch):
 
 
 def test_cors_preflight_allows_x_api_key(client):
-    """Browser preflight OPTIONS with X-API-Key must be allowed by CORS."""
+    """Browser preflight OPTIONS with X-API-Key must be allowed by CORS for 5173 and 3000."""
     test_client, _ = client
-    headers = {
-        "Origin": "http://localhost:5173",
-        "Access-Control-Request-Method": "POST",
-        "Access-Control-Request-Headers": "Content-Type, X-API-Key",
-    }
-    res = test_client.options("/api/score", headers=headers)
-    assert res.status_code == 200
-    allow_origin = res.headers.get("access-control-allow-origin")
-    assert allow_origin == "http://localhost:5173"
-    allow_headers = res.headers.get("access-control-allow-headers", "").lower()
-    assert "x-api-key" in allow_headers
+    for origin in ["http://localhost:5173", "http://localhost:3000"]:
+        headers = {
+            "Origin": origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type, X-API-Key",
+        }
+        res = test_client.options("/api/score", headers=headers)
+        assert res.status_code == 200
+        allow_origin = res.headers.get("access-control-allow-origin")
+        assert allow_origin == origin
+        allow_headers = res.headers.get("access-control-allow-headers", "").lower()
+        assert "x-api-key" in allow_headers
+
