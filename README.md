@@ -45,8 +45,10 @@ Modern e-commerce platforms (such as Uzum Market) process hundreds of thousands 
 3. **Aspect-Based Sentiment Extraction (ABSA):** Automatically identifies specific operational dimensions mentioned in the text (`delivery`, `quality`, `price`, `seller`, `packaging`, `other`) along with per-aspect polarities.
 4. **Interactive Analytics Dashboard:** Provides per-product sentiment distributions over time, aspect breakdown matrices, review drill-downs, and a live scoring playground.
 5. **Model Registry & Instant Rollback:** Implements immutable model version tracking allowing zero-downtime rollbacks via a single CLI command if performance degrades in production.
-6. **Alerting & Anomaly Detection:** Flags products experiencing sudden spikes in negative reviews with automated Telegram notifications and built-in flood control.
+6. **Alerting & Anomaly Detection:** Planned / Stretch Goal
+<!-- Flags products experiencing sudden spikes in negative reviews with automated Telegram notifications and built-in flood control.-->
 
+   
 ---
 
 ## 2. System Architecture
@@ -246,13 +248,13 @@ SENTIMENT_SVC_URL=http://localhost:8001 ASPECT_SVC_URL=http://localhost:8002 \
 uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-**Terminal 4 — Dashboard UI (Port 5173):**
+**Terminal 4 — Dashboard UI (Port 3000):**
 ```bash
 cd dashboard
 npm install
 npm run dev
 ```
-Navigate to: `http://localhost:5173`
+Navigate to: `http://localhost:3000`
 
 ---
 
