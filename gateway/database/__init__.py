@@ -3,9 +3,9 @@ from gateway.database.models import Base, Prediction, Product, Review
 
 __all__ = [
     "Base",
+    "Prediction",
     "Product",
     "Review",
-    "Prediction",
     "get_database_url",
     "get_engine",
     "get_session",

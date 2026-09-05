@@ -6,10 +6,12 @@ exclude = [
     ".venv",
     "venv",
     "*.md",
+    "sentiment-svc",
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "W"]
+select = ["E", "F", "I", "W", "B", "UP", "SIM", "RUF", "S"]
+ignore = ["S101", "S311"]
 
 [tool.pytest.ini_options]
 testpaths = ["gateway/tests"]

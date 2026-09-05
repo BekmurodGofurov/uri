@@ -25,7 +25,7 @@ Each `register` call creates a new directory. `rollback` only changes the `curre
 ## One-command rollback
 
 ```bash
-python -m platform.registry rollback sentiment-v1
+python -m gateway.registry rollback sentiment-v1
 ```
 
 Output:
@@ -34,23 +34,24 @@ Rolled back: 'sentiment-v2' → 'sentiment-v1'
 Active version is now: sentiment-v1
 ```
 
-After rollback, restart (or signal) the sentiment-svc container to reload the model from the registry:
-```bash
-docker compose restart sentiment-svc
-# or send SIGTERM to trigger graceful reload
-```
+> [!IMPORTANT]
+> **Rollback haqida muhim eslatma:**
+> Rollback buyrug'i faqat `current` pointer faylini yangilaydi. Ishlab turgan `sentiment-svc` modeli yangilanishi uchun xizmat yangi `MODEL_PATH` bilan qayta ishga tushirilishi (restart) kerak:
+> ```bash
+> docker compose restart sentiment-svc
+> ```
 
 ## All CLI commands
 
 ```bash
 # Show active version and its metadata
-python -m platform.registry current
+python -m gateway.registry current
 
 # List all registered versions (sorted by registration time)
-python -m platform.registry list
+python -m gateway.registry list
 
 # Register a new model artifact (file or directory)
-python -m platform.registry register \
+python -m gateway.registry register \
     --version  sentiment-v2 \
     --service  sentiment-svc \
     --type     tfidf \
@@ -59,10 +60,10 @@ python -m platform.registry register \
     --notes    "Retrained with augmented neutral class"
 
 # Roll back to a previous version
-python -m platform.registry rollback sentiment-v1
+python -m gateway.registry rollback sentiment-v1
 
 # Show full metadata for a version
-python -m platform.registry info sentiment-v1
+python -m gateway.registry info sentiment-v1
 ```
 
 ## Environment variable
@@ -78,7 +79,7 @@ Set `REGISTRY_ROOT` in docker-compose or `.env` to point to a volume mount.
 The TF-IDF model (`sentiment-v1`) is already trained. Register it:
 
 ```bash
-python -m platform.registry register \
+python -m gateway.registry register \
     --version  sentiment-v1 \
     --service  sentiment-svc \
     --type     tfidf \
@@ -90,10 +91,10 @@ python -m platform.registry register \
 
 ```bash
 # 1. Show current state
-python -m platform.registry current
+python -m gateway.registry current
 
 # 2. Register a hypothetical v2
-python -m platform.registry register \
+python -m gateway.registry register \
     --version sentiment-v2 \
     --service sentiment-svc \
     --type    tfidf \
@@ -101,19 +102,19 @@ python -m platform.registry register \
     --metric  "macro-f1: 0.64 (demo)"
 
 # 3. Confirm v2 is active
-python -m platform.registry list
+python -m gateway.registry list
 
 # 4. Simulate bad deploy → roll back
-python -m platform.registry rollback sentiment-v1
+python -m gateway.registry rollback sentiment-v1
 
 # 5. Confirm rollback succeeded
-python -m platform.registry current
+python -m gateway.registry current
 ```
 
 ## Python API
 
 ```python
-from platform.registry import ModelRegistry
+from gateway.registry import ModelRegistry
 
 reg = ModelRegistry()                              # uses ./model_registry
 
@@ -128,3 +129,4 @@ reg.current()          # → "sentiment-v1"
 
 path = reg.artifact_path(reg.current())  # Path to the active model file
 ```
+

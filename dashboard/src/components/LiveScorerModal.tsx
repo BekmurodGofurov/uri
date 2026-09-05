@@ -6,7 +6,7 @@ import {
   Bot,
   Star,
 } from 'lucide-react';
-import { scoreReviewInteractive } from '../services/api';
+import { DEFAULT_PRODUCT_ID, scoreReviewInteractive } from '../services/api';
 import { ScoreItemResult } from '../types/api';
 
 interface LiveScorerModalProps {
@@ -34,7 +34,7 @@ const PRESET_EXAMPLES = [
 export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
   isOpen,
   onClose,
-  productId = 'uzum-phone-redmi13',
+  productId = DEFAULT_PRODUCT_ID,
   onSuccess,
 }) => {
   const [reviewText, setReviewText] = useState('');

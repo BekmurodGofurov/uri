@@ -287,7 +287,10 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       {/* Dynamic Charts & Aspect Breakdown Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <SentimentChart data={sentiment_over_time} />
-        <AspectBreakdown aspects={aspect_breakdown} />
+        <AspectBreakdown
+          aspects={aspect_breakdown}
+          activeModelVersions={active_model_versions}
+        />
       </div>
 
       {/* Reviews Drill-down section */}
