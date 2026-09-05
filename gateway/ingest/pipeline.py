@@ -15,6 +15,55 @@ DEFAULT_SENTIMENT_SVC_URL = os.getenv("SENTIMENT_SVC_URL", "http://localhost:800
 DEFAULT_ASPECT_SVC_URL = os.getenv("ASPECT_SVC_URL", "http://localhost:8002")
 
 
+def score_only_batch(
+    reviews: list[dict[str, str]],
+    sentiment_client: httpx.Client,
+    aspect_client: httpx.Client,
+    sentiment_url: str = DEFAULT_SENTIMENT_SVC_URL,
+    aspect_url: str = DEFAULT_ASPECT_SVC_URL,
+) -> list[dict[str, Any]]:
+    """Score reviews via ML services and return results WITHOUT saving to DB.
+
+    Used by the ``/api/score/preview`` demo endpoint so that casual visitors
+    do not pollute the production ``reviews`` / ``predictions`` tables.
+    """
+    if not reviews:
+        return []
+
+    items = [ReviewIn(id=r["id"], text=r["text"]) for r in reviews]
+    request = ScoreRequest(reviews=items)
+    req_dict = request.model_dump()
+
+    sent_res = sentiment_client.post(f"{sentiment_url.rstrip('/')}/v1/score", json=req_dict)
+    sent_res.raise_for_status()
+    sentiment_resp = SentimentResponse.model_validate(sent_res.json())
+
+    asp_res = aspect_client.post(f"{aspect_url.rstrip('/')}/v1/score", json=req_dict)
+    asp_res.raise_for_status()
+    aspect_resp = AspectResponse.model_validate(asp_res.json())
+
+    sent_map = {res.id: res for res in sentiment_resp.results}
+    aspect_map = {res.id: [h.model_dump() for h in res.aspects] for res in aspect_resp.results}
+    combined_model_version = f"{sentiment_resp.model_version};{aspect_resp.model_version}"
+
+    results: list[dict[str, Any]] = []
+    for rev in reviews:
+        sent_item = sent_map.get(rev["id"])
+        if not sent_item:
+            continue
+        results.append(
+            {
+                "review_id": rev["id"],
+                "text": rev["text"],
+                "sentiment_label": sent_item.label,
+                "sentiment_confidence": sent_item.confidence,
+                "aspects": aspect_map.get(rev["id"], []),
+                "model_version": combined_model_version,
+            }
+        )
+    return results
+
+
 def score_and_store_batch(
     session: Session,
     reviews: list[Review],

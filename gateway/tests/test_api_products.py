@@ -286,6 +286,39 @@ def test_post_score_success(client):
     assert len(preds) == 2
 
 
+def test_post_score_duplicate_id_rejected(client):
+    """Sending a review with an ID that already exists must return 409."""
+    test_client, db = client
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+
+    # Insert a review directly
+    db.add(Review(id="dup_1", text="Existing review", rating=4))
+    db.commit()
+
+    payload = {"reviews": [{"id": "dup_1", "text": "Trying to overwrite"}]}
+    res = test_client.post("/api/score", json=payload)
+    assert res.status_code == 409
+    assert "already exists" in res.json()["detail"]
+
+
+def test_post_score_generates_id_when_missing(client):
+    """When the client omits 'id', the server should generate one."""
+    test_client, _ = client
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+
+    payload = {"reviews": [{"text": "No ID provided here"}]}
+    res = test_client.post("/api/score", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["scored_count"] == 1
+    # Server-generated ID should start with "rev_"
+    assert data["predictions"][0]["review_id"].startswith("rev_")
+
+
 def test_post_score_ml_failure(client):
     test_client, _ = client
 
@@ -298,4 +331,74 @@ def test_post_score_ml_failure(client):
     payload = {"reviews": [{"id": "fail_1", "text": "Testing failure"}]}
     res = test_client.post("/api/score", json=payload)
     assert res.status_code == 502
-    assert "failed to score" in res.json()["detail"].lower()
+    # Error message should be generic — no internal details leaked
+    assert res.json()["detail"] == "Scoring service unavailable"
+
+
+def test_post_score_rejected_without_api_key(client, monkeypatch):
+    """When API_KEY is configured, requests without the header are rejected."""
+    import sys
+
+    app_module = sys.modules["gateway.api.app"]
+    monkeypatch.setattr(app_module, "API_KEY", "test-secret-key")
+
+    test_client, _ = client
+    payload = {"reviews": [{"text": "Should be rejected"}]}
+    res = test_client.post("/api/score", json=payload)
+    assert res.status_code == 403
+
+    # With the correct key it should pass
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+    res2 = test_client.post(
+        "/api/score",
+        json=payload,
+        headers={"X-API-Key": "test-secret-key"},
+    )
+    assert res2.status_code == 200
+
+
+# ── Preview endpoint tests ───────────────────────────────────────────────────
+
+
+def test_preview_score_success(client):
+    """Preview endpoint returns results without saving to DB."""
+    test_client, db = client
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+
+    payload = {"reviews": [{"text": "Demo tahlil — bazaga yozilmasin"}]}
+    res = test_client.post("/api/score/preview", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["scored_count"] == 1
+    pred = data["predictions"][0]
+    assert pred["sentiment_label"] in ["positive", "neutral", "negative"]
+    assert pred["text"] == "Demo tahlil — bazaga yozilmasin"
+
+    # Verify nothing was saved to the database
+    from sqlalchemy import select as sa_select
+
+    reviews = list(db.execute(sa_select(Review)).scalars().all())
+    preds = list(db.execute(sa_select(Prediction)).scalars().all())
+    assert len(reviews) == 0
+    assert len(preds) == 0
+
+
+def test_preview_does_not_require_api_key(client, monkeypatch):
+    """Preview endpoint should work even when API_KEY is configured."""
+    import sys
+
+    app_module = sys.modules["gateway.api.app"]
+    monkeypatch.setattr(app_module, "API_KEY", "test-secret-key")
+
+    test_client, _ = client
+    sent_c = TestClient(sent_app)
+    asp_c = TestClient(asp_app)
+    app.dependency_overrides[get_ml_clients] = lambda: (sent_c, asp_c)
+
+    payload = {"reviews": [{"text": "Preview should always work"}]}
+    res = test_client.post("/api/score/preview", json=payload)
+    assert res.status_code == 200

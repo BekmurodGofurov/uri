@@ -83,15 +83,14 @@ export async function scoreReviewInteractive(
   const reqPayload = {
     reviews: [
       {
-        id: `rev_${Date.now()}`,
         text: reviewText,
         rating: rating ?? 5,
-        product_id: productId || 'uzum-prod-1',
+        product_id: productId || 'prod_1',
       },
     ],
   };
 
-  const res = await fetch(`${BASE_URL}/api/score`, {
+  const res = await fetch(`${BASE_URL}/api/score/preview`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(reqPayload),
