@@ -419,4 +419,3 @@ def test_cors_preflight_allows_x_api_key(client):
         assert allow_origin == origin
         allow_headers = res.headers.get("access-control-allow-headers", "").lower()
         assert "x-api-key" in allow_headers
-
