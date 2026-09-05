@@ -51,11 +51,34 @@ raw_df = st.session_state["raw_df"]
 if st.session_state["text_col"] is None:
     st.subheader("Ustunlarni belgilang")
     st.dataframe(raw_df.head(5), use_container_width=True)
-    text_col = st.selectbox("Sharh matni ustuni", options=list(raw_df.columns))
+
+    cols = list(raw_df.columns)
+    # Xavfsizlik: agar CSV'da "text"/"id" nomli ustun bo'lsa, uni avtomatik
+    # standart qilib tanlaymiz — oldingi safar ID va matn ustunlari
+    # tasodifan almashtirilib qo'yilgan edi, bu holatni oldini oladi.
+    text_default = cols.index("text") if "text" in cols else 0
+    id_options = ["(yo'q — qator raqami)", *cols]
+    id_default = id_options.index("id") if "id" in cols else 0
+
+    text_col = st.selectbox("Sharh matni ustuni", options=cols, index=text_default)
     id_col = st.selectbox(
         "ID ustuni (bo'lmasa, qator raqami ishlatiladi)",
-        options=["(yo'q — qator raqami)", *list(raw_df.columns)],
+        options=id_options,
+        index=id_default,
     )
+
+    if text_col == id_col:
+        st.error(
+            "⚠️ Sharh matni ustuni va ID ustuni bir xil tanlandi — bu "
+            "odatda xato belgilanganini bildiradi. Iltimos, ularni tekshiring."
+        )
+
+    id_display = id_col if id_col != "(yo'q — qator raqami)" else "qator raqami"
+    st.info(
+        f"Tekshiring: matn ustuni = **{text_col}**, ID ustuni = "
+        f"**{id_display}**. Namuna matn: _{raw_df[text_col].iloc[0]!r}_"
+    )
+
     if st.button("Tasdiqlash", type="primary"):
         df = raw_df.copy()
         for col in ("aspects_json", "recheck_aspects_json"):
@@ -63,9 +86,48 @@ if st.session_state["text_col"] is None:
                 df[col] = ""
         df["aspects_json"] = df["aspects_json"].fillna("").astype(str)
         df["recheck_aspects_json"] = df["recheck_aspects_json"].fillna("").astype(str)
+
+        # --- Oldingi saqlangan progressni avtomatik tiklash ---
+        # Agar gold_set.jsonl allaqachon mavjud bo'lsa (masalan, sahifa
+        # tasodifan yangilanib ketgan bo'lsa), unda saqlangan aspektlarni
+        # id bo'yicha moslashtirib, df ga qayta yuklaymiz — shunda avvalgi
+        # ishingiz yo'qolmaydi va "Saqlash" bosilganda fayl ustidan
+        # yozilmaydi.
+        resumed_count = 0
+        if os.path.exists(MAIN_OUT):
+            saved_by_id = {}
+            with open(MAIN_OUT, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        rec = json.loads(line)
+                        saved_by_id[rec["id"]] = rec["aspects"]
+                    except (json.JSONDecodeError, KeyError):
+                        continue
+
+            def _row_id_for(i, id_col_local):
+                return str(df.loc[i, id_col_local]) if id_col_local else f"row_{i}"
+
+            for i in df.index:
+                rid = _row_id_for(i, None if id_col.startswith("(") else id_col)
+                if rid in saved_by_id:
+                    df.loc[i, "aspects_json"] = json.dumps(
+                        saved_by_id[rid], ensure_ascii=False
+                    )
+                    resumed_count += 1
+
         st.session_state["text_col"] = text_col
         st.session_state["id_col"] = None if id_col.startswith("(") else id_col
         st.session_state["df"] = df
+        # Birinchi hali belgilanmagan qatorga o'tamiz (davom ettirish).
+        first_unlabeled = next(
+            (i for i in df.index if df.loc[i, "aspects_json"] == ""), 0
+        )
+        st.session_state["current_idx"] = int(first_unlabeled)
+        if resumed_count:
+            st.toast(f"✅ {resumed_count} ta oldin saqlangan belgi tiklandi.")
         st.rerun()
     st.stop()
 
