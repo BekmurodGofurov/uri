@@ -11,17 +11,25 @@ __pycache__/
 venv/
 ENV/
 .pytest_cache/
+# Coverage and DB
 .coverage
+coverage.xml
+coverage_html/
 htmlcov/
-.ruff_cache/
+*.db
+*.sqlite
+*.sqlite3
 
 # Node
 node_modules/
 dist/
 .dist/
+.vite/
+dashboard/.vite/
 
 # OS / IDE
 .DS_Store
 .vscode/
 .idea/
+
 
