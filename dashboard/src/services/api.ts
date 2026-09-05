@@ -2,7 +2,7 @@ import {
   ProductListItem,
   ProductDetailResponse,
   ProductReviewsResponse,
-  GatewayScoreResponse,
+  PreviewScoreResponse,
   Sentiment,
 } from '../types/api';
 
@@ -86,7 +86,7 @@ export async function scoreReviewInteractive(
   reviewText: string,
   rating?: number,
   productId?: string
-): Promise<GatewayScoreResponse> {
+): Promise<PreviewScoreResponse> {
   const reqPayload = {
     reviews: [
       {
