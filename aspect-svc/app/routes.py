@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
 
-from app.inference import predict
-from app.model_loader import get_aspects, get_macro_f1, get_model, get_type, get_version
 from app.schemas import HealthResponse, ModelInfoResponse
+from models.model_loader import get_aspects, get_macro_f1, get_model, get_type, get_version
 from shared.contracts import AspectResponse, AspectResult, ScoreRequest
+from training.inference import predict
 
 router = APIRouter()
 

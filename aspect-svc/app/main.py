@@ -2,8 +2,8 @@ import logging
 
 from fastapi import FastAPI
 
-from app.model_loader import load_model
 from app.routes import router
+from models.model_loader import load_model
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,5 +20,3 @@ def startup_event():
 
 
 app.include_router(router)
-        aspects=model.aspects,
-    )

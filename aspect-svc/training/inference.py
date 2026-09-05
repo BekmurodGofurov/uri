@@ -1,4 +1,4 @@
-from app.model_loader import get_type
+from models.model_loader import get_type
 from shared.contracts import AspectHit
 
 _KEYWORDS = {
