@@ -1,7 +1,7 @@
 """
-platform/tests/test_registry.py
-────────────────────────────────
-Tests for the model registry (platform/registry/manager.py).
+gateway/tests/test_registry.py
+───────────────────────────────
+Tests for the model registry (gateway/registry/manager.py).
 
 Covers the requirement from §7:
   "a test that the rollback command actually rolls back"
