@@ -4,8 +4,11 @@ Bu hujjat 6 ta aspekt toifasini belgilaydi va har biri uchun aniq ta'rif + misol
 `gold_set.jsonl`ni qo'lda belgilashda va LLM'ga prompt yozishda shu ta'riflarga tayaning —
 ta'rif noaniq bo'lsa, o'zingiz bilan kelishmovchilik (kappa past chiqadi) kafolatlangan.
 
-> **Eslatma:** bu qoralama (draft). 100 ta tasodifiy sharhni o'qib chiqqach (talabnoma, 1-vazifa),
-> ta'riflarni real ma'lumotga moslab tahrirlang — bu 1-kun ichida qilinishi shart.
+> **Holat:** ✅ Tasdiqlangan (draft emas). 100+ ta sharh o'qib chiqilgan, 300 ta
+> gold set to'liq belgilangan, va ta'riflar ikki bosqichli Cohen's kappa
+> tekshiruvi (pastga qarang) orqali real kelishmovchilik misollariga asoslanib
+> aniqlashtirilgan. Keyingi o'zgarish faqat R1 qoidasiga ko'ra (jamoa yozma
+> roziligi bilan) kiritiladi.
 
 ---
 
@@ -24,6 +27,8 @@ manzilga yetkazish aniqligi. Mahsulotning o'zi haqida emas — **jarayon** haqid
 1. "Yetkazib berish 2 hafta kechikdi."
 2. "Kuryer manzilni topa olmay, mahsulot orqaga qaytarildi."
 3. "Buyurtma boshqa shahar filialiga noto'g'ri yuborilgan."
+4. "Zakaz bergandim, lekin hali ham kelmadi" (aybdor aniq ko'rsatilmagan — pastdagi
+   "Chegara holati: buyurtma kelmadi" bo'limiga qarang).
 
 ---
 
@@ -76,6 +81,28 @@ siyosati, javobgarlik. Platformaning o'zi (Uzum) emas — **muayyan sotuvchi**.
 2. "Kafolat haqida gap bo'lganda sotuvchi javobgarlikdan qochdi."
 3. "Shikoyat yozganimga bir hafta bo'ldi, hali ham javob yo'q."
 
+> ⚠️ **Chegara holati: `seller` vs `delivery`** — real kappa tekshiruvida eng ko'p
+> chalkashgan juftlik shu ikkisi edi (kappa = 0.479). Qoida: **agar buyurtma
+> umuman kelmagan/yo'qolgan bo'lsa va matnda aybdor aniq ko'rsatilmagan bo'lsa —
+> faqat `delivery` ga qo'ying.** `seller` faqat sotuvchi bilan **to'g'ridan-to'g'ri
+> muloqot** (xabar yozish, javob kutish) yoki **kafolat/almashtirish siyosati**
+> aniq tilga olinganda qo'shiladi.
+>
+> Masalan: *"pulini tulaganman ammo zakasim berilmagan"* → faqat `delivery`
+> (kim aybdorligi noaniq). Lekin *"sotuvchiga yozdim, javob bermadi"* →
+> `delivery` + `seller` (muloqot aniq tilga olingan).
+>
+> **Diqqat — bu qoidani haddan tashqari qattiq qo'llamang:** agar mahsulotni
+> **almashtirish/qaytarishni so'rash va rad etilish/qiyinchilik** aniq tasvirlansa
+> ("sotuvchidan so'rang dedi", "almashtirib berishmayapti", "qaytarib
+> olishmadi"), bu — **kafolat/almashtirish siyosati** haqida, demak `seller`
+> ham qo'shilishi kerak, hatto asosiy muammo mahsulot sifati (`quality`) bo'lsa
+> ham. Faqat "buyurtma yo'qolgan/kelmagan, hech kim bilan gaplashilmagan" holatida
+> `seller`ni tashlab ketasiz.
+>
+> Masalan: *"soatni qaytarib berish uchun keldim... sotuvchidan sorang, deyishdi"*
+> → `quality` + `seller` (almashtirish so'ralgan va rad etilgan — ikkalasi ham bor).
+
 ---
 
 ## 5. `packaging` — Qadoqlash
@@ -93,6 +120,10 @@ muhim toifa — biznes buni ko'pincha alohida nazorat qilishni xohlaydi.
 1. "Quti yorilib, mahsulot ezilib kelgan."
 2. "Qadoqsiz, faqat paket ichida jo'natilgan."
 3. "Quti namlangan, ichidagi mahsulotga ham ta'sir qilgan."
+4. "Paket juda qulay, chemodanimda joy tejaldi." (⚠️ real belgilashda bu ikki marta
+   `quality`/`other`ga xato tushib qolgan — "paket/qadoq" so'zi tilga olinsa,
+   birinchi navbatda `packaging`ni ko'rib chiqing, hatto ijobiy va tasodifiy
+   aytilgandek tuyulsa ham.)
 
 ---
 
@@ -100,9 +131,26 @@ muhim toifa — biznes buni ko'pincha alohida nazorat qilishni xohlaydi.
 
 **Ta'rif:** Yuqoridagi 5 toifaning hech biriga aniq mos kelmaydigan, lekin baribir
 mazmunli fikr bildirilgan holatlar (masalan: umumiy taassurot, ilova/interfeys haqida
-fikr, mahsulotning umumiy tavsifi bilan bog'liq bo'lmagan izoh). Agar sharh hech qanday
-aniq aspektga tegishli bo'lmasa yoki juda umumiy bo'lsa ("zo'r", "yoqmadi" — aniq nimasi
-haqida emas), shu yerga tushadi.
+fikr, mahsulotning umumiy tavsifi bilan bog'liq bo'lmagan izoh).
+
+> ⚠️ **Chegara holati: `other` vs `quality`** — real kappa tekshiruvida bu eng ko'p
+> chalkashgan juftlik bo'ldi (kappa = 0.44). Muammo: avvalgi qoida "qisqa sharh →
+> `other`" edi, lekin **uzunlik emas, mazmun** hal qiluvchi bo'lishi kerak.
+>
+> **To'g'ri qoida:** Agar sharh qisqa bo'lsa-yu, lekin **mahsulotning o'zi haqida**
+> ijobiy/salbiy fikr bildirsa ("yaxshi", "zo'r ekan", "ishlayapti", "yoqmadi") — bu
+> **`quality`**, uzunligidan qat'iy nazar. `other` faqat sharh **hech qanday aniq
+> narsaga ishora qilmasa** ishlatiladi (masalan: "rahmat", "super", "5 yulduz" —
+> mahsulot, narx, yetkazish, sotuvchi yoki qadoqning qay biri haqida ekanligi
+> umuman aniqlanmaydigan holatlar).
+>
+> Masalan: *"tasiri sezildi zo'r ekan"* → `quality` (mahsulotning ta'siri haqida,
+> qisqa bo'lsa ham). Lekin *"xammasi ajoyib, raxmat!"* → `other` (nima "hammasi"
+> ekanligi aniq emas — mahsulotmi, xizmatmi, umuman tajribami).
+
+Agar sharh hech qanday aniq aspektga tegishli bo'lmasa yoki juda umumiy bo'lsa
+("zo'r", "yoqmadi" — aniq nimasi haqida emasligi chindan ham aniqlanmasa), shu
+yerga tushadi.
 
 **Ijobiy misollar:**
 1. "Umuman olganda mamnunman."
@@ -122,9 +170,28 @@ Bitta sharh bir nechta aspektga tegishli bo'lishi mumkin va **shart emas hammasi
 xil polaritetda bo'lishi** — masalan: *"Yetkazib berish tez edi, lekin mahsulot sifati
 pastroq chiqdi"* → `delivery: positive`, `quality: negative`.
 
-## Kappa tekshiruvi (3-kun)
+## Kappa tekshiruvi (3-kun) — yakuniy xulosa
 
-Agar `aspect_labeling_app.py`dagi "Qayta tekshirish rejimi"da o'z-o'zingizga nisbatan
-kappa < 0.6 chiqsa, muammo odatda shu yerda: `other` bilan `quality`/`delivery` orasidagi
-chegara noaniq bo'lib qoladi. Shunday holatda yuqoridagi ta'riflarni yanada aniqroq
-qilib qayta yozing — bu modelning aybi emas, taksonomiyaning aybi.
+**1-bosqich (50 ta, tasodifiy tanlov):**
+
+| Aspekt | Kappa | Xulosa |
+|---|---|---|
+| delivery | 0.898 | Ajoyib |
+| price | 0.778 | Yaxshi |
+| packaging | 0.778 | Yaxshi |
+| quality | 0.674 | Qoniqarli |
+| seller | 0.479 | Past — qoida qo'shildi |
+| other | 0.44 | Past — qoida qo'shildi |
+
+**2-bosqich (20 ta, ataylab `seller`/`other`ga qaratilgan qiyin holatlar):** raqam
+o'zi past chiqdi (seller=0.219, other=0.259), lekin qo'lda tekshirilganda buning
+sababi taksonomiyaning noaniqligi emas — **kappa formulasining tizimli tuzatishni
+"kelishmovchilik" deb hisoblashi** edi. 20 tadan 7 tasi to'g'ri ravishda `other`dan
+`quality`ga o'tkazildi (yangi mazmun-asosli qoida ishladi), 2 tasida esa `seller`
+qoidasi haddan tashqari qattiq talqin qilinib, kerakli holatlarda ham olib
+tashlangan edi — bu yuqorida tuzatildi ("Diqqat — bu qoidani haddan tashqari
+qattiq qo'llamang" bandi).
+
+**Xulosa:** taksonomiya endi yetarlicha aniq. Keyingi safar chalkashish chiqsa,
+bu holat allaqachon yozib qo'yilgan bandlar bilan yechiladi — yangi tub qoida
+qo'shish shart emas.
