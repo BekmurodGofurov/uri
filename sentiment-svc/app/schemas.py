@@ -1,25 +1,18 @@
-from typing import Literal, TypeAlias
+from typing import Literal
 
 from pydantic import BaseModel, Field
-
-Sentiment: TypeAlias = Literal["negative", "neutral", "positive"]
 
 # Attempt import from shared.contracts; fallback to local definition for standalone docker
 try:
     from shared.contracts import (
         ReviewIn as ReviewItem,
-    )
-    from shared.contracts import (
         ScoreRequest,
         Sentiment,
-    )
-    from shared.contracts import (
         SentimentResponse as ScoreResponse,
-    )
-    from shared.contracts import (
         SentimentResult as PredictionResult,
     )
 except ImportError:
+    Sentiment = Literal["negative", "neutral", "positive"]
 
     class ReviewItem(BaseModel):
         id: str = Field(..., description="Unique review ID")
