@@ -6,9 +6,15 @@ from pydantic import BaseModel, Field
 try:
     from shared.contracts import (
         ReviewIn as ReviewItem,
+    )
+    from shared.contracts import (
         ScoreRequest,
         Sentiment,
+    )
+    from shared.contracts import (
         SentimentResponse as ScoreResponse,
+    )
+    from shared.contracts import (
         SentimentResult as PredictionResult,
     )
 except ImportError:
