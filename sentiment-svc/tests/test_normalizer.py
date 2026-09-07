@@ -1,3 +1,4 @@
+# ruff: noqa: RUF001, RUF003
 import os
 import sys
 

@@ -16,7 +16,7 @@ os.environ["PYTHONPATH"] = _dir
 
 def run_cmd(cmd: list[str]) -> None:
     print(f"\n>>> Running: {' '.join(cmd)}")
-    subprocess.run(cmd, check=True, cwd=_dir)
+    subprocess.run(cmd, check=True, cwd=_dir)  # noqa: S603
 
 
 def main():

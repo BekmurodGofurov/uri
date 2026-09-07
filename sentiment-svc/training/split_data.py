@@ -15,8 +15,8 @@ import pandas as pd
 
 
 def get_hash_bucket(val: str) -> int:
-    """Return a hash bucket 0..99 based on md5 hash"""
-    h = hashlib.md5(str(val).encode("utf-8")).hexdigest()
+    """Returns an integer bucket 0..99 based on sha256 hash."""
+    h = hashlib.sha256(str(val).encode("utf-8")).hexdigest()
     return int(h[:8], 16) % 100
 
 

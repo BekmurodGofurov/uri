@@ -1,3 +1,4 @@
+# ruff: noqa: RUF001
 import re
 import unicodedata
 
