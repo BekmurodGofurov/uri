@@ -52,10 +52,33 @@ def test_missing_text_rejected(client):
     assert r.status_code == 422
 
 
+def test_text_too_long_rejected(client):
+    # Contract: max_length=5000
+    long_text = "a" * 5001
+    r = client.post("/v1/score", json={"reviews": [{"id": "r1", "text": long_text}]})
+    assert r.status_code == 422
+
+
+def test_batch_too_large_rejected(client):
+    # Contract: max_length=64 reviews
+    too_many = [{"id": f"r{i}", "text": "test"} for i in range(65)]
+    r = client.post("/v1/score", json={"reviews": too_many})
+    assert r.status_code == 422
+
+
 def test_health(client):
     r = client.get("/health")
     assert r.status_code == 200
-    assert r.json()["status"] in ["ok", "error"]
+    assert r.json()["status"] == "ok"
+    assert r.json()["model_loaded"] is True
+
+
+def test_health_unloaded(client, monkeypatch):
+    monkeypatch.setattr(model_loader, "_model", None)
+    r = client.get("/health")
+    assert r.status_code == 200
+    assert r.json()["status"] == "error"
+    assert r.json()["model_loaded"] is False
 
 
 def test_model_info(client):

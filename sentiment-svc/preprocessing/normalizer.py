@@ -1,5 +1,8 @@
+# ruff: noqa: RUF001
 import re
 import unicodedata
+
+_VOWELS = set("аеёиоуэюяўaouie")
 
 _CYR_TO_LAT: dict[str, str] = {
     "а": "a",
@@ -7,7 +10,6 @@ _CYR_TO_LAT: dict[str, str] = {
     "в": "v",
     "г": "g",
     "д": "d",
-    "е": "ye",
     "ё": "yo",
     "ж": "j",
     "з": "z",
@@ -47,12 +49,18 @@ def _cyr_to_lat(text: str) -> str:
     result = []
     i = 0
     while i < len(text):
-        two = text[i : i + 2].lower()
-        if two in _CYR_TO_LAT:
-            result.append(_CYR_TO_LAT[two])
+        ch = text[i].lower()
+        if ch == "е":
+            # Word-initial or after vowel/space -> 'ye', after consonant -> 'e'
+            if i == 0 or text[i - 1].isspace() or text[i - 1].lower() in _VOWELS:
+                result.append("ye")
+            else:
+                result.append("e")
+            i += 1
+        elif text[i : i + 2].lower() in _CYR_TO_LAT:
+            result.append(_CYR_TO_LAT[text[i : i + 2].lower()])
             i += 2
         else:
-            ch = text[i].lower()
             result.append(_CYR_TO_LAT.get(ch, text[i]))
             i += 1
     return "".join(result)
@@ -63,6 +71,8 @@ def normalize(text: str) -> str:
         raise TypeError(f"Expected str, got {type(text).__name__}")
     text = unicodedata.normalize("NFC", text)
     text = text.lower()
+    # Unify all apostrophe variants into standard ASCII apostrophe (')
+    text = re.sub(r"[`ʻʼ'ʽ’]", "'", text)
     text = _cyr_to_lat(text)
     text = re.sub(r"https?://\S+|www\.\S+", " ", text)
     text = re.sub(r"\+?998[\s\-]?\d{2}[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}", " ", text)

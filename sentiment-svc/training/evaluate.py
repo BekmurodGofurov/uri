@@ -8,12 +8,19 @@ Usage (transformer):
 
 import argparse
 import json
+import os
+import sys
 
 import joblib
 import numpy as np
 import pandas as pd
 from preprocessing.normalizer import normalize
 from sklearn.metrics import classification_report, confusion_matrix, f1_score
+
+# Ensure sentiment-svc root is on sys.path
+_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _dir not in sys.path:
+    sys.path.insert(0, _dir)
 
 
 def evaluate_tfidf(model_path, test_df):

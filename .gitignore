@@ -32,4 +32,5 @@ dashboard/.vite/
 .vscode/
 .idea/
 
-
+sentiment-svc/data/
+sentiment-svc/models/

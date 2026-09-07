@@ -21,7 +21,7 @@ def load_model():
         _model = joblib.load(model_path)
         logger.info("TF-IDF model loaded.")
     elif _type == "transformer":
-        from transformers import AutoModelForSequenceClassification, AutoTokenizer  # noqa: PLC0415
+        from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
         logger.info(f"Loading transformer model from {model_path}")
         _tokenizer = AutoTokenizer.from_pretrained(model_path)

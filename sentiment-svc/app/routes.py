@@ -21,11 +21,11 @@ def score(request: ScoreRequest) -> ScoreResponse:
     try:
         predictions = predict(texts)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
     results = [
         PredictionResult(id=id_, label=p["label"], confidence=p["confidence"])
-        for id_, p in zip(ids, predictions)
+        for id_, p in zip(ids, predictions, strict=False)
     ]
     return ScoreResponse(results=results, model_version=get_version())
 

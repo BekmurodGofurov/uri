@@ -1,12 +1,10 @@
+# ruff: noqa: RUF001, RUF003
 import os
 import sys
 
 _sentiment_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-
-
 if _sentiment_dir not in sys.path:
     sys.path.insert(0, _sentiment_dir)
-
 
 import pytest  # noqa: E402
 from preprocessing.normalizer import normalize  # noqa: E402
@@ -49,5 +47,24 @@ def test_only_special_chars():
     assert normalize("!!! @@@") == ""
 
 
-def test_apostrophe_kept():
-    assert "o'" in normalize("o'zbek")
+# === SPEC REQUIREMENT: Test all 4 apostrophe encodings ===
+def test_apostrophe_variants():
+    # ASCII standard apostrophe
+    assert normalize("o'zbek") == "o'zbek"
+    # Modifier letter turned comma (ʻ)
+    assert normalize("oʻzbek") == "o'zbek"
+    # Right single quotation mark (’)
+    assert normalize("o'zbek") == "o'zbek"
+    # Grave accent (`)
+    assert normalize("o`zbek") == "o'zbek"
+    # Combined check for g'
+    assert normalize("gʻoya") == "g'oya"
+    assert normalize("g`oya") == "g'oya"
+
+
+# === SPEC REQUIREMENT: Cyrillic to Latin transliteration ===
+def test_cyrillic_transliteration():
+    assert normalize("яхши") == "yaxshi"
+    assert normalize("ўзбек") == "o'zbek"
+    assert normalize("ғоя") == "g'oya"
+    assert normalize("қўлланма") == "qo'llanma"
