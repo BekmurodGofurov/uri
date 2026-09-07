@@ -6,6 +6,8 @@ exclude = [
     ".venv",
     "venv",
     "*.md",
+    "Makefile",
+    "**/Makefile",
     "sentiment-svc",
     "aspect-svc",
 ]
