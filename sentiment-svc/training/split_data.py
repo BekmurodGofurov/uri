@@ -39,7 +39,7 @@ def split(input_path: str, output_dir: str) -> None:
     val.to_csv(os.path.join(output_dir, "val.csv"), index=False)
     test.to_csv(os.path.join(output_dir, "test.csv"), index=False)
     manifest = {
-        "hash_algorithm": "md5",
+        "hash_algorithm": "sha256",
         "split_ratios": "70/15/15",
         "total_rows": len(df),
         "train_rows": len(train),

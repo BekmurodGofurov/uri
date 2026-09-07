@@ -1,40 +1,26 @@
+"""App schemas — imports strictly from shared.contracts.
+
+The shared package is available because:
+  - In Docker: PYTHONPATH=/workspace is set in the Dockerfile, which adds the
+    monorepo root so `shared/` is importable.
+  - In local dev: run from the repo root, or set PYTHONPATH=. manually.
+
+There is NO try/except fallback here. If shared.contracts is unavailable the
+service should fail fast with an ImportError rather than silently running with
+locally-redefined types that may drift from the frozen contract.
+"""
+
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
-# Attempt import from shared.contracts; fallback to local definition for standalone docker
-try:
-    from shared.contracts import (
-        ReviewIn as ReviewItem,
-    )
-    from shared.contracts import (
-        ScoreRequest,
-        Sentiment,
-    )
-    from shared.contracts import (
-        SentimentResponse as ScoreResponse,
-    )
-    from shared.contracts import (
-        SentimentResult as PredictionResult,
-    )
-except ImportError:
-    Sentiment = Literal["negative", "neutral", "positive"]
-
-    class ReviewItem(BaseModel):
-        id: str = Field(..., description="Unique review ID")
-        text: str = Field(..., min_length=1, max_length=5000)
-
-    class ScoreRequest(BaseModel):
-        reviews: list[ReviewItem] = Field(..., min_length=1, max_length=64)
-
-    class PredictionResult(BaseModel):
-        id: str
-        label: Sentiment
-        confidence: float = Field(..., ge=0.0, le=1.0)
-
-    class ScoreResponse(BaseModel):
-        results: list[PredictionResult]
-        model_version: str
+from shared.contracts import ReviewIn as ReviewItem  # noqa: F401 (re-exported)
+from shared.contracts import (
+    ScoreRequest,  # noqa: F401 (re-exported)
+    Sentiment,  # noqa: F401 (re-exported)
+)
+from shared.contracts import SentimentResponse as ScoreResponse  # noqa: F401 (re-exported)
+from shared.contracts import SentimentResult as PredictionResult  # noqa: F401 (re-exported)
 
 
 class HealthResponse(BaseModel):
