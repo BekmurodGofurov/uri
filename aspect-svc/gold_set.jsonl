@@ -1,0 +1,300 @@
+{"id": "gold_0000", "text": "sevimli kofeni akisyada yanayam arzonga olish judayam zo'r", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0001", "text": "qishki deb o'ylagandim lekin yupqa ekanku bu boshqa qalinrog'iga qishkisiga almashtirib berolmaysizlarmi?", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0003", "text": "manga birak tavar berdila almawtirib berishmayapti juda yomon", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0004", "text": "uziniki bilan bir xil, xech kanday farki yuk. bir kunda keldi. uzum market .", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0005", "text": "mohsulot 1kunga kechigib keldi lekin yaqshi ichlayabdi", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0009", "text": "mahsulot yahshi faqat zood marketda nisbatan arzon ekan raqobat taraflama qaraganda zood market qulayroq manimcha", "aspects": [{"aspect": "price", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0011", "text": "qidirgandim, uzum jamoasiga raxmat", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0014", "text": "judayam qulay raxmat kottakon", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0015", "text": "yorigi bor ekan rasimda yaxshi edi lekin yaxshi narsa ekan kaytargim kelmadi shunga karamay 5 yuldizcha kuydim", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0020", "text": "juda ajoyib tanlov. menga juda yoqdi ishilarga omad.", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0022", "text": "maxsulot uz vaktida yetib keldi zur", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0023", "text": "unchalik sifati yoqmadi bu mahsulot un yuqori narx quyilgan kartonlari qayrilgan sifati yaxshi emas", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "price", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0024", "text": "yuzimga yaxshi tushdi tiniq qb qoyd sfatiga gap yo puliga arzidi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0025", "text": "buyurtmani oldim", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0026", "text": "u hatto ishlamayapti, faqat tana tebranadi, tuklar ishlamaydi.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0027", "text": "9 mm juda ingichka qo'yganda uncha bilinmedikan o'zimni tabiiy kiprigimdaqa bopqoladikan", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0031", "text": "narxi uchun zo'r! rahmat!", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0033", "text": "yuk bir tarafi ozrok singan ekan", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0034", "text": "mazali ezilib ketmadi", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0038", "text": "assalomu alaykum uzum marketga gap yo'q zo'r zo'r zo'r ekan", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0043", "text": "steklosi sinik keldi", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0045", "text": "umuman yoqmadi cunmadm bu lab buyogiga", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0047", "text": "ozroq kichkina ekan xa lekin bo'ladi", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0048", "text": "assalomu alaykum. 3 kun oldin shu soatni sotib olgan edim. soatni sovg'aga olgan edim, lekin u qo'lga juda kattalik qildi. shunga uni qaytarib berish bo'yicha bugun uzum market punktiga kelgan edim. soat upakovkasi bilan turibdi, ishlatilmagan. lekin ular etishdiki, sotuvchidan sorang, agar qaytarsin diyishsa pulini qaytarib beraman deb aytishdi.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0049", "text": "yaxshi ekan 1-kunda keldi", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0050", "text": "musr narsa ekan pulimni qaytarib beringlar", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0053", "text": "mahsulotlar sifatlik emas ekan xafa bulmanglaru yana bozordan qimmat ham", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "price", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0055", "text": "ishlamayapti kabel monitor tasvirni obermayapti", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0059", "text": "manga yoqdi narxiga arzidi zor", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0060", "text": "boyin uchun juda ham foydali mahsulot ekan ishlab chiqaruvchiga rahmat shunday mahsulot ishlab chiqarganlari uchun barchaga tavsiya qilaman sifati zor ekan narxi xam arzon ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0064", "text": "buladi yaxshi puliga yarasha lekin ovozi baland emas ekan", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0065", "text": "men adashib boshqa silikon chexolni buyurtma qilib yuboribman nima qilsam boladi? imkoni bo'lsa chexolarni madeliga moslab qoyinglar adashmaslik uchun qolganlari juda zor", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0068", "text": "qog'oz rangi oq emas ekan", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0071", "text": "tavsiya qilaman!", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0072", "text": "berilmagan, pulini tulaganman ammo zakasim berilmagan", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0075", "text": "ajoyib ruchka, imtihonim uchun zakaz qilgamdim omad tilelar", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0076", "text": "chiroyli va arzon", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0078", "text": "xa buladi narxiga yarasha", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0079", "text": "ko'rsatilgan narsa emas aslida boshqa narsa keldi", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0080", "text": "qoyil o'ylaganimdan ham yaxshi skidkada deb shubhalangandim to'g'risi lekin juda yaxshi keldi dugonalarimni havasi keldi ularga ham uzum marketni tavsiya qildim katta raxmat uzumga ham ishlab chiqaruvchilarga ham", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0081", "text": "1yulduzga ham arzimaskan sifat dgan narsa yoq", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0088", "text": "906ga zakaz qilgandim pulti sigmayapti", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0089", "text": "chap va o'ng quloqlari almashib qolgan, ovozi yaxshi lekin", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0090", "text": "menga ushbu maxsulot yetkazib berilmadi 5 kun ichida pulni kaytaramiz deyiladi pulni kaytariщmadi kayerga murojat kilishim kk.", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0091", "text": "o'rtacha baholayman", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0092", "text": "mahsulotni oldim. tezda kelar ekan. rahmat", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0093", "text": "rangi ochib ketmasa boldi", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0104", "text": "bolalik hotirlalarni eslatuvchi ajoyib o'yinchoq farzandlarimzga qo'shilib o'ynayapmz. uzum market jamoasiga katta raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0105", "text": "3 ta chexol oldim hammasi tugri kemayapti", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0106", "text": "upakovka bzilgan 2ta ,l l chikvoti ichidan maslaxat bermiman", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0107", "text": "quloq tiqinlari bittasi bor bittasi yoq pulimni ham qaytarib solmadi qanaqa ishlayapsizlar o'zi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0108", "text": "men oylagandek shikmadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0109", "text": "soat juda chiroyli qolimga katta keldi tuship qolyapti", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0110", "text": "assalomu alakum xammaga 2 ta zakaz bergandim 1 ta kelipti", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0111", "text": "megafon yokmadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0112", "text": "lost tom ford cherry atr vapshe yoqmadi. hidi ujis . balki boshqalaga yoqar hidi utkirde", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0113", "text": "o'ng tomoni pauza qilish tugmasi ishlamayapti musiqa eshitishga yaxshi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0117", "text": "xuddi bolaligimdagidek tami zor narxi xamyonbob judayam yoqti yana olaman", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0119", "text": "1sutkaga bormasdan tavar qo'limga yetib keldi.", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0120", "text": "juda zor tanlov", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0121", "text": "qopqog'i juda yomon ochiladi .sal harakatga ancha ishlatilib shaqillab qolganga o'xshaydi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0122", "text": "vaktni tugirlab bumidi,kantak yozib bumidi,xar safar rakam terib kungirok kilish kerek", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0125", "text": "umuman ishlamayabdi kaytarib olishingizni sorayman kerak yemas bu maxsulot menga", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0126", "text": "zo'r telefon. skidkada yaxwi narxda oldim. bozordan arzon raxmat.", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0127", "text": "magazindan ancha orzon uzum ga kotta raxmat", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0131", "text": "nme bu brak narsani bervordila 38w deb 20w bub yotipku zaryad tiqadigan joyi kirmaydi vazvrat qilaman tovarri", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0134", "text": "mahsulot sifati yoqmadi. hatto o'rnatmasdan oldin dars ketdi.salfetkaham ichida yo'q.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0135", "text": "zo'r ishlayapti. yetkazib berishga ham gap yoq. omad ishlatingizga.", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0136", "text": "juda ajoyib ekan manga juda yoqdi eng arzoni ham sifatlisi ham sizlarda ekan raxmat kottakon", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0137", "text": "xozir endi nma qsa boladi, yaxshi sharh qoldirilgani uchun olgan edim, ogandan keyin qarasam original emas xardoim yaxshilab tekshirib olinglar", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0139", "text": "sifati zor , narxi undan zor ,rahmat takrodan kuzgu yangiliklarni kutup qolamiz", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0140", "text": "assalom alaykum soyabon oyoqlari bilan kelmadi nimaga", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0146", "text": "mahsulotni bugun oldim 3 oylik tolovga 1 kinda kelsi tavsiya qilaman olishni oldindan tolovlarsiz va qoshimcha foizsiz", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0147", "text": "nu buladi oddiy chiroq kabi yonar ekan svet uchsa yaxshi deb olgan edim uzum market hodimlariga katta raxmat", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0149", "text": "juda sifatsiz narsa ekan yopishmin õljak. oldakchila", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0151", "text": "yaxshi, sifatli, faqat ishlab chiqaruvchilarga aytish kerakda, \"stekloni chetini qora ramka qilmanglar\"'- deb.", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0152", "text": "17000 so'mdan olardim, bugundan 35000 qilib narxini ko'tarib qo'yibsizlar! sal insof ham kerakda!!!?", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0153", "text": "judayam yaxshi narxi al'o", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0154", "text": "kotta upakovka- yaxshi narx", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0159", "text": "puliga arzimidi umuman ishlamadi ochirish tugmasi", "aspects": [{"aspect": "price", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0161", "text": "ataylab qidirib, qidirib 1-rasmdagidek qisqichlisini buyurtma qilgandim, barbir boshqachasini yuborishibdi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0162", "text": "zo'r bozordan ancha arzon va sifatli mahsulotlari uzum market ishchilari va uzum market ha omad bundanda yaxshi bolinglar", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0164", "text": "sifati zòr, bass kuchli ekan juda wunisi yoqmadi. quloqni tez charchatadi", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0165", "text": "muzlatmadi brak", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0167", "text": "zakazala chexol na iphone 11 dostavili na iphone 13(", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0169", "text": "yahwi narsa, lekin gaz pedal nakidkasini ornata olmadim", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0171", "text": "qirilganligini nazarga olmasa zo'r", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0172", "text": "dishoviy tanalka ekan umuman tanalkaga oxshamidi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0174", "text": "sifati yaxshi emas", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0177", "text": "yaxshi emas ekan", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0178", "text": "menga unchalik yoqmadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0180", "text": "uzum market ga raxmad tez yetkazib berishibdi 1 donamas kuproq olishni xoxlardik cheklangan ekan", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0187", "text": "umuman bomaydigan narsa ekanda bu", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0188", "text": "bowida ishladi 2 haftaga qomay nimagadir kuyib qoldi. o'zimizdanmi yoki maxsulot brak bilishgaham ulgurmay qoldim", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0190", "text": "mikser ham juda yaxshi iwlayapti ham sifatli ham qulay olishlarizni tafsiya qilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0191", "text": "best of luck ur trade the musk is really great", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0192", "text": "bu nmaga uzuun kengligi juda katta lekin sifati yaxshi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0193", "text": "paroshokdan kupdan beri foydalanaman buyurtma berib ikkilangandim originalmikan deb vapshe super original ekan. narxiga, sifatiga, tez dostavkaga 5 uzum marketga raxmat", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0194", "text": "mayda narsalarga yaxshi narsa ekan", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0199", "text": "2 kun ishladi keyin ishlamay koldi, uzum market boshkasiga almashtirib beradimi?", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0201", "text": "printerni telfonga ulayolmadim", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0203", "text": "maniki ishlatilgan chiqdi", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0208", "text": "olganimda tekshirib korolmagandim zaryadi yoqligi uchun. bugun ishlatib korsam chap tomoni ishlamayapti, tinmay shovqin berayapti. ŏng tomonida ham uzilish bolayapti. zaryad ham yaxshi ushlamaydi shekillik bir 80 bir 90 korsatadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0209", "text": "manga sifati yoqmadi , labda yigilib qolyapti, shyotkasi ham dagal labizga surtganizda qiryapti.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0211", "text": "tel o'chib qolayapti o'zidan o'zi. batereykani olib qayta o'rnatmaguncha yonmayapti.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0212", "text": "salom dokon egasi man bilan boglanin xavo namlagich oluvdm iwlamayapti", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0214", "text": "salom xammaga, sal kechikib bulsa xam massajyorni oldim, bu narxga juddayam zur massajyor!!! rekomenduyu dermidi", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0215", "text": "judayam z'or qozon ekan. judayam sifatli aprel qozonlari. narxlari ham xamyonbop rahmat uzum marketga va aprel qozoni firmasiga.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0216", "text": "musr sfat digan narsa yo' umuman", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0218", "text": "shlang bizga sinik xolatla keldi.ovora buldik.uzok yulga junatishdan oldin etiborlirok bulinglar", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0219", "text": "ajoyib narxga juda zor sifat raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0220", "text": "1ta qulog'i buzulib qoldi yaxshi emas", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0222", "text": "yaxshi, vaqtida yetib keldi.", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0223", "text": "assalomu aleykum bu maxsulot berilmagan lekin pul tolangan chek tolangan", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0225", "text": "oyoq kiyimni oldik ichidan keshbek sovga deb chiqdi keshbek bor ekan qanaqa qib ishlatamiz javob bering", "aspects": [{"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0226", "text": "bir razmer kichkina yurarkan", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0227", "text": "judayam kichkina emib bilmadi oģzidan tuwip ketadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0228", "text": "almashtirsa boladimi kichkina keldi 12chi razmerga", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0230", "text": "quyoshda qolganmi rangi qizarganini bervoribsizlar", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0233", "text": "chexol telefonga tòri kemadi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0234", "text": "sifatga gap yo'q o'ta zo'r mazza qildim, lekin yetqazibberishda biroz muammo bo'ldi", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0235", "text": "yolgon hushtak chalarkan faqat", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0237", "text": "brak chiqdi olishni maslahat bermayman. tovarni qaytarishham bosh ogriq bolyapdi.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0239", "text": "buyrutmani o'z vawtida oldim.katta raxmat", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0242", "text": "sifati yaxshi emas ekan", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0243", "text": "raxmat sovga uchun", "aspects": [{"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0246", "text": "manga rosa asqoti vaqtida", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0247", "text": "man kikoni 19 raqamlisni zakaz qgandim manga 03 raqamlisi keldi iltimos azgina diqqatliro bolila", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0250", "text": "56 razmer, 52ga tugri keldi. rostim 175", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0251", "text": "xammasi ajoyib raxmat!", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0252", "text": "amallasa buladi", "aspects": [{"aspect": "other", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0257", "text": "aksiya uchun raxmat", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0258", "text": "zo'r gap yo'q puliga arziydi, uzum marketdagilarga raxmat", "aspects": [{"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0259", "text": "bir marta taqqanimda qorayib qoldi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0260", "text": "uzimizni tekstil juda zur, fakat ichki bozorni xam arzonrok kilsela nur ustiga nur, omad!", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0262", "text": "archa yaxshi ekan gap yuk yeniga bonuslar xam tashkil kilsangizlar masalan uyinchoklarini zur bular edi", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0263", "text": "ishlashi zōr. hali sezon boshlanmasdan narxlar arzonligida olib qoydim. bu narxga xatto bozorda ham yoq edi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0266", "text": "chexol 100 silikonnan tayorlangan. sfati juda yaxshi. 1,5 kunda keldi qoraqolpoqstonga. rahmat sotuvchiga kottakon.", "aspects": [{"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0267", "text": "sensori ishlamasakanu", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0268", "text": "mahsulotni qabul qilib oldim kutganimdek sifatli va hamyonbop ishlatib ko'rdim efekti haqida yana izohlarda qoldiraman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0269", "text": "00000 mahsulotni qaytarob olishmadi man toq svetini oman och svetiga alishtirb berishmadi", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0270", "text": "raxmat sovgasi xam bor ekan ichida", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0271", "text": "sifati yaxshi lekin nega zaryad olmayapti", "aspects": [{"aspect": "quality", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0272", "text": "sovg'amni oldim raxmat, pepsiga gap yok", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0273", "text": "zor kutkanimdanam yaxwi keldi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0275", "text": "uyalila tufta narsa sotgani", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0277", "text": "original maxsulot men jentra eshik obshivkalari uchun oldim birga bir zavodskoy chiqdi gap yoq hammaga tavsiya qilaman buyurtmam 1 yarim kunda keldi sotuvchi va kargo hizmatiga katta rahmat", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "seller", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0279", "text": "bu kemadi. nega o'rniga snickers solishibdi. nimasi bu.", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0281", "text": "islemey kaldi 2 kunnen keyin. okimaydi uliuma", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0283", "text": "notbukka ulanmasakan batareyasi zo'r kopka yetarkanu lekin mazzaqib eshitib yurganda quloqlarni ogritib qoyarkan lekin yaxshi manga yoqti", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0285", "text": "materialiga gap yuk", "aspects": [{"aspect": "other", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0286", "text": "buyurtma o'z vaqtida keldi yaxshi ekan raxmat", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0290", "text": "uz imeydan o'tmagan ekan yana bilmadim rasxod", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0292", "text": "tugri gap yoqmagani uchun quyilmadimi", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0299", "text": "rosa zor upakovka sifti yaxshi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0097", "text": "sifatiga gap yuq", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0098", "text": "assalom alikum kawelyok yoqdi. ajoyib. ham co'nteklari ko'p ham katta. anca narsa ketdi iciga. puliga nisbatan kacestvasi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0099", "text": "zakazimni oldim kachestvasi man kutganday ekan sovg'a tariqadida ichidan maybelline tushi ham chiqdi gap yoq rahmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0100", "text": "pomadaga ko'nglimdagidek rang keldi labda turishi judayam maqul super faqat judayam kichkina", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0101", "text": "alloh rozi bo'lsin ko'nglimdagiday ishlaringga barokat tilayman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0102", "text": "yaxshi maxsulot", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0103", "text": "yaxshi maxsulot", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0114", "text": "assalomu alaykum. onajonimlaga hadiya uchun oldim. sifati va ishlashi zo'r raxmat.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0115", "text": "otlichno rabotayet", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0116", "text": "judayam zor sumka ekan, podarka uchun yarasharkan, xammaga tavsiya etaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0118", "text": "manga maqul bir necha bor qayta qayta buyurtma qildim", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0123", "text": "doglani zor ketkazdi rahmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0124", "text": "olish olmaslikni kop oyladim, lekin olganimdan xursandman rostanam kachestvasi bomba , telefonga idealniy tuwdi, mazza qb ishlatasla", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0128", "text": "assalomu alaykum . juda ham qulay hamda betakror dizaynda ishlangan . uzum ilovasidagilarga ham rahmat kattakon sifatli va qulay savdo uchun !!!", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0129", "text": "assalomu alaykum, katta rahmat, narsam a'lo darajada yetib keldi ko'nglim yuksak darajada to'ldi yana bir bor rahmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0130", "text": "otaxam zor ishilarga omad uzum market top", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0132", "text": "raxmad zo'r ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0133", "text": "zorakan kachestva materiyali mishkaga zor efekt bervoti. sotuvchiga raxmat. razmer etilganidaka kotta faqat 2 sm kichiro 88 razmerakan boyi 40 sm. lekn xichnima rol oynamidi asosiysi kachestasi yaxshi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0138", "text": "zo'r sifatli hammaga maslaxat beraman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0141", "text": "bu kozga siviritka judayam yaxshi ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0142", "text": "manga juda materiali ham yumshiqqina", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0143", "text": "gap bo'lishi mumkin emas supper", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0144", "text": "zo'r ovoldm mahsulot sfatiga gap yo'q", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0145", "text": "sifatli judayam ajoyib ekan bozorga borib sarson bulib yurgandan kura sizlardan olish qulay ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0148", "text": "juda chiroyli, issiq va qulay", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0150", "text": "narsalari judayam zor sifatliy ekan 100 men", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0155", "text": "zur gap yuk menga yokdi, tavsiya kilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0156", "text": "juda kichkina lekin hidi zor ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0157", "text": "rahmat tòliq hammasi joyida kirlarga musaffolik va tozalik beradi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0158", "text": "uzum marketga telefon udar ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0160", "text": "zur chiroylikan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0163", "text": "mahsulot sfati alo darajada", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0166", "text": "sifati juda zur manga yokdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0168", "text": "noutbuk sumkasini oldim. sifati a'lo. raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0170", "text": "judayam yaxshi kachestva aloo darajada xamaga raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0173", "text": "yumshoqina va qulayakan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0175", "text": "yaxshi xammasi zor", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0176", "text": "5 baho, lekin vergullarni rangi sariq, kitobning varoqlari rangi ham sariq. vergullarni biroz to'qroq sariq bo'lsa, (1420 o'lchamdagisidaka) ko'rish osonroq.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0179", "text": "sifatli manga yoqdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0181", "text": "zver! vaщe zor shiqti. kosholyok alip yedim zor yeken unadi! super.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0182", "text": "batareyka 10 litrga yetadi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0183", "text": "vadaga muvofiq ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0184", "text": "1ga1 birxil raxmat kotta", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0185", "text": "judayam anoyib yoqdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0186", "text": "yaxwi eirpods ekan olila", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0189", "text": "hidi yaxshi ekan. dezodaranti bilan birgalikda ishlataman. effekti zo'r", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0195", "text": "i like it very good quality", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0196", "text": "nihoyatda go'zal", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0197", "text": "sifati juda yaxshi. men kutganimdek katta raxmat.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0198", "text": "tochit noji otlichno", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0200", "text": "juda yoqti lekin rangi oq emas ekan malochniyroq ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0202", "text": "sifati yahshikan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0204", "text": "iwlashi yaxshi xozircha", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0205", "text": "gap so'z bo'lishi mumkin emas! judayam zo'r. hammaga tavsiya qilaman ayniqsa o'yin uchun juda zo'r. ovozi juda baland", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0206", "text": "men xoxlagandimday gap yo", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0207", "text": "raxmat kottakon judayam yoqdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0210", "text": "qabul qilindi. tovar sifati a'lo darajada.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0213", "text": "raxmat zakazimdi oldim. menga yoqti", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0217", "text": "multivarka kashalar sup kilishda zur ekan raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0221", "text": "zanjir juda chroylik rasimdagidak ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0224", "text": "ajoyib beautiful", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0229", "text": "maxsulotti sifati yaxwi manga yoqti zòr", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0231", "text": "yaxshi sifatli mahsulot", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0232", "text": "kozon zur.. kolganini ishlatganimdan keyin yozaman. uzumga tashakkur", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0236", "text": "ustozimga padarka qoldim juda xursand bo'lila raxmat silaga soatga gap yo'q", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0238", "text": "juda zor sifatiga gap yuq", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0240", "text": "raxmat zur ishlikan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0241", "text": "menga juda yoqdi raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0244", "text": "mahsulot ishlashi va sifati yaxshi , rangi ham yoqdi tafsiya qilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0245", "text": "kutganimdanam yaxw chiqti zor", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0248", "text": "juda zo'r soat ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0249", "text": "juda ham yaxshi ekan. rahmat kattakon.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0253", "text": "sifati yaxshi olila arzidi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0254", "text": "yaxshi ishlashi xam", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0255", "text": "juda chiroyli ekan sal kichikroq lekin materiali juda ham ajoyib", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0256", "text": "otlichnoye kachestvo", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0261", "text": "raxmat kattakon yaxshi ishlayapti", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0264", "text": "zo'r massajchi ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0265", "text": "xakikatdan xam rangini uzgartirar ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0274", "text": "n 12 .juda chiroyli ekan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0276", "text": "raxmat juda zõr", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0278", "text": "salom qalam manga yoqdi probka uchun oluvdim juda zur ekan yana olaman uzum marketga raxmat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0280", "text": "hidi juda shirin ekan, ham kattagina barakali sovun", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0282", "text": "yengilgina zor fudbolka ekan yumshokkina", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0284", "text": "juda ham ajoyib qahva katta va zur", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0287", "text": "juda zor ekan koringanidek ekan vapshe zor", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0288", "text": "zo'r mahsulot atjimaniya mashqlari u.n", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0289", "text": "juda ham ajoyib,menga juda yoqdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0291", "text": "juda bejirim va chiroyli, uzum marketga omad", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0293", "text": "juda zor hammasi uchun rahamat", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0294", "text": "sifati zur!bu kaychi bn kup chiroyli narsala yasash mn, farzandlarim boshlavorishgan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0295", "text": "teyes cc2 ga tushdi. gap yoq! juda foydali narsa", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0296", "text": "xuddi rasmdagidek", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0297", "text": "maxsulot sifati yaxshi mos keldi xamma yogi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0298", "text": "ajoyib jiyanimga juda yoqdi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0300", "text": "vapshe dabdala igrushka kachestvasi yo umumqn upakovkada na remeshogi bor na öqi bor bola perchance oynab otrmidyu", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0301", "text": "otzivlarida kichkina ekan deyishudi, lekin man kutgandek kichkina emas ekan, manga rosa yoqdi, narhi ham chiroyli ekan. o'zi shunaqa quticha qidirib yurudim, rahmat kattakon. savdoingizga baraka bersin. lekin qora rang olgan yaxshi ekan, man rozovy oludim, rosa chiroyli, lekin ko'p ushlansa kir bolishini o'ylamabman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0302", "text": "birinchi marta uzumdan zakaz qilgan edim. lekin chiroyli upakovkani ichidan shunaqa yirtiq parda chiqdi.(((", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0303", "text": "qo'limga keb tushguniga qadar karobkasi ochilgan bu xolatda oldim , ustma ust shrix zakaz urigan ! ummuman tavar yomon mas !", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0304", "text": "umuman yeb bulmaydi yaroklilik muddati xam yezilmagan eskirgan sifatsiz", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0305", "text": "hammayoqqa tökilib keldi upakovka qoniqtirmadi, hamma olingan mahsulotimga tökilib rasvo qilgan", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0306", "text": "ishlamadi defekti ekan. karobkasi xam ochilgan edi. oldin kimgadir borib qaytib legan va kegin menga yetib keldi, karobkasi ustgi plenkasi ochilgan edi shundan blib qodim. hushyor bӯlinglar hozirgi paytlarda defekt narsalarnixam tqishtiryapdilar. shunig uchun 1 ta yulduzcha quydim.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0307", "text": "upakovka i kachestvo otlichnoye", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0308", "text": "foydali bo'lsa kerak deb sotib olgan edim. karopkasini ochsam ichida oqib yotibdi shampun. juda yomon puli ham unday arzon emas. shuncha pulga yarim bo'lib qolgan shampun olsayza. hech kimga keremas shekilli bo'm bo'sh qutisi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "price", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0309", "text": "1chi marta ishlatib korishim bu firmanikini, har xilidan oludim, mazasiyam yaxshi va eng asosiysi ezilib ketmas ekan, yoqdi tavsiya qilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0310", "text": "juda chiroyli ekan rasmda paketni ichida bulgani uchun xirarok tushipti xayotta rosa chiroyli bejirim. xammaga yokti. puliga arzidi, tavsiya kilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0311", "text": "foydasi sezilmadi xozircha", "aspects": [{"aspect": "other", "polarity": "neutral", "confidence": 1.0}]}
+{"id": "gold_0312", "text": "assalomu alaykum.paket juda ham qulay.chemodanimda ancha joy tejaldi.", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0313", "text": "tavsiya qilmayman!!! ishlatilgan mahsulot sotishibdi! chunki ichida kofedan qolgan va suv idishda suvdan qolgan doglari bor va qutisi ham yertilgan mahsulotni sotishibdi! afsus, sovg'a uchun olgan edim!", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0314", "text": "uzuk nima uchun maxsus qadoqda emas, uzuk salafan paketda singan xolatda yetib keldi", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0315", "text": "qadoqdan batareykasiz chiqtiku, batareykasini qayerdan topamiz. mahsulot batareykasi bn deb qoyiptiku", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "seller", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0316", "text": "man pushti rangidan buyurtma kilgandim. urniga judayam xunuk rangidan berib yuborilibdi bu dukonga ishonch yuk ekan sotib olishni maslaxat bermasdis upakovkasiyam rasvo manga yokmadi umuman", "aspects": [{"aspect": "seller", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0317", "text": "baraka topin yeffekti 1tada sezildi ayollarga olishni tavsiya kilaman", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0318", "text": "menga kegani singan ekan upakovka qilinganga ochib tekshirmagan ekanim joyida", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0319", "text": "juda xafa boldim tokilib kebti iltimos paketga solib jonatila", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0320", "text": "zakazlarimni oldim kattakon raxmat huddi uziday kelgan. upakovkasi alo darajada. kattakon raxmat", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0321", "text": "2chi marta olishim bundan qurigan yorilgan labni tez tiklidi", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0322", "text": "parashok yaxshi ekan fakat upakovkani cheti ochik keldi. paketni ichiga tukilibdi ozginasi.", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0323", "text": "bumaykan birinchidan karobkasi yirtilib yotibdi , telefonni 4 foiz tuldirudi qizidi , keyin galofkadan ovoz chiqobdi", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0324", "text": "karobkasi nam bop ketibdi yahwi chiqmadi karobkasiga narsa tokilgami bilmiman", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0325", "text": "karobkasi umuman yaroqsiz keldi.", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0326", "text": "azgina ishlatilingan, orginal qadoq ochilgan. o'rniga eski skoch yopishtirilgan uzum marketdan kutmagandim", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0327", "text": "shovqinni qaytarishi umuman sezilmadi bowqa lux copylarda zor bilinayotgan edi !", "aspects": [{"aspect": "other", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0328", "text": "maxsulotga gap yoq.juda sifatli pishirganda ezilib ketmiydi qancha qaynasa ham.oila azolarimgayam juda yoqdi.har doim shu maxshulotdan ovamiza.ham arzon ham sifatli.uzum xodimlariga kotta raxmat bozorni aylanib otirmayman 1kunga qolmay maxsulotlarimni elitib berishadi", "aspects": [{"aspect": "delivery", "polarity": "positive", "confidence": 1.0}, {"aspect": "quality", "polarity": "positive", "confidence": 1.0}, {"aspect": "price", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0329", "text": "nimaga bittasi ochilgan va bowqattan upakovka qilingan?", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0330", "text": "kimdir ishlatib kaytarvorganmi bu maxsulotdi rasvo korobka ochilib tukilib yotibdi tuplam tulik emasku", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0331", "text": "yetib kelishi 4.8 upakovkasi uchun -0.2 upakovka zor deb bolmaydi lekin ozi yaxshi naushnik", "aspects": [{"aspect": "delivery", "polarity": "negative", "confidence": 1.0}, {"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0332", "text": "men o'ylaganimdan ko'ra kichik ekan. paxtali tampon qutidan chiqmadi.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0333", "text": "poddelka ekan qaytarmoqchiman kim ishlab chiqarilgani yozilmagan i qutisidayam farqi bor", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0334", "text": "assalomaleykum man vivo v23 ga buyurtma berodim. manga umuman boshqa modelniki keldi. qutini ustida v23 yozilgan lekin ichida v27 niki ekan! respect", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0335", "text": "zakazni uz vaktida oldim raxmat kottakon. fakat bittagina minus upakovka yaxshi kilinmaganmi yeki pri transportirovka vaktida jidkostni bir kismi tukilib ketibdi. ammo xidiga gap yuuuuuu. uzum marketga aloxida raxmat", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0336", "text": "yaxshilab qadoqlab junatilar tukilib ketmasin", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0337", "text": "usb kabeli kamplektida bor yozilgan lekin chiqmadi karobkasiyam pachoq majoq bup kegan ichidagidiyam shunnday kir bup yotipdi sifatga vapshe etibor yuq bu nima axvol man buni endi kabelimi qattandir topishim keregmi sharmandalikku bu", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0338", "text": "assalomu aleykom. õylaganimdan anca kickinekan. upakovkalariyam buklanib ketibdi. lekin hidi judayam shirikanakan. hammaga olib ishlatib kõriwini maslahat beraman", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0339", "text": "tasiri sezildi zorakan", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0340", "text": "qutisi yo'q ekan rasmidek", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0341", "text": "yarim kunga yetkazib berishdi. paketlarni birinchi marta olishim mas. yanna bir bor katta raxmat maxsulotni upakovka kilib tovarniy vid kilishga yerdam kiganlariz uchun. judda kulay. rasm kushib bulmadi lekin ichidagi kand uchun katta raxmat", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0342", "text": "yaxshi hamyon, u ajoyib tarzda qadoqlangan edi. rahmat", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0343", "text": "bu termopotni sifati yaxshi emas ekan xarid qilishlarizni tavsiya bermayman 5 kun ishladi 6 chi kun ishlamadi man chaqaloq bolamga deb 2 ta xarid qilgandim 2 chisini xali ishlatmadik upakovkadan qanday ob kelgan busak shunday turibdi muammoni kim bilan xal qilsam buladi?", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0344", "text": "negadir xo'jayinimda ta'siri sezilmadi. deyarli hechqanaqa o'zgarish yo'q.", "aspects": [{"aspect": "quality", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0345", "text": "ozi zor srestva lekn idishida yarim keldi kogozli plombasi ochilgan", "aspects": [{"aspect": "packaging", "polarity": "negative", "confidence": 1.0}]}
+{"id": "gold_0346", "text": "yaxshi ciroyli upakovkalada keldi", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0347", "text": "suv filtri sifatli. korsatilgan qismlari karobkada mavjud. ishlashi yaxshi. tafsiya qilaman....", "aspects": [{"aspect": "quality", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0348", "text": "kutganimdan ham katta ekan. ayniqsa paketini dizayini yoqdi", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}
+{"id": "gold_0349", "text": "yaxshi narsa ekan bachalarim juda xursand boldi upakovkasiyam yaxshi", "aspects": [{"aspect": "packaging", "polarity": "positive", "confidence": 1.0}]}

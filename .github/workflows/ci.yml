@@ -36,4 +36,49 @@ jobs:
 
       - name: Run Pytest with coverage
         run: |
-          pytest
+          pytest --cov-fail-under=60 --cov-report=xml:coverage.xml --cov-report=html:coverage_html
+
+      - name: Print coverage summary
+        if: always()
+        run: |
+          python -m coverage report --skip-covered || true
+
+      - name: Upload coverage XML (for badge/external tools)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          retention-days: 30
+
+      - name: Upload coverage HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage_html/
+          retention-days: 30
+
+  dashboard:
+    name: Build Dashboard Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: dashboard/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check and build
+        run: npm run build
+

@@ -11,13 +11,13 @@ from shared.contracts import (
 )
 
 __all__ = [
-    "Sentiment",
     "Aspect",
+    "AspectHit",
+    "AspectResponse",
+    "AspectResult",
     "ReviewIn",
     "ScoreRequest",
-    "SentimentResult",
+    "Sentiment",
     "SentimentResponse",
-    "AspectHit",
-    "AspectResult",
-    "AspectResponse",
+    "SentimentResult",
 ]

@@ -1,0 +1,39 @@
+name: aspect-svc CI
+
+on:
+  pull_request:
+    paths:
+      - "aspect-svc/**"
+      - ".github/workflows/aspect.yml"
+
+defaults:
+  run:
+    working-directory: aspect-svc
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check formatting with ruff
+        run: ruff format --check .
+
+      - name: Lint with ruff
+        run: ruff check .
+
+      - name: Run tests with coverage
+        env:
+          PYTHONPATH: .
+        run: pytest -c /dev/null -o addopts="" tests/ --cov=app --cov=models --cov=training --cov-report=term-missing --cov-fail-under=60
