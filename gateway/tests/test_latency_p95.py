@@ -97,7 +97,10 @@ def test_gateway_overhead_p95(gateway_client: TestClient):
 
     # Warm-up: 3 calls to avoid cold-start skew
     for w in range(3):
-        r = gateway_client.post("/api/score/preview", json=_build_batch(batch_idx=9900 + w))
+        r = gateway_client.post(
+            "/api/score/preview",
+            json=_build_batch(batch_idx=9900 + w),
+        )
         assert r.status_code == 200, f"Warm-up call failed: {r.text}"
 
     # Measured runs
@@ -107,9 +110,9 @@ def test_gateway_overhead_p95(gateway_client: TestClient):
         response = gateway_client.post("/api/score/preview", json=payload)
         elapsed_ms = (time.perf_counter() - t0) * 1000
 
-        assert (
-            response.status_code == 200
-        ), f"Batch {i} failed with {response.status_code}: {response.text}"
+        assert response.status_code == 200, (
+            f"Batch {i} failed with {response.status_code}: {response.text}"
+        )
         latencies_ms.append(elapsed_ms)
 
     # Stats using statistics.quantiles (mathematically defensible percentile)
@@ -132,6 +135,6 @@ def test_gateway_overhead_p95(gateway_client: TestClient):
         f"{'=' * 55}"
     )
 
-    assert (
-        p95 < P95_THRESHOLD_MS
-    ), f"p95 latency {p95:.1f}ms exceeds {P95_THRESHOLD_MS}ms threshold (batch_size={BATCH_SIZE})"
+    assert p95 < P95_THRESHOLD_MS, (
+        f"p95 latency {p95:.1f}ms exceeds {P95_THRESHOLD_MS}ms threshold (batch_size={BATCH_SIZE})"
+    )
