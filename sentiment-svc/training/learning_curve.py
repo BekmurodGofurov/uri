@@ -27,7 +27,7 @@ def plot(train_path: str, val_path: str) -> None:
     pipe = Pipeline(
         [
             ("tfidf", TfidfVectorizer(max_features=20000, ngram_range=(1, 2))),
-            ("clf", LogisticRegression(class_weight="balanced", max_iter=1000)),
+            ("clf", LogisticRegression(class_weight="balanced", max_iter=1000, random_state=42)),
         ]
     )
 

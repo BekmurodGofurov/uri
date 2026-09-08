@@ -1,7 +1,13 @@
 name: sentiment-svc CI
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'sentiment-svc/**'
+      - '.github/workflows/sentiment.yml'
   pull_request:
+    branches: [main]
     paths:
       - "sentiment-svc/**"
       - ".github/workflows/sentiment.yml"

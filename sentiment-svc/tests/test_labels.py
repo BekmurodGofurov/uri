@@ -11,9 +11,12 @@ import sys
 
 import pytest
 
+# Ensure sentiment-svc root is in sys.path before importing from training
 _sentiment_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _sentiment_dir not in sys.path:
     sys.path.insert(0, _sentiment_dir)
+
+from training.prepare_data import rating_to_label  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Pure unit tests — no file I/O, always run in CI
@@ -21,69 +24,61 @@ if _sentiment_dir not in sys.path:
 VALID_LABELS = {"positive", "neutral", "negative"}
 
 
-def _rating_to_label(rating) -> str:
-    """Inline re-implementation of prepare_data.rating_to_label for unit tests."""
-    if isinstance(rating, str):
-        textual = {
-            "excellent": "positive",
-            "good": "positive",
-            "fair": "neutral",
-            "poor": "negative",
-            "very poor": "negative",
-        }
-        return textual[rating.strip().lower()]
-    r = int(rating)
-    if r <= 2:
-        return "negative"
-    elif r == 3:
-        return "neutral"
-    else:
-        return "positive"
-
-
 def test_rating_1_is_negative():
-    assert _rating_to_label(1) == "negative"
+    assert rating_to_label(1) == "negative"
 
 
 def test_rating_2_is_negative():
-    assert _rating_to_label(2) == "negative"
+    assert rating_to_label(2) == "negative"
 
 
 def test_rating_3_is_neutral():
-    assert _rating_to_label(3) == "neutral"
+    assert rating_to_label(3) == "neutral"
 
 
 def test_rating_4_is_positive():
-    assert _rating_to_label(4) == "positive"
+    assert rating_to_label(4) == "positive"
 
 
 def test_rating_5_is_positive():
-    assert _rating_to_label(5) == "positive"
+    assert rating_to_label(5) == "positive"
 
 
 def test_textual_excellent_is_positive():
-    assert _rating_to_label("excellent") == "positive"
+    assert rating_to_label("excellent") == "positive"
 
 
 def test_textual_good_is_positive():
-    assert _rating_to_label("good") == "positive"
+    assert rating_to_label("good") == "positive"
 
 
 def test_textual_fair_is_neutral():
-    assert _rating_to_label("fair") == "neutral"
+    assert rating_to_label("fair") == "neutral"
 
 
 def test_textual_poor_is_negative():
-    assert _rating_to_label("poor") == "negative"
+    assert rating_to_label("poor") == "negative"
 
 
 def test_textual_very_poor_is_negative():
-    assert _rating_to_label("very poor") == "negative"
+    assert rating_to_label("very poor") == "negative"
+
+
+def test_textual_case_and_whitespace_handling():
+    assert rating_to_label("  EXCELLENT  ") == "positive"
+    assert rating_to_label("Fair") == "neutral"
+    assert rating_to_label(" POOR ") == "negative"
+
+
+def test_string_numeric_ratings():
+    assert rating_to_label("1") == "negative"
+    assert rating_to_label("3") == "neutral"
+    assert rating_to_label("5") == "positive"
 
 
 def test_all_outputs_are_valid_labels():
     for r in [1, 2, 3, 4, 5]:
-        assert _rating_to_label(r) in VALID_LABELS
+        assert rating_to_label(r) in VALID_LABELS
 
 
 # ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 import os
 import sys
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi.testclient import TestClient
@@ -73,20 +73,22 @@ def test_health(client):
     assert r.json()["model_loaded"] is True
 
 
-def test_health_unloaded(client, monkeypatch):
-    monkeypatch.setattr(model_loader, "_model", None)
-    r = client.get("/health")
-    assert r.status_code == 200
-    assert r.json()["status"] == "error"
-    assert r.json()["model_loaded"] is False
+def test_health_unloaded(client):
+    with patch("app.routes.get_model", side_effect=RuntimeError("Model not loaded")):
+        response = client.get("/health")
+        assert response.status_code == 503
 
 
 def test_model_info(client):
-    r = client.get("/model-info")
-    assert r.status_code == 200
-    data = r.json()
+    response = client.get("/model-info")
+    assert response.status_code == 200
+    data = response.json()
     assert "model_version" in data
     assert "model_type" in data
+    assert data["training_date"] == "2026-09-04"
+    assert data["headline_metric"] == "macro-f1: 0.6241"
+    assert data["num_classes"] == 3
+    assert set(data["labels"]) == {"negative", "neutral", "positive"}
 
 
 def test_multiple_reviews(client):

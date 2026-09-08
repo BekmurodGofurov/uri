@@ -48,6 +48,7 @@ def train(train_path: str, val_path: str, out_path: str) -> float:
                     max_iter=1000,
                     class_weight="balanced",
                     C=1.0,
+                    random_state=42,
                     n_jobs=-1,
                 ),
             ),
