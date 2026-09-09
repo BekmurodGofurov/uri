@@ -40,11 +40,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+cors_origins = os.getenv("CORS_ORIGINS")
+if not cors_origins:
+    raise ValueError("CORS_ORIGINS environment variable must be set in .env")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(
-        ","
-    ),
+    allow_origins=cors_origins.split(","),
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "X-API-Key", "Authorization", "Accept"],

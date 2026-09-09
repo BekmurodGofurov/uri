@@ -11,8 +11,13 @@ from shared.contracts import AspectResponse, ReviewIn, ScoreRequest, SentimentRe
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SENTIMENT_SVC_URL = os.getenv("SENTIMENT_SVC_URL", "http://localhost:8001")
-DEFAULT_ASPECT_SVC_URL = os.getenv("ASPECT_SVC_URL", "http://localhost:8002")
+DEFAULT_SENTIMENT_SVC_URL = os.getenv("SENTIMENT_SVC_URL")
+DEFAULT_ASPECT_SVC_URL = os.getenv("ASPECT_SVC_URL")
+
+if not DEFAULT_SENTIMENT_SVC_URL:
+    raise ValueError("SENTIMENT_SVC_URL must be defined in .env")
+if not DEFAULT_ASPECT_SVC_URL:
+    raise ValueError("ASPECT_SVC_URL must be defined in .env")
 
 
 def score_only_batch(

@@ -9,13 +9,14 @@ from gateway.database.models import Base
 
 load_dotenv()
 
-DEFAULT_DATABASE_URL = "sqlite:///./uzum_reviews.db"
-
-
 def get_database_url() -> str:
     url = os.getenv("DATABASE_URL")
     if not url:
-        return DEFAULT_DATABASE_URL
+        raise ValueError("DATABASE_URL environment variable is required. The application must connect to PostgreSQL.")
+    
+    if url.startswith("sqlite"):
+        raise ValueError("SQLite is strictly prohibited. The application must connect to PostgreSQL.")
+
     # Ensure postgresql:// is compatible with sqlalchemy psycopg driver
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql+psycopg://", 1)
@@ -26,10 +27,7 @@ def get_database_url() -> str:
 
 def get_engine(database_url: str | None = None):
     url = database_url or get_database_url()
-    connect_args = {}
-    if url.startswith("sqlite"):
-        connect_args["check_same_thread"] = False
-    return create_engine(url, connect_args=connect_args)
+    return create_engine(url)
 
 
 def init_db(engine=None) -> None:
