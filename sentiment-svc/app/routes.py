@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 
 from app.inference import predict
 from app.model_loader import get_model, get_type, get_version
@@ -37,11 +37,17 @@ def health() -> HealthResponse:
         loaded = True
     except RuntimeError:
         loaded = False
-    return HealthResponse(
+    content = HealthResponse(
         status="ok" if loaded else "error",
         model_loaded=loaded,
         model_version=get_version(),
     )
+    if not loaded:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Model is not loaded",
+        )
+    return content
 
 
 @router.get("/model-info", response_model=ModelInfoResponse)
@@ -49,6 +55,6 @@ def model_info() -> ModelInfoResponse:
     return ModelInfoResponse(
         model_version=get_version(),
         model_type=get_type(),
-        training_data="2026-09-04",
-        heading_metrics="macro-f2: 0.6241",
+        training_date="2026-09-04",
+        heading_metric="macro-f2: 0.6241",
     )

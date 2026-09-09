@@ -83,3 +83,9 @@ def normalize(text: str) -> str:
 
 def normalize_batch(texts: list[str]) -> list[str]:
     return [normalize(t) for t in texts]
+
+
+def test_normalize_batch():
+    inputs = ["Yaxshi mahsulot!", "TAVSIYA QILAMAN"]
+    expected = ["yaxshi mahsulot", "tavsiya qilaman"]
+    assert normalize_batch(inputs) == expected

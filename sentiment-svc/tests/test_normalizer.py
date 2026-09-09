@@ -49,17 +49,25 @@ def test_only_special_chars():
 
 # === SPEC REQUIREMENT: Test all 4 apostrophe encodings ===
 def test_apostrophe_variants():
-    # ASCII standard apostrophe
+    # 1. ASCII standard apostrophe (') - 0x27
     assert normalize("o'zbek") == "o'zbek"
-    # Modifier letter turned comma (ʻ)
+
+    # 2. Modifier letter turned comma (ʻ) - \u02bb (official Uzbek Latin)
     assert normalize("oʻzbek") == "o'zbek"
-    # Right single quotation mark (’)
-    assert normalize("o'zbek") == "o'zbek"
-    # Grave accent (`)
+
+    # 3. Right single quotation mark (’) - \u2019 (common from mobile keyboards)
+    assert normalize("o’zbek") == "o'zbek"
+
+    # 4. Grave accent / backtick (`) - 0x60
     assert normalize("o`zbek") == "o'zbek"
+
+    # Bonus: Modifier letter apostrophe (ʼ) - \u02bc
+    assert normalize("oʼzbek") == "o'zbek"
+
     # Combined check for g'
     assert normalize("gʻoya") == "g'oya"
     assert normalize("g`oya") == "g'oya"
+    assert normalize("g’oya") == "g'oya"
 
 
 # === SPEC REQUIREMENT: Cyrillic to Latin transliteration ===
