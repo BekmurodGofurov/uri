@@ -7,7 +7,7 @@ if _sentiment_dir not in sys.path:
     sys.path.insert(0, _sentiment_dir)
 
 import pytest  # noqa: E402
-from preprocessing.normalizer import normalize  # noqa: E402
+from preprocessing.normalizer import normalize, normalize_batch  # noqa: E402
 
 
 def test_basic_latin():
@@ -76,3 +76,9 @@ def test_cyrillic_transliteration():
     assert normalize("ўзбек") == "o'zbek"
     assert normalize("ғоя") == "g'oya"
     assert normalize("қўлланма") == "qo'llanma"
+
+
+def test_normalize_batch():
+    inputs = ["Yaxshi mahsulot!", "TAVSIYA QILAMAN"]
+    expected = ["yaxshi mahsulot", "tavsiya qilaman"]
+    assert normalize_batch(inputs) == expected
