@@ -7,7 +7,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-uzum_reviews}
-      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "${POSTGRES_PORT:-5433}:5432"
     volumes:
@@ -20,8 +19,8 @@ services:
 
   sentiment-svc:
     build:
-      context: .
-      dockerfile: sentiment-svc/Dockerfile
+      context: ./sentiment-svc
+      dockerfile: Dockerfile
     image: ${SENTIMENT_IMAGE:-sentiment-svc:v1}
     container_name: uri-sentiment-svc
     restart: unless-stopped

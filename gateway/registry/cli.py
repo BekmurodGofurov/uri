@@ -42,9 +42,7 @@ from gateway.registry.manager import DEFAULT_REGISTRY_ROOT, ModelRegistry, Regis
 
 
 def _get_registry() -> ModelRegistry:
-    root = os.getenv("REGISTRY_ROOT")
-    if not root:
-        raise ValueError("REGISTRY_ROOT must be defined in environment")
+    root = os.getenv("REGISTRY_ROOT", str(DEFAULT_REGISTRY_ROOT))
     return ModelRegistry(root=root)
 
 
