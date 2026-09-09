@@ -1,0 +1,107 @@
+{
+  "n_test": 60,
+  "threshold": 0.5,
+  "per_aspect": {
+    "majority": {
+      "delivery": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "quality": {
+        "precision": 0.6166666666666667,
+        "recall": 1.0,
+        "f1": 0.7628865979381443
+      },
+      "price": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "seller": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "packaging": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "other": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    },
+    "keyword": {
+      "delivery": {
+        "precision": 0.5,
+        "recall": 0.16666666666666666,
+        "f1": 0.25
+      },
+      "quality": {
+        "precision": 1.0,
+        "recall": 0.2702702702702703,
+        "f1": 0.425531914893617
+      },
+      "price": {
+        "precision": 1.0,
+        "recall": 0.8333333333333334,
+        "f1": 0.9090909090909091
+      },
+      "seller": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "packaging": {
+        "precision": 0.6,
+        "recall": 0.2727272727272727,
+        "f1": 0.375
+      },
+      "other": {
+        "precision": 0.12195121951219512,
+        "recall": 0.8333333333333334,
+        "f1": 0.2127659574468085
+      }
+    },
+    "model": {
+      "delivery": {
+        "precision": 0.09090909090909091,
+        "recall": 0.16666666666666666,
+        "f1": 0.11764705882352941
+      },
+      "quality": {
+        "precision": 0.6585365853658537,
+        "recall": 0.7297297297297297,
+        "f1": 0.6923076923076923
+      },
+      "price": {
+        "precision": 0.2,
+        "recall": 0.16666666666666666,
+        "f1": 0.18181818181818182
+      },
+      "seller": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "packaging": {
+        "precision": 0.6666666666666666,
+        "recall": 0.36363636363636365,
+        "f1": 0.47058823529411764
+      },
+      "other": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      }
+    }
+  },
+  "macro_f1": {
+    "majority": 0.12714776632302405,
+    "keyword": 0.3620647969052224,
+    "model": 0.2437268613739202
+  }
+}
