@@ -8,18 +8,18 @@ import argparse
 import os
 import sys
 
-import joblib
-import pandas as pd
-from preprocessing.normalizer import normalize
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import classification_report, f1_score
-from sklearn.pipeline import Pipeline
-
 # Ensure sentiment-svc root is on sys.path
 _dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _dir not in sys.path:
     sys.path.insert(0, _dir)
+
+import joblib  # noqa: E402
+import pandas as pd  # noqa: E402
+from preprocessing.normalizer import normalize  # noqa: E402
+from sklearn.feature_extraction.text import TfidfVectorizer  # noqa: E402
+from sklearn.linear_model import LogisticRegression  # noqa: E402
+from sklearn.metrics import classification_report, f1_score  # noqa: E402
+from sklearn.pipeline import Pipeline  # noqa: E402
 
 
 def load(path: str) -> pd.DataFrame:
