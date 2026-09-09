@@ -97,7 +97,10 @@ def test_gateway_overhead_p95(gateway_client: TestClient):
 
     # Warm-up: 3 calls to avoid cold-start skew
     for w in range(3):
-        r = gateway_client.post("/api/score/preview", json=_build_batch(batch_idx=9900 + w))
+        r = gateway_client.post(
+            "/api/score/preview",
+            json=_build_batch(batch_idx=9900 + w),
+        )
         assert r.status_code == 200, f"Warm-up call failed: {r.text}"
 
     # Measured runs

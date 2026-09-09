@@ -1,13 +1,20 @@
 FROM python:3.11-slim
 
-WORKDIR /app
+WORKDIR /workspace
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies first (layer-cached)
+COPY sentiment-svc/requirements.txt sentiment-svc/requirements.txt
+RUN pip install --no-cache-dir -r sentiment-svc/requirements.txt
 
-COPY . .
+# Copy the monorepo root so shared/ is importable
+COPY shared/ shared/
+COPY sentiment-svc/ sentiment-svc/
 
-ENV MODEL_PATH=models/tfidf_v1.joblib \
+WORKDIR /workspace/sentiment-svc
+
+# Expose the monorepo root so `import shared` works without a try/except
+ENV PYTHONPATH=/workspace \
+    MODEL_PATH=models/tfidf_v1.joblib \
     MODEL_VERSION=sentiment-v1 \
     MODEL_TYPE=tfidf
 
