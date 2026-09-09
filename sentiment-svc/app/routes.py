@@ -56,5 +56,5 @@ def model_info() -> ModelInfoResponse:
         model_version=get_version(),
         model_type=get_type(),
         training_date="2026-09-04",
-        heading_metric="macro-f2: 0.6241",
+        headline_metric="macro-f1: 0.6241",
     )

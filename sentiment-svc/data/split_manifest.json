@@ -1,0 +1,23 @@
+{
+  "hash_algorithm": "sha256",
+  "split_ratios": "70/15/15",
+  "total_rows": 352151,
+  "train_rows": 251141,
+  "val_rows": 50224,
+  "test_rows": 50786,
+  "train_label_distribution": {
+    "positive": 193171,
+    "negative": 46480,
+    "neutral": 11490
+  },
+  "val_label_distribution": {
+    "positive": 38572,
+    "negative": 9508,
+    "neutral": 2144
+  },
+  "test_label_distribution": {
+    "positive": 39132,
+    "negative": 9487,
+    "neutral": 2167
+  }
+}
