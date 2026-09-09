@@ -1,30 +1,90 @@
+import json
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
 _model = None
+_tokenizer = None
 _version = None
 _type = None
 _macro_f1 = None
+_device = None
 
 _ASPECTS = ["delivery", "quality", "price", "seller", "packaging", "other"]
+_POLARITIES = ["negative", "neutral", "positive"]
+
+
+class AspectMultiTaskModel:
+    """4-kun notebook'idagi arxitekturaning aynan nusxasi (import qilinadi)."""
+
+    def __new__(cls, *args, **kwargs):
+        import torch.nn as nn
+        from transformers import AutoModel
+
+        class _Impl(nn.Module):
+            def __init__(self, model_name, n_aspects, n_polarity):
+                super().__init__()
+                self.backbone = AutoModel.from_pretrained(model_name)
+                hidden = self.backbone.config.hidden_size
+                self.dropout = nn.Dropout(0.1)
+                self.presence_head = nn.Linear(hidden, n_aspects)
+                self.polarity_head = nn.Linear(hidden, n_aspects * n_polarity)
+                self.n_aspects = n_aspects
+                self.n_polarity = n_polarity
+
+            def forward(self, input_ids, attention_mask):
+                out = self.backbone(input_ids=input_ids, attention_mask=attention_mask)
+                pooled = out.last_hidden_state[:, 0]
+                pooled = self.dropout(pooled)
+                presence_logits = self.presence_head(pooled)
+                polarity_logits = self.polarity_head(pooled).view(
+                    -1, self.n_aspects, self.n_polarity
+                )
+                return presence_logits, polarity_logits
+
+        return _Impl(*args, **kwargs)
 
 
 def load_model():
-    global _model, _version, _type, _macro_f1
+    global _model, _tokenizer, _version, _type, _macro_f1, _device
 
-    _version = os.getenv("MODEL_VERSION", "aspect-stub-v0.1")
     _type = os.getenv("MODEL_TYPE", "keyword_stub")
-    _macro_f1 = float(os.getenv("MODEL_MACRO_F1", "0.0"))
 
     if _type == "keyword_stub":
         logger.info("Loading keyword-rule stub aspect model (no artifact needed).")
-
+        _version = os.getenv("MODEL_VERSION", "aspect-stub-v0.1")
+        _macro_f1 = float(os.getenv("MODEL_MACRO_F1", "0.0"))
         _model = "keyword_stub"
         logger.info("Stub aspect model ready.")
+
     elif _type == "multilabel":
-        raise NotImplementedError("multilabel model loader hali yozilmagan (4-kun ishi)")
+        import torch
+        from transformers import AutoTokenizer
+
+        model_dir = os.getenv("MODEL_PATH", "models/aspect_model_v1")
+        info_path = os.path.join(model_dir, "model_info.json")
+
+        with open(info_path, encoding="utf-8") as f:
+            info = json.load(f)
+
+        _version = info["model_version"]
+        _macro_f1 = float(info["macro_f1"])
+        backbone_source = info.get("backbone_source", info["base_model"])
+
+        _device = "cuda" if torch.cuda.is_available() else "cpu"
+        _tokenizer = AutoTokenizer.from_pretrained(model_dir)
+
+        _model = AspectMultiTaskModel(backbone_source, len(_ASPECTS), len(_POLARITIES))
+        state_dict = torch.load(
+            os.path.join(model_dir, "pytorch_model.bin"), map_location=_device
+        )
+        _model.load_state_dict(state_dict)
+        _model.to(_device)
+        _model.eval()
+
+        logger.info(f"Multilabel aspect model yuklandi: {_version} ({_device})")
+
     else:
         raise ValueError(f"Unsupported MODEL_TYPE: {_type}")
 
@@ -33,6 +93,14 @@ def get_model():
     if _model is None:
         raise RuntimeError("Model not loaded. Call load_model() first.")
     return _model
+
+
+def get_tokenizer():
+    return _tokenizer
+
+
+def get_device():
+    return _device
 
 
 def get_version() -> str:
@@ -49,3 +117,7 @@ def get_macro_f1() -> float:
 
 def get_aspects() -> list[str]:
     return _ASPECTS
+
+
+def get_polarities() -> list[str]:
+    return _POLARITIES
