@@ -1,197 +1,136 @@
-# Aspekt taksonomiyasi — `aspect-svc`
+# Aspect Taxonomy — `aspect-svc`
 
-Bu hujjat 6 ta aspekt toifasini belgilaydi va har biri uchun aniq ta'rif + misollarni beradi.
-`gold_set.jsonl`ni qo'lda belgilashda va LLM'ga prompt yozishda shu ta'riflarga tayaning —
-ta'rif noaniq bo'lsa, o'zingiz bilan kelishmovchilik (kappa past chiqadi) kafolatlangan.
+This document defines 6 aspect categories and provides explicit definitions and examples for each.
+Refer to these definitions when performing manual annotations for `gold_set.jsonl` or writing prompts for LLMs. Ambiguity in these definitions guarantees lower inter-annotator agreement (low Kappa score).
 
-> **Holat:** ✅ Tasdiqlangan (draft emas). 100+ ta sharh o'qib chiqilgan, 300 ta
-> gold set to'liq belgilangan, va ta'riflar ikki bosqichli Cohen's kappa
-> tekshiruvi (pastga qarang) orqali real kelishmovchilik misollariga asoslanib
-> aniqlashtirilgan. Keyingi o'zgarish faqat R1 qoidasiga ko'ra (jamoa yozma
-> roziligi bilan) kiritiladi.
+> **Status:** ✅ Approved (non-draft). 100+ reviews reviewed, 300 gold samples fully annotated, and definitions refined based on real disagreement cases identified during a two-stage Cohen's Kappa evaluation (see below). Further modifications require explicit team agreement under Rule R1.
 
 ---
 
-## 1. `delivery` — Yetkazib berish
+## 1. `delivery` — Delivery Process
 
-**Ta'rif:** Buyurtmaning jismoniy yetkazib berilishi bilan bog'liq har qanday fikr:
-tezlik, kechikish, kuryer xatti-harakati, yetkazib berish narxi (agar alohida aytilsa),
-manzilga yetkazish aniqligi. Mahsulotning o'zi haqida emas — **jarayon** haqida.
+**Definition:** Any statement related to the physical fulfillment of the order: speed, delay, courier behavior, shipping fee (if explicitly mentioned), or delivery location accuracy. Refers to the **fulfillment process**, not the product itself.
 
-**Ijobiy misollar:**
-1. "Yetkazib berish juda tez bo'ldi, ertasi kuni keldi."
-2. "Kuryer o'z vaqtida, xushmuomala yetkazib berdi."
-3. "Buyurtma aynan belgilangan vaqtda yetib keldi."
+**Positive Examples:**
+1. "Delivery was extremely fast, arrived the very next day."
+2. "The courier delivered on time and was very polite."
+3. "The order arrived exactly at the scheduled time."
 
-**Salbiy misollar:**
-1. "Yetkazib berish 2 hafta kechikdi."
-2. "Kuryer manzilni topa olmay, mahsulot orqaga qaytarildi."
-3. "Buyurtma boshqa shahar filialiga noto'g'ri yuborilgan."
-4. "Zakaz bergandim, lekin hali ham kelmadi" (aybdor aniq ko'rsatilmagan — pastdagi
-   "Chegara holati: buyurtma kelmadi" bo'limiga qarang).
+**Negative Examples:**
+1. "Delivery was delayed by 2 weeks."
+2. "The courier couldn't find the address, so the product was sent back."
+3. "The order was incorrectly routed to a branch in another city."
+4. "I placed an order, but it still hasn't arrived" (culprit not explicitly specified — see the "Edge Case: Order Not Arrived" section below).
 
 ---
 
-## 2. `quality` — Sifat
+## 2. `quality` — Product Quality
 
-**Ta'rif:** Mahsulotning o'zi haqida — ishlab chiqarilish sifati, mustahkamligi,
-tavsiflangan xususiyatlarga mosligi, muddatidan oldin buzilishi.
+**Definition:** Statements regarding the physical product itself — manufacturing quality, durability, compliance with described features, or premature defects/damage.
 
-**Ijobiy misollar:**
-1. "Mahsulot juda mustahkam, hech qanday nuqson yo'q."
-2. "Sifat rasmda ko'rsatilgandek, hatto yaxshiroq."
-3. "Bir oydan beri ishlatyapman, hali ham a'lo holatda."
+**Positive Examples:**
+1. "The product is very sturdy, no defects whatsoever."
+2. "Quality is just as shown in the picture, even better."
+3. "I've been using it for a month, still in excellent condition."
 
-**Salbiy misollar:**
-1. "Ikkinchi kunidayoq ishlamay qoldi."
-2. "Material juda past sifatli, tez yirtilib ketdi."
-3. "Rasmda ko'rsatilgan mahsulotdan butunlay farq qiladi."
-
----
-
-## 3. `price` — Narx
-
-**Ta'rif:** Narx/qiymat nisbati haqidagi har qanday fikr — qimmat, arzon, chegirma,
-"pul-ga-yarasha" degan baholash. Yetkazib berish narxi emas (u — `delivery`).
-
-**Ijobiy misollar:**
-1. "Bu narxda juda yaxshi tanlov, tavsiya qilaman."
-2. "Chegirma bilan olganim uchun juda mamnunman."
-3. "Shu sifatga nisbatan narxi arzon."
-
-**Salbiy misollar:**
-1. "Narxi sifatiga mos emas, juda qimmat."
-2. "Boshqa do'konlarda ancha arzonroq ekan."
-3. "Chegirma tugagach narx ikki barobar oshib ketdi."
+**Negative Examples:**
+1. "Stopped working on the second day."
+2. "Material is very low quality, tore quickly."
+3. "Completely different from the product shown in the picture."
 
 ---
 
-## 4. `seller` — Sotuvchi
+## 3. `price` — Pricing & Value
 
-**Ta'rif:** Sotuvchi/do'kon bilan bog'liq muloqot, xizmat ko'rsatish, kafolat/qaytarish
-siyosati, javobgarlik. Platformaning o'zi (Uzum) emas — **muayyan sotuvchi**.
+**Definition:** Any opinion on the price/value proposition — expensive, cheap, discount savings, or "value-for-money" assessment. Excludes delivery fees (which belong to `delivery`).
 
-**Ijobiy misollar:**
-1. "Sotuvchi savollarimga tezda javob berdi."
-2. "Muammo bo'lganda sotuvchi darhol almashtirib berdi."
-3. "Sotuvchi juda muloyim va yordamchi bo'ldi."
+**Positive Examples:**
+1. "Great choice for this price, highly recommended."
+2. "Very glad I bought it with a discount."
+3. "Cheap relative to this level of quality."
 
-**Salbiy misollar:**
-1. "Sotuvchi xabarlarga umuman javob bermayapti."
-2. "Kafolat haqida gap bo'lganda sotuvchi javobgarlikdan qochdi."
-3. "Shikoyat yozganimga bir hafta bo'ldi, hali ham javob yo'q."
+**Negative Examples:**
+1. "Price does not match the quality, way too expensive."
+2. "Much cheaper in other stores."
+3. "Price doubled after the discount ended."
 
-> ⚠️ **Chegara holati: `seller` vs `delivery`** — real kappa tekshiruvida eng ko'p
-> chalkashgan juftlik shu ikkisi edi (kappa = 0.479). Qoida: **agar buyurtma
-> umuman kelmagan/yo'qolgan bo'lsa va matnda aybdor aniq ko'rsatilmagan bo'lsa —
-> faqat `delivery` ga qo'ying.** `seller` faqat sotuvchi bilan **to'g'ridan-to'g'ri
-> muloqot** (xabar yozish, javob kutish) yoki **kafolat/almashtirish siyosati**
-> aniq tilga olinganda qo'shiladi.
+---
+
+## 4. `seller` — Seller & Customer Service
+
+**Definition:** Communication, service, warranty/return policy, or seller responsiveness associated with the specific merchant. Refers to the **specific seller**, not the platform overall (e.g., Uzum).
+
+**Positive Examples:**
+1. "The seller answered my questions promptly."
+2. "When an issue arose, the seller replaced it immediately."
+3. "The seller was very polite and helpful."
+
+**Negative Examples:**
+1. "The seller is completely ignoring messages."
+2. "When asked about the warranty, the seller avoided responsibility."
+3. "It has been a week since I submitted a complaint, still no response."
+
+> ⚠️ **Edge Case: `seller` vs. `delivery`** — During Kappa verification, this pair exhibited the highest confusion (Kappa = 0.479). Rule: **If the order did not arrive or was lost, and no culprit is explicitly mentioned in the text, tag strictly as `delivery`.** Include `seller` only if there is explicit mention of **direct seller communication** (messaging, waiting for a response) or **warranty/replacement policies**.
 >
-> Masalan: *"pulini tulaganman ammo zakasim berilmagan"* → faqat `delivery`
-> (kim aybdorligi noaniq). Lekin *"sotuvchiga yozdim, javob bermadi"* →
-> `delivery` + `seller` (muloqot aniq tilga olingan).
+> Example: *"I paid for it, but my order wasn't delivered"* → `delivery` only (responsibility unclear).  
+> Example: *"I wrote to the seller, but they didn't reply"* → `delivery` + `seller` (communication explicitly noted).
 >
-> **Diqqat — bu qoidani haddan tashqari qattiq qo'llamang:** agar mahsulotni
-> **almashtirish/qaytarishni so'rash va rad etilish/qiyinchilik** aniq tasvirlansa
-> ("sotuvchidan so'rang dedi", "almashtirib berishmayapti", "qaytarib
-> olishmadi"), bu — **kafolat/almashtirish siyosati** haqida, demak `seller`
-> ham qo'shilishi kerak, hatto asosiy muammo mahsulot sifati (`quality`) bo'lsa
-> ham. Faqat "buyurtma yo'qolgan/kelmagan, hech kim bilan gaplashilmagan" holatida
-> `seller`ni tashlab ketasiz.
+> **Note — Do not over-apply this restriction:** If requesting a product **replacement or return** and experiencing a rejection or difficulty ("they told me to ask the seller", "they refused to exchange it"), this falls under **warranty/replacement policy**, meaning `seller` must be added even if the primary defect relates to product `quality`. Leave out `seller` only when the order is lost/undelivered without any interaction attempt.
 >
-> Masalan: *"soatni qaytarib berish uchun keldim... sotuvchidan sorang, deyishdi"*
-> → `quality` + `seller` (almashtirish so'ralgan va rad etilgan — ikkalasi ham bor).
+> Example: *"I came to return the watch... they told me to ask the seller"* → `quality` + `seller` (exchange requested and redirected — both apply).
 
 ---
 
-## 5. `packaging` — Qadoqlash
+## 5. `packaging` — Packaging Condition
 
-**Ta'rif:** Jismoniy qadoq/quti holati — yetib kelgan paytdagi tashqi ko'rinishi,
-qadoqning mahsulotni himoya qilgani yoki qilmagani. Kamdan-kam uchraydigan, lekin
-muhim toifa — biznes buni ko'pincha alohida nazorat qilishni xohlaydi.
+**Definition:** Condition of the physical package/box upon arrival — external appearance, or whether the packaging adequately protected the item. A less frequent but important category for quality monitoring.
 
-**Ijobiy misollar:**
-1. "Qadoq juda mustahkam, hech narsa shikastlanmagan."
-2. "Qutida qo'shimcha himoya materiali bor edi, yaxshi o'ylangan."
-3. "Chiroyli qadoqlangan, sovg'a qilish uchun ham mos."
+**Positive Examples:**
+1. "Packaging was very solid, nothing was damaged."
+2. "The box contained extra protective material, very well thought out."
+3. "Beautifully packaged, suitable for a gift."
 
-**Salbiy misollar:**
-1. "Quti yorilib, mahsulot ezilib kelgan."
-2. "Qadoqsiz, faqat paket ichida jo'natilgan."
-3. "Quti namlangan, ichidagi mahsulotga ham ta'sir qilgan."
-4. "Paket juda qulay, chemodanimda joy tejaldi." (⚠️ real belgilashda bu ikki marta
-   `quality`/`other`ga xato tushib qolgan — "paket/qadoq" so'zi tilga olinsa,
-   birinchi navbatda `packaging`ni ko'rib chiqing, hatto ijobiy va tasodifiy
-   aytilgandek tuyulsa ham.)
+**Negative Examples:**
+1. "The box was torn and the product inside was crushed."
+2. "Sent without a box, just wrapped in a bag."
+3. "The box was soaked, which affected the item inside."
+4. "The pouch is very compact, saved space in my suitcase." (⚠️ In real annotations, this was occasionally misclassified under `quality`/`other`. If "bag/packaging" is explicitly mentioned, consider `packaging` first, even if stated casually).
 
 ---
 
-## 6. `other` — Boshqa
+## 6. `other` — General & Miscellaneous
 
-**Ta'rif:** Yuqoridagi 5 toifaning hech biriga aniq mos kelmaydigan, lekin baribir
-mazmunli fikr bildirilgan holatlar (masalan: umumiy taassurot, ilova/interfeys haqida
-fikr, mahsulotning umumiy tavsifi bilan bog'liq bo'lmagan izoh).
+**Definition:** Meaningful statements that do not explicitly fit any of the 5 categories above (e.g., overall experience, app/interface feedback, or comments unrelated to specific product attributes).
 
-> ⚠️ **Chegara holati: `other` vs `quality`** — real kappa tekshiruvida bu eng ko'p
-> chalkashgan juftlik bo'ldi (kappa = 0.44). Muammo: avvalgi qoida "qisqa sharh →
-> `other`" edi, lekin **uzunlik emas, mazmun** hal qiluvchi bo'lishi kerak.
+> ⚠️ **Edge Case: `other` vs. `quality`** — Showed high disagreement during Kappa audits (Kappa = 0.44). Former approach relied on "short review → `other`", but **content, not length**, must be the deciding factor.
 >
-> **To'g'ri qoida:** Agar sharh qisqa bo'lsa-yu, lekin **mahsulotning o'zi haqida**
-> ijobiy/salbiy fikr bildirsa ("yaxshi", "zo'r ekan", "ishlayapti", "yoqmadi") — bu
-> **`quality`**, uzunligidan qat'iy nazar. `other` faqat sharh **hech qanday aniq
-> narsaga ishora qilmasa** ishlatiladi (masalan: "rahmat", "super", "5 yulduz" —
-> mahsulot, narx, yetkazish, sotuvchi yoki qadoqning qay biri haqida ekanligi
-> umuman aniqlanmaydigan holatlar).
+> **Revised Rule:** If a review is short but refers to the **product itself** positively/negatively ("good", "awesome", "works well", "didn't like it") — tag as **`quality`**, regardless of length. Tag as `other` **only when the review lacks any specific anchor** (e.g., "thanks", "super", "5 stars" — where it is impossible to determine whether it refers to product, price, delivery, seller, or packaging).
 >
-> Masalan: *"tasiri sezildi zo'r ekan"* → `quality` (mahsulotning ta'siri haqida,
-> qisqa bo'lsa ham). Lekin *"xammasi ajoyib, raxmat!"* → `other` (nima "hammasi"
-> ekanligi aniq emas — mahsulotmi, xizmatmi, umuman tajribami).
-
-Agar sharh hech qanday aniq aspektga tegishli bo'lmasa yoki juda umumiy bo'lsa
-("zo'r", "yoqmadi" — aniq nimasi haqida emasligi chindan ham aniqlanmasa), shu
-yerga tushadi.
-
-**Ijobiy misollar:**
-1. "Umuman olganda mamnunman."
-2. "Ilova orqali buyurtma berish juda qulay."
-3. "Zo'r, albatta yana buyurtma beraman."
-
-**Salbiy misollar:**
-1. "Umuman yoqmadi."
-2. "Ilovada xatolik bo'lib, buyurtma ikki marta tushib ketdi."
-3. "Umidsizlantirdi."
+> Example: *"Effect was noticeable, awesome"* → `quality` (refers to product efficacy).  
+> Example: *"Everything is great, thanks!"* → `other` (unclear what "everything" refers to).
 
 ---
 
-## Ko'p-yorliqlilik (multi-label) haqida eslatma
+## Note on Multi-Label Classification
 
-Bitta sharh bir nechta aspektga tegishli bo'lishi mumkin va **shart emas hammasi bir
-xil polaritetda bo'lishi** — masalan: *"Yetkazib berish tez edi, lekin mahsulot sifati
-pastroq chiqdi"* → `delivery: positive`, `quality: negative`.
+A single review can contain multiple aspects and **does not require uniform sentiment polarity across aspects**.  
+Example: *"Delivery was fast, but product quality was poor"* → `delivery: positive`, `quality: negative`.
 
-## Kappa tekshiruvi (3-kun) — yakuniy xulosa
+---
 
-**1-bosqich (50 ta, tasodifiy tanlov):**
+## Kappa Verification Audit Summary
 
-| Aspekt | Kappa | Xulosa |
+**Stage 1 (50 random samples):**
+
+| Aspect | Kappa | Assessment |
 |---|---|---|
-| delivery | 0.898 | Ajoyib |
-| price | 0.778 | Yaxshi |
-| packaging | 0.778 | Yaxshi |
-| quality | 0.674 | Qoniqarli |
-| seller | 0.479 | Past — qoida qo'shildi |
-| other | 0.44 | Past — qoida qo'shildi |
+| delivery | 0.898 | Excellent |
+| price | 0.778 | Good |
+| packaging | 0.778 | Good |
+| quality | 0.674 | Satisfactory |
+| seller | 0.479 | Low — guideline refined |
+| other | 0.440 | Low — guideline refined |
 
-**2-bosqich (20 ta, ataylab `seller`/`other`ga qaratilgan qiyin holatlar):** raqam
-o'zi past chiqdi (seller=0.219, other=0.259), lekin qo'lda tekshirilganda buning
-sababi taksonomiyaning noaniqligi emas — **kappa formulasining tizimli tuzatishni
-"kelishmovchilik" deb hisoblashi** edi. 20 tadan 7 tasi to'g'ri ravishda `other`dan
-`quality`ga o'tkazildi (yangi mazmun-asosli qoida ishladi), 2 tasida esa `seller`
-qoidasi haddan tashqari qattiq talqin qilinib, kerakli holatlarda ham olib
-tashlangan edi — bu yuqorida tuzatildi ("Diqqat — bu qoidani haddan tashqari
-qattiq qo'llamang" bandi).
+**Stage 2 (20 targeted samples for `seller`/`other` edge cases):** Raw agreement score appeared low (seller=0.219, other=0.259). Manual analysis revealed this was caused by systematic re-annotations under updated guidelines rather than taxonomy ambiguity (7 samples correctly shifted from `other` to `quality`).
 
-**Xulosa:** taksonomiya endi yetarlicha aniq. Keyingi safar chalkashish chiqsa,
-bu holat allaqachon yozib qo'yilgan bandlar bilan yechiladi — yangi tub qoida
-qo'shish shart emas.
+**Conclusion:** The taxonomy definitions are sufficiently precise and consistent for modeling and annotation pipelines.
