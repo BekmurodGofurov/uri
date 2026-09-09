@@ -46,6 +46,17 @@ class AspectMultiTaskModel:
         return _Impl(*args, **kwargs)
 
 
+def _resolve_backbone_source(info: dict) -> str:
+    """model_info.json'dagi backbone_source ba'zan faqat lokal papka nomi
+    (masalan "pretrained_backbone") bo'lishi mumkin — bu HF Hub'da mavjud
+    emas. Bunday holatda asl base_model'ga (haqiqiy HF repo id) qaytamiz."""
+    backbone_source = info.get("backbone_source", info["base_model"])
+    looks_like_hf_repo_or_path = "/" in backbone_source or os.path.exists(backbone_source)
+    if not looks_like_hf_repo_or_path:
+        return info["base_model"]
+    return backbone_source
+
+
 def load_model():
     global _model, _tokenizer, _version, _type, _macro_f1, _device
 
@@ -64,13 +75,26 @@ def load_model():
 
         model_dir = os.getenv("MODEL_PATH", "models/aspect_model_v1")
         info_path = os.path.join(model_dir, "model_info.json")
+        hf_repo_id = os.getenv("HF_MODEL_REPO")  # masalan: "Jony-0009/isomiddinovs-model"
+
+        # Model lokal diskda topilmasa (masalan yengil Docker image'da),
+        # uni Hugging Face Hub'dan avtomatik tortib olamiz.
+        if hf_repo_id and not os.path.exists(info_path):
+            from huggingface_hub import snapshot_download
+
+            logger.info(f"Model lokal topilmadi, Hugging Face'dan yuklanmoqda: {hf_repo_id}")
+            snapshot_download(
+                repo_id=hf_repo_id,
+                local_dir=model_dir,
+                token=os.getenv("HF_TOKEN"),  # faqat private repo bo'lsa kerak
+            )
 
         with open(info_path, encoding="utf-8") as f:
             info = json.load(f)
 
         _version = info["model_version"]
         _macro_f1 = float(info["macro_f1"])
-        backbone_source = info.get("backbone_source", info["base_model"])
+        backbone_source = _resolve_backbone_source(info)
 
         _device = "cuda" if torch.cuda.is_available() else "cpu"
         _tokenizer = AutoTokenizer.from_pretrained(model_dir)
