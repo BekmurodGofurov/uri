@@ -33,4 +33,5 @@ dashboard/.vite/
 .idea/
 
 sentiment-svc/data/
-sentiment-svc/models/
+sentiment-svc/models/*
+!sentiment-svc/models/tfidf_v1.joblib

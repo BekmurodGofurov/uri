@@ -4,6 +4,8 @@ __pycache__/
 .env
 data/*
 !data/split_manifest.json
-models/
+models/*
+!models/.gitkeep
+!models/tfidf_v1.joblib
 .pytest_cache/
 .ruff_cache/
