@@ -40,12 +40,8 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-_cors_origins_raw = os.getenv("CORS_ORIGINS")
-_cors_origins = (
-    [orig.strip() for orig in _cors_origins_raw.split(",") if orig.strip()]
-    if _cors_origins_raw
-    else []
-)
+_cors_origins_raw = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+_cors_origins = [orig.strip() for orig in _cors_origins_raw.split(",") if orig.strip()]
 
 app.add_middleware(
     CORSMiddleware,
