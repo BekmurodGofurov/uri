@@ -84,20 +84,6 @@ services:
       retries: 3
       start_period: 5s
 
-  dashboard:
-    build:
-      context: ./dashboard
-      dockerfile: Dockerfile
-    image: uri-dashboard:latest
-    container_name: uri-dashboard
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      VITE_API_URL: http://gateway:8000
-    depends_on:
-      gateway:
-        condition: service_started
-
 volumes:
   postgres_data:
+

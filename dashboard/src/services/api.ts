@@ -6,8 +6,27 @@ import {
   Sentiment,
 } from '../types/api';
 
-export const BASE_URL = import.meta.env.VITE_API_URL || '';
+const rawApiUrl = import.meta.env.VITE_API_URL;
+
+if (!rawApiUrl || !rawApiUrl.trim()) {
+  console.error(
+    "[URI Dashboard] XATOLIK: VITE_API_URL .env faylida ko'rsatilmagan! " +
+    "Iltimos, dashboard/.env faylida VITE_API_URL=http://localhost:8000 deb belgilang."
+  );
+}
+
+export const BASE_URL = (rawApiUrl || '').trim().replace(/\/+$/, '');
 export const DEFAULT_PRODUCT_ID = 'prod_1';
+
+export function requireApiUrl(): string {
+  if (!BASE_URL) {
+    throw new Error(
+      "VITE_API_URL belgilanmagan! Iltimos, dashboard/.env faylida VITE_API_URL ni ko'rsating " +
+      "(masalan: VITE_API_URL=http://localhost:8000)."
+    );
+  }
+  return BASE_URL;
+}
 
 export function errorMessage(err: unknown, fallback: string): string {
   if (err instanceof Error) return err.message;
@@ -22,6 +41,12 @@ export interface ApiStatus {
 }
 
 export async function checkGatewayHealth(): Promise<ApiStatus> {
+  if (!BASE_URL) {
+    return {
+      online: false,
+      error: "VITE_API_URL .env faylida belgilanmagan! dashboard/.env faylini tekshiring.",
+    };
+  }
   try {
     const res = await fetch(`${BASE_URL}/api/health`, {
       headers: { Accept: 'application/json' },
@@ -46,7 +71,8 @@ export async function checkGatewayHealth(): Promise<ApiStatus> {
 }
 
 export async function fetchProducts(): Promise<ProductListItem[]> {
-  const res = await fetch(`${BASE_URL}/api/products`);
+  const baseUrl = requireApiUrl();
+  const res = await fetch(`${baseUrl}/api/products`);
   if (!res.ok) {
     const errText = await res.text();
     throw new Error(`Mahsulotlarni yuklashda xatolik (${res.status}): ${errText}`);
@@ -56,7 +82,8 @@ export async function fetchProducts(): Promise<ProductListItem[]> {
 }
 
 export async function fetchProductDetail(productId: string): Promise<ProductDetailResponse> {
-  const res = await fetch(`${BASE_URL}/api/products/${encodeURIComponent(productId)}`);
+  const baseUrl = requireApiUrl();
+  const res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(productId)}`);
   if (!res.ok) {
     const errText = await res.text();
     throw new Error(`Mahsulot tafsilotini yuklashda xatolik (${res.status}): ${errText}`);
@@ -68,12 +95,13 @@ export async function fetchProductReviews(
   productId: string,
   params?: { limit?: number; offset?: number; sentiment?: Sentiment }
 ): Promise<ProductReviewsResponse> {
+  const baseUrl = requireApiUrl();
   const query = new URLSearchParams();
   if (params?.limit) query.set('limit', String(params.limit));
   if (params?.offset) query.set('offset', String(params.offset));
   if (params?.sentiment) query.set('sentiment', params.sentiment);
 
-  const url = `${BASE_URL}/api/products/${encodeURIComponent(productId)}/reviews?${query.toString()}`;
+  const url = `${baseUrl}/api/products/${encodeURIComponent(productId)}/reviews?${query.toString()}`;
   const res = await fetch(url);
   if (!res.ok) {
     const errText = await res.text();
@@ -87,6 +115,7 @@ export async function scoreReviewInteractive(
   rating?: number,
   productId?: string
 ): Promise<PreviewScoreResponse> {
+  const baseUrl = requireApiUrl();
   const reqPayload = {
     reviews: [
       {
@@ -97,7 +126,7 @@ export async function scoreReviewInteractive(
     ],
   };
 
-  const res = await fetch(`${BASE_URL}/api/score/preview`, {
+  const res = await fetch(`${baseUrl}/api/score/preview`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(reqPayload),
