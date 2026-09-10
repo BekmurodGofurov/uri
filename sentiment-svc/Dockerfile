@@ -18,4 +18,4 @@ ENV PYTHONPATH=/workspace \
     MODEL_VERSION=sentiment-v1 \
     MODEL_TYPE=tfidf
 
-CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${SENTIMENT_PORT:-${PORT:?SENTIMENT_PORT yoki PORT muhit o'zgaruvchisi ko'rsatilishi shart}}"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${SENTIMENT_PORT:-${PORT:?SENTIMENT_PORT or PORT environment variable must be set}}"]

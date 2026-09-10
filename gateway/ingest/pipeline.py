@@ -11,6 +11,7 @@ from shared.contracts import AspectResponse, ReviewIn, ScoreRequest, SentimentRe
 
 logger = logging.getLogger(__name__)
 
+
 def get_sentiment_svc_url() -> str:
     url = os.getenv("SENTIMENT_SVC_URL")
     if not url:
@@ -42,7 +43,6 @@ def score_only_batch(
 
     sentiment_url = sentiment_url or get_sentiment_svc_url()
     aspect_url = aspect_url or get_aspect_svc_url()
-
 
     items = [ReviewIn(id=r["id"], text=r["text"]) for r in reviews]
     request = ScoreRequest(reviews=items)
@@ -160,4 +160,3 @@ def process_unscored_reviews(
         session, unscored, sentiment_client, aspect_client, sentiment_url, aspect_url
     )
     return len(saved)
-

@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
   // 1. Root .env fallback
   const rootEnv = loadEnv(mode, rootDir, '');
   // 2. Dashboard .env (primary)
@@ -24,12 +24,12 @@ export default defineConfig(({ mode }) => {
     process.env.FRONTEND_PORT ||
     process.env.VITE_PORT ||
     process.env.PORT;
-  if (!portStr) {
+  if (command === 'serve' && !portStr) {
     throw new Error(
       "[URI Dashboard] ERROR: FRONTEND_PORT must be set in dashboard/.env file!"
     );
   }
-  const serverPort = Number(portStr);
+  const serverPort = portStr ? Number(portStr) : 3000;
 
   return {
     envDir: __dirname,

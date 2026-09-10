@@ -47,15 +47,3 @@ def model_info():
         "training_date": "2026-09-03",
         "headline_metric": "macro-f1: 0.80 (stub)",
     }
-
-
-if __name__ == "__main__":
-    import os
-    import uvicorn
-
-    port_val = os.getenv("ASPECT_PORT") or os.getenv("PORT")
-    if not port_val:
-        raise RuntimeError("ASPECT_PORT or PORT environment variable must be set in .env file")
-    uvicorn.run("gateway.stubs.aspect_stub:app", host="0.0.0.0", port=int(port_val))
-
-

@@ -56,7 +56,6 @@ app.add_middleware(
 )
 
 
-
 def get_db():
     yield from get_session()
 
@@ -527,14 +526,3 @@ def score_reviews_endpoint(
         scored_count=len(results),
         predictions=results,
     )
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    port_val = os.getenv("GATEWAY_PORT") or os.getenv("PORT")
-    if not port_val:
-        raise RuntimeError("GATEWAY_PORT or PORT environment variable must be set in .env file")
-    uvicorn.run("gateway.api.app:app", host="0.0.0.0", port=int(port_val))
-
-
