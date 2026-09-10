@@ -14,16 +14,18 @@ logger = logging.getLogger(__name__)
 
 def get_sentiment_svc_url() -> str:
     url = os.getenv("SENTIMENT_SVC_URL")
-    if not url:
-        raise RuntimeError("SENTIMENT_SVC_URL must be set in .env file")
-    return url
+    if url:
+        return url
+    port = os.getenv("SENTIMENT_PORT", "8001")
+    return f"http://localhost:{port}"
 
 
 def get_aspect_svc_url() -> str:
     url = os.getenv("ASPECT_SVC_URL")
-    if not url:
-        raise RuntimeError("ASPECT_SVC_URL must be set in .env file")
-    return url
+    if url:
+        return url
+    port = os.getenv("ASPECT_PORT", "8002")
+    return f"http://localhost:{port}"
 
 
 def score_only_batch(
