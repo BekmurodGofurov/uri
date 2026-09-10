@@ -62,7 +62,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
       setError(
         errorMessage(
           err,
-          "Gateway API ga ulanishda xatolik yuz berdi. Backend ishlayotganligini tekshiring."
+          "Error connecting to Gateway API. Please verify that the backend is running."
         )
       );
     } finally {
@@ -87,9 +87,9 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-slate-900 text-base">Jonli AI Tahlil (Live Scorer)</h3>
+              <h3 className="font-extrabold text-slate-900 text-base">Live AI Scorer</h3>
               <p className="text-xs text-slate-500">
-                Sharh yozing va Gateway ML xizmatlaridan natijani real vaqtda oling
+                Write a review and receive real-time predictions from Gateway ML services
               </p>
             </div>
           </div>
@@ -107,7 +107,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
           {/* Quick preset examples */}
           <div>
             <span className="text-xs font-semibold text-slate-500 mb-2 block">
-              Namunaviy o'zbekcha sharhlar:
+              Sample review texts:
             </span>
             <div className="flex flex-wrap gap-2">
               {PRESET_EXAMPLES.map((ex, i) => (
@@ -126,7 +126,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Rating selector */}
             <div className="flex items-center gap-3">
-              <span className="text-xs font-semibold text-slate-700">Baholash:</span>
+              <span className="text-xs font-semibold text-slate-700">Rating:</span>
               <div className="flex items-center gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -145,18 +145,18 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
                   </button>
                 ))}
               </div>
-              <span className="text-xs font-mono font-bold text-slate-700">{rating} yulduz</span>
+              <span className="text-xs font-mono font-bold text-slate-700">{rating} stars</span>
             </div>
 
             {/* Textarea */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">
-                Sharh matni (O'zbek tilida):
+                Review text:
               </label>
               <textarea
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
-                placeholder="Masalan: Mahsulot sifati juda ajoyib, yetkazib berish ham tez bo'ldi..."
+                placeholder="e.g. Mahsulot sifati juda ajoyib, yetkazib berish ham tez bo'ldi..."
                 rows={4}
                 className="w-full p-3.5 text-sm bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 transition resize-none"
               />
@@ -176,12 +176,12 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span>AI xizmatlari tahlil qilmoqda...</span>
+                  <span>AI services analyzing...</span>
                 </>
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>Gateway orqali tahlil qilish</span>
+                  <span>Score via Gateway</span>
                 </>
               )}
             </button>
@@ -194,7 +194,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-uzum-400" />
                   <span className="text-xs font-bold uppercase tracking-wider text-slate-300">
-                    AI Tahlil Natijasi
+                    AI Prediction Result
                   </span>
                 </div>
 
@@ -208,7 +208,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
 
               {/* Sentiment outcome */}
               <div className="flex items-center justify-between">
-                <span className="text-xs text-slate-400">Kayfiyat:</span>
+                <span className="text-xs text-slate-400">Sentiment:</span>
                 <span
                   className={`px-2.5 py-1 rounded-lg text-xs font-extrabold uppercase ${
                     result.sentiment_label === 'positive'
@@ -219,17 +219,17 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
                   }`}
                 >
                   {result.sentiment_label === 'positive'
-                    ? 'Ijobiy'
+                    ? 'Positive'
                     : result.sentiment_label === 'negative'
-                    ? 'Salbiy'
-                    : 'Neytral'}{' '}
+                    ? 'Negative'
+                    : 'Neutral'}{' '}
                   ({Math.round(result.sentiment_confidence * 100)}%)
                 </span>
               </div>
 
               {/* Aspects outcome */}
               <div>
-                <span className="text-xs text-slate-400 block mb-1.5">Aniqlangan jihatlar:</span>
+                <span className="text-xs text-slate-400 block mb-1.5">Identified aspects:</span>
                 {result.aspects && result.aspects.length > 0 ? (
                   <div className="flex flex-wrap gap-1.5">
                     {result.aspects.map((asp, i) => (
@@ -242,7 +242,7 @@ export const LiveScorerModal: React.FC<LiveScorerModalProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <span className="text-xs text-slate-500 italic">Jihatlar topilmadi</span>
+                  <span className="text-xs text-slate-500 italic">No aspects identified</span>
                 )}
               </div>
             </div>

@@ -10,8 +10,8 @@ const rawApiUrl = import.meta.env.VITE_API_URL;
 
 if (!rawApiUrl || !rawApiUrl.trim()) {
   console.error(
-    "[URI Dashboard] XATOLIK: VITE_API_URL .env faylida ko'rsatilmagan! " +
-    "Iltimos, dashboard/.env faylida VITE_API_URL=http://localhost:8000 deb belgilang."
+    "[URI Dashboard] ERROR: VITE_API_URL is not set in .env file! " +
+    "Please specify VITE_API_URL in dashboard/.env (e.g. http://<host>:<port>)."
   );
 }
 
@@ -21,10 +21,10 @@ export const DEFAULT_PRODUCT_ID = 'prod_1';
 export function requireApiUrl(): string {
   if (!BASE_URL) {
     throw new Error(
-      "VITE_API_URL belgilanmagan! Iltimos, dashboard/.env faylida VITE_API_URL ni ko'rsating " +
-      "(masalan: VITE_API_URL=http://localhost:8000)."
+      "VITE_API_URL is not specified! Please set VITE_API_URL in dashboard/.env."
     );
   }
+
   return BASE_URL;
 }
 
@@ -44,7 +44,7 @@ export async function checkGatewayHealth(): Promise<ApiStatus> {
   if (!BASE_URL) {
     return {
       online: false,
-      error: "VITE_API_URL .env faylida belgilanmagan! dashboard/.env faylini tekshiring.",
+      error: "VITE_API_URL is not specified in .env file! Please check dashboard/.env.",
     };
   }
   try {
@@ -65,7 +65,7 @@ export async function checkGatewayHealth(): Promise<ApiStatus> {
   } catch (err: unknown) {
     return {
       online: false,
-      error: errorMessage(err, 'Gateway API ga ulanib bo‘lmadi'),
+      error: errorMessage(err, 'Failed to connect to Gateway API'),
     };
   }
 }
@@ -75,7 +75,7 @@ export async function fetchProducts(): Promise<ProductListItem[]> {
   const res = await fetch(`${baseUrl}/api/products`);
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Mahsulotlarni yuklashda xatolik (${res.status}): ${errText}`);
+    throw new Error(`Failed to load products (${res.status}): ${errText}`);
   }
   const data = await res.json();
   return Array.isArray(data) ? data : [];
@@ -86,7 +86,7 @@ export async function fetchProductDetail(productId: string): Promise<ProductDeta
   const res = await fetch(`${baseUrl}/api/products/${encodeURIComponent(productId)}`);
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Mahsulot tafsilotini yuklashda xatolik (${res.status}): ${errText}`);
+    throw new Error(`Failed to load product details (${res.status}): ${errText}`);
   }
   return res.json();
 }
@@ -105,7 +105,7 @@ export async function fetchProductReviews(
   const res = await fetch(url);
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Sharhlarni yuklashda xatolik (${res.status}): ${errText}`);
+    throw new Error(`Failed to load reviews (${res.status}): ${errText}`);
   }
   return res.json();
 }
@@ -134,7 +134,7 @@ export async function scoreReviewInteractive(
 
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Tahlil qilishda xatolik (${res.status}): ${errText}`);
+    throw new Error(`Scoring failed (${res.status}): ${errText}`);
   }
 
   return res.json();

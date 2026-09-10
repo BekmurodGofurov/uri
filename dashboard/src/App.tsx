@@ -34,15 +34,16 @@ export const App: React.FC = () => {
 
       if (!health.online) {
         setApiError(
-          `Gateway API ga ulanib bo'lmadi (${BASE_URL || 'http://localhost:8000'}). Iltimos, backend xizmatini ishga tushiring.`
+          `Could not connect to Gateway API (${BASE_URL || "URL not specified"}). Please ensure the backend service is running.`
         );
+
       }
 
       const prods = await fetchProducts();
       setProducts(prods);
     } catch (e: unknown) {
       console.error('Failed to load dashboard data:', e);
-      setApiError(errorMessage(e, "Mahsulotlarni Gateway API'dan yuklab bo'lmadi"));
+      setApiError(errorMessage(e, "Failed to load products from Gateway API"));
     } finally {
       setIsLoadingProducts(false);
       setIsRefreshing(false);
@@ -100,7 +101,7 @@ export const App: React.FC = () => {
               onClick={loadData}
               className="px-2.5 py-1 rounded-md bg-amber-200/60 hover:bg-amber-200 text-amber-950 font-bold transition shrink-0"
             >
-              Qayta urinish
+              Retry
             </button>
           </div>
         </div>
