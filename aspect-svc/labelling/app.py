@@ -4,9 +4,7 @@ import os
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(
-    page_title="Aspekt gold-set belgilash", page_icon="🏷️", layout="centered"
-)
+st.set_page_config(page_title="Aspekt gold-set belgilash", page_icon="🏷️", layout="centered")
 
 ASPECTS = [
     ("delivery", "Yetkazib berish"),
@@ -113,18 +111,14 @@ if st.session_state["text_col"] is None:
             for i in df.index:
                 rid = _row_id_for(i, None if id_col.startswith("(") else id_col)
                 if rid in saved_by_id:
-                    df.loc[i, "aspects_json"] = json.dumps(
-                        saved_by_id[rid], ensure_ascii=False
-                    )
+                    df.loc[i, "aspects_json"] = json.dumps(saved_by_id[rid], ensure_ascii=False)
                     resumed_count += 1
 
         st.session_state["text_col"] = text_col
         st.session_state["id_col"] = None if id_col.startswith("(") else id_col
         st.session_state["df"] = df
         # Birinchi hali belgilanmagan qatorga o'tamiz (davom ettirish).
-        first_unlabeled = next(
-            (i for i in df.index if df.loc[i, "aspects_json"] == ""), 0
-        )
+        first_unlabeled = next((i for i in df.index if df.loc[i, "aspects_json"] == ""), 0)
         st.session_state["current_idx"] = int(first_unlabeled)
         if resumed_count:
             st.toast(f"✅ {resumed_count} ta oldin saqlangan belgi tiklandi.")
@@ -175,17 +169,14 @@ if recheck_mode:
         "Bu rejimda birinchi belgilaganingiz ko'rsatilmaydi — kelgusi kunda "
         "o'zingizga qarshi qiyoslash (Cohen's kappa) uchun."
     )
-    st.session_state["current_idx"] = min(
-        st.session_state["current_idx"], active_limit - 1
-    )
+    st.session_state["current_idx"] = min(st.session_state["current_idx"], active_limit - 1)
 
 idx = st.session_state["current_idx"]
 
 labeled = int((df[active_col].iloc[:active_limit] != "").sum())
 st.progress(labeled / active_limit if active_limit else 0)
 st.write(
-    f"**Belgilangan: {labeled} / {active_limit}**"
-    + (" (qayta tekshirish)" if recheck_mode else "")
+    f"**Belgilangan: {labeled} / {active_limit}**" + (" (qayta tekshirish)" if recheck_mode else "")
 )
 
 c1, c2, c3 = st.columns([1, 2, 1])
@@ -194,9 +185,7 @@ with c1:
         st.session_state["current_idx"] -= 1
         st.rerun()
 with c3:
-    if st.button(
-        "Keyingi ➡️", use_container_width=True, disabled=idx >= active_limit - 1
-    ):
+    if st.button("Keyingi ➡️", use_container_width=True, disabled=idx >= active_limit - 1):
         st.session_state["current_idx"] += 1
         st.rerun()
 with c2:
@@ -223,11 +212,7 @@ st.markdown(
 )
 
 existing_raw = df.loc[idx, active_col]
-existing = (
-    {a["aspect"]: a["polarity"] for a in json.loads(existing_raw)}
-    if existing_raw
-    else {}
-)
+existing = {a["aspect"]: a["polarity"] for a in json.loads(existing_raw)} if existing_raw else {}
 
 prefill = existing if not recheck_mode else {}
 
@@ -246,9 +231,7 @@ for key, label in ASPECTS:
         selections[key] = POLARITY_TO_CODE[choice]
 
 if st.button("💾 Saqlash va keyingisi", type="primary", use_container_width=True):
-    aspects_list = [
-        {"aspect": k, "polarity": v, "confidence": 1.0} for k, v in selections.items()
-    ]
+    aspects_list = [{"aspect": k, "polarity": v, "confidence": 1.0} for k, v in selections.items()]
     df.loc[idx, active_col] = json.dumps(aspects_list, ensure_ascii=False)
     st.session_state["df"] = df
     save_jsonl(
@@ -296,12 +279,9 @@ with st.expander("📊 O'z-o'ziga mosligini hisoblash (Cohen's kappa)"):
         with open(RECHECK_OUT, encoding="utf-8") as f:
             recheck_lines = f.readlines()
 
-        main_rows = {
-            json.loads(line)["id"]: json.loads(line)["aspects"] for line in main_lines
-        }
+        main_rows = {json.loads(line)["id"]: json.loads(line)["aspects"] for line in main_lines}
         recheck_rows = {
-            json.loads(line)["id"]: json.loads(line)["aspects"]
-            for line in recheck_lines
+            json.loads(line)["id"]: json.loads(line)["aspects"] for line in recheck_lines
         }
         common_ids = [i for i in recheck_rows if i in main_rows]
         if len(common_ids) < 2:
@@ -309,14 +289,8 @@ with st.expander("📊 O'z-o'ziga mosligini hisoblash (Cohen's kappa)"):
         else:
             results = []
             for key, label in ASPECTS:
-                y1 = [
-                    1 if key in {a["aspect"] for a in main_rows[i]} else 0
-                    for i in common_ids
-                ]
-                y2 = [
-                    1 if key in {a["aspect"] for a in recheck_rows[i]} else 0
-                    for i in common_ids
-                ]
+                y1 = [1 if key in {a["aspect"] for a in main_rows[i]} else 0 for i in common_ids]
+                y2 = [1 if key in {a["aspect"] for a in recheck_rows[i]} else 0 for i in common_ids]
                 if len(set(y1)) < 2 and len(set(y2)) < 2:
                     kappa = float("nan")
                 else:
@@ -328,9 +302,5 @@ with st.expander("📊 O'z-o'ziga mosligini hisoblash (Cohen's kappa)"):
                         "N": len(common_ids),
                     }
                 )
-            st.dataframe(
-                pd.DataFrame(results), use_container_width=True, hide_index=True
-            )
-            st.caption(
-                "Kappa < 0.6 bo'lsa, taksonomiya noaniq — ta'riflarni aniqlashtirish kerak."
-            )
+            st.dataframe(pd.DataFrame(results), use_container_width=True, hide_index=True)
+            st.caption("Kappa < 0.6 bo'lsa, taksonomiya noaniq — ta'riflarni aniqlashtirish kerak.")

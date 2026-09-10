@@ -1,24 +1,10 @@
-"""
-aspect-svc — YAKUNIY, XOLIS baholash: 60 ta test_locked to'plamda.
 
-MUHIM QOIDA (R5): bu skript FAQAT BIR MARTA ishga tushiriladi. Natija qanday
-chiqishidan qat'i nazar (yaxshi yoki yomon), qaytib modelni yoki threshold'larni
-"test'ga moslab" o'zgartirish TAQIQLANADI — bu test-set leakage bo'ladi va
-butun baholashni haqiqiy bo'lmagan holga keltiradi.
-
-Threshold'lar bu yerda QATTIQ YOZILGAN (dev to'plamda tuned qilingan qiymatlar),
-bu skript ularni HECH QACHON qayta sozlamaydi.
-
-Ishga tushirish (aspect-svc/ papkasidan):
-    python training/evaluate_locked_test.py
-"""
-
-from models.model_loader import AspectMultiTaskModel
 import json
 import os
 import sys
 
 import torch
+from models.model_loader import AspectMultiTaskModel
 from sklearn.metrics import precision_recall_fscore_support
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
@@ -91,12 +77,7 @@ def main():
 
     # Majority baseline — faqat train statistikasidan (test'ga qaralmagan holda)
     y_train = [presence_row(r, ASPECTS) for r in train]
-    majority = [
-        1 if sum(col) > len(col) /
-        2 else 0 for col in zip(
-            *
-            y_train,
-            strict=True)]
+    majority = [1 if sum(col) > len(col) / 2 else 0 for col in zip(*y_train, strict=True)]
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     with open(os.path.join(MODEL_DIR, "model_info.json"), encoding="utf-8") as f:
@@ -107,11 +88,7 @@ def main():
 
     tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
     model = AspectMultiTaskModel(backbone_source, len(ASPECTS), len(POLARITIES))
-    state_dict = torch.load(
-        os.path.join(
-            MODEL_DIR,
-            "pytorch_model.bin"),
-        map_location=device)
+    state_dict = torch.load(os.path.join(MODEL_DIR, "pytorch_model.bin"), map_location=device)
     model.load_state_dict(state_dict)
     model.to(device)
     model.eval()
@@ -135,8 +112,7 @@ def main():
             attention_mask = enc["attention_mask"].to(device)
             presence_logits, _ = model(input_ids, attention_mask)
             probs = torch.sigmoid(presence_logits)[0].cpu().tolist()
-            pred = [1 if probs[j] > TUNED_THRESHOLDS[a]
-                    else 0 for j, a in enumerate(ASPECTS)]
+            pred = [1 if probs[j] > TUNED_THRESHOLDS[a] else 0 for j, a in enumerate(ASPECTS)]
             y_pred_model.append(pred)
 
     def per_aspect_prf(y_true_mat, y_pred_mat):
@@ -144,8 +120,7 @@ def main():
         for j, aspect in enumerate(ASPECTS):
             yt = [row[j] for row in y_true_mat]
             yp = [row[j] for row in y_pred_mat]
-            p, r, f1, _ = precision_recall_fscore_support(
-                yt, yp, average="binary", zero_division=0)
+            p, r, f1, _ = precision_recall_fscore_support(yt, yp, average="binary", zero_division=0)
             result[aspect] = {"precision": p, "recall": r, "f1": f1}
         return result
 
@@ -170,8 +145,7 @@ def main():
         print(f"{aspect:12s} | {m:11.3f} | {k:10.3f} | {mp:8.3f} | {mr:8.3f} | {mf:9.3f}")
 
     macro_f1_model = sum(results["model"][a]["f1"] for a in ASPECTS) / len(ASPECTS)
-    macro_f1_majority = sum(results["majority"][a]["f1"]
-                            for a in ASPECTS) / len(ASPECTS)
+    macro_f1_majority = sum(results["majority"][a]["f1"] for a in ASPECTS) / len(ASPECTS)
     macro_f1_keyword = sum(results["keyword"][a]["f1"] for a in ASPECTS) / len(ASPECTS)
 
     summary = (

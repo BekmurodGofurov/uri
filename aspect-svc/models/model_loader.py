@@ -100,9 +100,7 @@ def load_model():
         _tokenizer = AutoTokenizer.from_pretrained(model_dir)
 
         _model = AspectMultiTaskModel(backbone_source, len(_ASPECTS), len(_POLARITIES))
-        state_dict = torch.load(
-            os.path.join(model_dir, "pytorch_model.bin"), map_location=_device
-        )
+        state_dict = torch.load(os.path.join(model_dir, "pytorch_model.bin"), map_location=_device)
         _model.load_state_dict(state_dict)
         _model.to(_device)
         _model.eval()

@@ -57,8 +57,7 @@ def _predict_keyword_stub(texts: list[str]) -> list[list[AspectHit]]:
                 )
         if not hits:
             hits.append(
-                AspectHit(aspect="other", polarity=_guess_polarity(
-                    text), confidence=0.3)  # type: ignore[arg-type]
+                AspectHit(aspect="other", polarity=_guess_polarity(text), confidence=0.3)  # type: ignore[arg-type]
             )
         all_hits.append(hits)
     return all_hits
@@ -77,7 +76,10 @@ def _predict_multilabel(texts: list[str]) -> list[list[AspectHit]]:
     with torch.no_grad():
         for text in texts:
             enc = tokenizer(
-                text, truncation=True, max_length=128, padding="max_length",
+                text,
+                truncation=True,
+                max_length=128,
+                padding="max_length",
                 return_tensors="pt",
             )
             input_ids = enc["input_ids"].to(device)
@@ -100,10 +102,7 @@ def _predict_multilabel(texts: list[str]) -> list[list[AspectHit]]:
                     )
             if not hits:
                 hits.append(
-                    AspectHit(
-                        aspect="other",
-                        polarity="neutral",
-                        confidence=0.3)  # type: ignore[arg-type]
+                    AspectHit(aspect="other", polarity="neutral", confidence=0.3)  # type: ignore[arg-type]
                 )
             all_hits.append(hits)
     return all_hits
