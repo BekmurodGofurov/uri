@@ -35,9 +35,20 @@ CATEGORIES = {
         "name": "Kofe va Choy Mahsulotlari",
         "category": "Oziq-ovqat",
         "keywords": [
-            "kofe", "qahva", "kofeni", "espresso", "shokolad", "shirinlik",
-            "konfet", "mazali", "choy", "choyni", "kok choy", "qora choy",
-            "damlama", "giyoh",
+            "kofe",
+            "qahva",
+            "kofeni",
+            "espresso",
+            "shokolad",
+            "shirinlik",
+            "konfet",
+            "mazali",
+            "choy",
+            "choyni",
+            "kok choy",
+            "qora choy",
+            "damlama",
+            "giyoh",
         ],
         "templates": [
             "Tchibo Gold Selection Kofe 100g",
@@ -51,8 +62,15 @@ CATEGORIES = {
         "name": "Qishki va Kuzgi Ustki Kiyimlar",
         "category": "Kiyim-kechak",
         "keywords": [
-            "kurtka", "kurtkani", "kurtkasi", "kurtkalar", "palto",
-            "vetrovka", "kastyum", "jilet", "kapshon",
+            "kurtka",
+            "kurtkani",
+            "kurtkasi",
+            "kurtkalar",
+            "palto",
+            "vetrovka",
+            "kastyum",
+            "jilet",
+            "kapshon",
         ],
         "templates": [
             "Erkaklar Qishki Qalin Issiq Kurtkasi",
@@ -66,9 +84,24 @@ CATEGORIES = {
         "name": "Silikon G'ilof va Aksessuarlar",
         "category": "Elektronika",
         "keywords": [
-            "chexol", "chixol", "chexolni", "chexoli", "steklo", "shisha",
-            "oyna", "silikon", "kamerali", "redmi", "samsung", "iphone",
-            "fleshka", "xotira", "shnur", "kabel", "zaryadnik", "zaryad",
+            "chexol",
+            "chixol",
+            "chexolni",
+            "chexoli",
+            "steklo",
+            "shisha",
+            "oyna",
+            "silikon",
+            "kamerali",
+            "redmi",
+            "samsung",
+            "iphone",
+            "fleshka",
+            "xotira",
+            "shnur",
+            "kabel",
+            "zaryadnik",
+            "zaryad",
         ],
         "templates": [
             "Samsung Galaxy A54 Silikon G'ilof",
@@ -84,8 +117,17 @@ CATEGORIES = {
         "name": "Simsiz Naushnik va Audio",
         "category": "Elektronika",
         "keywords": [
-            "naushnik", "naushnikni", "naushniki", "naushniklar", "quloqchin",
-            "ovoz", "bas", "bluetooth", "blutuz", "keys", "mikrofon",
+            "naushnik",
+            "naushnikni",
+            "naushniki",
+            "naushniklar",
+            "quloqchin",
+            "ovoz",
+            "bas",
+            "bluetooth",
+            "blutuz",
+            "keys",
+            "mikrofon",
         ],
         "templates": [
             "Simsiz Bluetooth Naushnik Pro",
@@ -99,8 +141,14 @@ CATEGORIES = {
         "name": "Yuz va Teri Parvarishi",
         "category": "Go'zallik va parvarish",
         "keywords": [
-            "krem", "kremni", "zardob", "yuzga", "shampun", "maska",
-            "ajin", "namlantiruvchi",
+            "krem",
+            "kremni",
+            "zardob",
+            "yuzga",
+            "shampun",
+            "maska",
+            "ajin",
+            "namlantiruvchi",
         ],
         "templates": [
             "Organik Yuz Kremi va Zardobi",
@@ -114,8 +162,17 @@ CATEGORIES = {
         "name": "Lab Bo'yog'i va Pardoz Vositalari",
         "category": "Go'zallik va parvarish",
         "keywords": [
-            "pomada", "pamada", "pomadani", "boyoq", "buyog", "labga",
-            "lab buyog", "upal", "kosmetika", "tonal", "lab boyogi",
+            "pomada",
+            "pamada",
+            "pomadani",
+            "boyoq",
+            "buyog",
+            "labga",
+            "lab buyog",
+            "upal",
+            "kosmetika",
+            "tonal",
+            "lab boyogi",
         ],
         "templates": [
             "Matoviy Lab Bo'yog'i To'plami 6 talik",
@@ -129,9 +186,20 @@ CATEGORIES = {
         "name": "Poyabzallar va Krossovkalar",
         "category": "Poyabzallar",
         "keywords": [
-            "krossovka", "krasovka", "krosovka", "krasovki", "krosovki",
-            "poyabzal", "oyoq kiyim", "keta", "tufli", "tagcharmi", "etik",
-            "razmer", "razmeri", "oyoqqa",
+            "krossovka",
+            "krasovka",
+            "krosovka",
+            "krasovki",
+            "krosovki",
+            "poyabzal",
+            "oyoq kiyim",
+            "keta",
+            "tufli",
+            "tagcharmi",
+            "etik",
+            "razmer",
+            "razmeri",
+            "oyoqqa",
         ],
         "templates": [
             "Erkaklar Kundalik Sport Krossovkasi",
@@ -145,9 +213,21 @@ CATEGORIES = {
         "name": "Smart Gadjetlar va Avtotovarlar",
         "category": "Elektronika",
         "keywords": [
-            "smartwatch", "braslet", "puls", "qadam", "soatni", "soat",
-            "avtomobil", "salon", "derjatel", "tutqich", "polik",
-            "magnitola", "pult", "pulti", "akkumulyator",
+            "smartwatch",
+            "braslet",
+            "puls",
+            "qadam",
+            "soatni",
+            "soat",
+            "avtomobil",
+            "salon",
+            "derjatel",
+            "tutqich",
+            "polik",
+            "magnitola",
+            "pult",
+            "pulti",
+            "akkumulyator",
         ],
         "templates": [
             "Smart Soat va Fitnes Braslet Ultra",
@@ -266,8 +346,15 @@ def main():
     review_product_map = {}
 
     order = [
-        "food", "jacket", "case", "audio", "skincare",
-        "cosmetics", "shoes", "gadget", "general",
+        "food",
+        "jacket",
+        "case",
+        "audio",
+        "skincare",
+        "cosmetics",
+        "shoes",
+        "gadget",
+        "general",
     ]
     now_dt = datetime.datetime.now(datetime.UTC)
 
@@ -276,14 +363,12 @@ def main():
         templates = CATEGORIES[cat_key]["templates"]
         category_name = CATEGORIES[cat_key]["category"]
 
-        for prod_sub_idx, chunk_start in enumerate(
-            range(0, len(idxs), MAX_REVIEWS_PER_PRODUCT)
-        ):
-            chunk = idxs[chunk_start:chunk_start + MAX_REVIEWS_PER_PRODUCT]
+        for prod_sub_idx, chunk_start in enumerate(range(0, len(idxs), MAX_REVIEWS_PER_PRODUCT)):
+            chunk = idxs[chunk_start : chunk_start + MAX_REVIEWS_PER_PRODUCT]
             tmpl = templates[prod_sub_idx % len(templates)]
             variant_num = (prod_sub_idx // len(templates)) + 1
 
-            prod_id = f"prod_{len(products)+1}"
+            prod_id = f"prod_{len(products) + 1}"
             title = f"{tmpl} (Model #{variant_num})" if variant_num > 1 else tmpl
 
             products.append((prod_id, title, category_name, now_dt))
@@ -310,7 +395,7 @@ def main():
 
     preds = pipeline.predict(raw_texts)
     probs = pipeline.predict_proba(raw_texts)
-    print(f"Sentiment predictions generated in {time.time()-t_sent:.2f}s.")
+    print(f"Sentiment predictions generated in {time.time() - t_sent:.2f}s.")
 
     # Format review rows and prediction rows
     print("Formatting review & prediction rows...")
@@ -325,7 +410,7 @@ def main():
         text = raw_texts[i]
         rating_val = RATING_MAP.get(raw_ratings[i], 5)
         prod_id = review_product_map[i]
-        rev_id = f"uzum_{i+1:06d}"
+        rev_id = f"uzum_{i + 1:06d}"
 
         row_time = base_timestamp + (i * time_increment) + random.randint(-1800, 1800)
         dt = datetime.datetime.fromtimestamp(row_time, datetime.UTC)
@@ -346,25 +431,23 @@ def main():
 
         for asp, kws in ASPECT_KEYWORDS.items():
             if any(kw in lowered for kw in kws):
-                aspect_hits.append(
-                    {"aspect": asp, "polarity": polarity_val, "confidence": 0.55}
-                )
+                aspect_hits.append({"aspect": asp, "polarity": polarity_val, "confidence": 0.55})
 
         if not aspect_hits:
-            aspect_hits.append(
-                {"aspect": "other", "polarity": polarity_val, "confidence": 0.30}
+            aspect_hits.append({"aspect": "other", "polarity": polarity_val, "confidence": 0.30})
+
+        predictions_rows.append(
+            (
+                rev_id,
+                sent_label,
+                round(conf, 4),
+                json.dumps(aspect_hits),
+                "sentiment-v1;aspect-stub-v0.1",
+                dt,
             )
+        )
 
-        predictions_rows.append((
-            rev_id,
-            sent_label,
-            round(conf, 4),
-            json.dumps(aspect_hits),
-            "sentiment-v1;aspect-stub-v0.1",
-            dt,
-        ))
-
-    print(f"Data formatted in {time.time()-t_prep:.2f}s.")
+    print(f"Data formatted in {time.time() - t_prep:.2f}s.")
 
     # Streaming COPY for reviews
     print("Streaming COPY into PostgreSQL 'reviews' table...")
@@ -373,7 +456,7 @@ def main():
         for row in reviews_rows:
             copy.write_row(row)
     conn.commit()
-    print(f"Finished COPY for {len(reviews_rows):,} reviews in {time.time()-t_copy:.2f}s.")
+    print(f"Finished COPY for {len(reviews_rows):,} reviews in {time.time() - t_copy:.2f}s.")
 
     # Streaming COPY for predictions
     print("Streaming COPY into PostgreSQL 'predictions' table...")
