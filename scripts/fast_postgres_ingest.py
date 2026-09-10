@@ -12,9 +12,7 @@ import random
 import time
 from collections import defaultdict
 
-import joblib
 import psycopg
-import pyarrow.ipc as ipc
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -315,15 +313,30 @@ def main():
     cur.execute("TRUNCATE TABLE predictions, reviews, products RESTART IDENTITY CASCADE;")
     conn.commit()
 
-    # Load Arrow cache
-    print(f"Loading arrow dataset from {ARROW_PATH}...")
-    with open(ARROW_PATH, "rb") as f:
-        table = ipc.RecordBatchStreamReader(f).read_all()
-    n_rows = table.num_rows
-    print(f"Loaded all {n_rows:,} reviews from arrow cache.")
+    # Load dataset (Arrow cache or Hugging Face)
+    if os.path.exists(ARROW_PATH):
+        print(f"Loading arrow dataset from {ARROW_PATH}...")
+        import pyarrow.ipc as ipc
 
-    raw_texts = [str(t) for t in table["normalized_review_text"]]
-    raw_ratings = [str(r) for r in table["rating"]]
+        with open(ARROW_PATH, "rb") as f:
+            table = ipc.RecordBatchStreamReader(f).read_all()
+        n_rows = table.num_rows
+        raw_texts = [str(t) for t in table["normalized_review_text"]]
+        raw_ratings = [str(r) for r in table["rating"]]
+    else:
+        print(
+            "Arrow cache not found. Downloading risqaliyevds/uzbek-sentiment-analysis "
+            "from Hugging Face..."
+        )
+        from datasets import load_dataset
+
+        ds = load_dataset("risqaliyevds/uzbek-sentiment-analysis")
+        split_data = ds["train"]
+        n_rows = len(split_data)
+        raw_texts = [str(t) for t in split_data["normalized_review_text"]]
+        raw_ratings = [str(r) for r in split_data["rating"]]
+
+    print(f"Loaded all {n_rows:,} reviews successfully.")
 
     # Bucket reviews by category
     print("Bucketing reviews by semantic category...")
@@ -389,13 +402,26 @@ def main():
     # Run sentiment pipeline in bulk
     print("Generating sentiment predictions in bulk...")
     t_sent = time.time()
-    pipeline = joblib.load(MODEL_PATH)
-    classes = list(pipeline.classes_)
-    class_indices = {c: i for i, c in enumerate(classes)}
+    has_ml = False
+    preds = []
+    probs = []
+    class_indices = {}
 
-    preds = pipeline.predict(raw_texts)
-    probs = pipeline.predict_proba(raw_texts)
-    print(f"Sentiment predictions generated in {time.time() - t_sent:.2f}s.")
+    if os.path.exists(MODEL_PATH):
+        try:
+            import joblib
+
+            pipeline = joblib.load(MODEL_PATH)
+            classes = list(pipeline.classes_)
+            class_indices = {c: i for i, c in enumerate(classes)}
+            preds = pipeline.predict(raw_texts)
+            probs = pipeline.predict_proba(raw_texts)
+            has_ml = True
+            print(f"Sentiment predictions generated via ML model in {time.time() - t_sent:.2f}s.")
+        except Exception as err:
+            print(f"ML model loading failed ({err}). Falling back to rating-based sentiment.")
+    else:
+        print("Model file not found. Falling back to rating-based sentiment.")
 
     # Format review rows and prediction rows
     print("Formatting review & prediction rows...")
@@ -417,8 +443,19 @@ def main():
 
         reviews_rows.append((rev_id, prod_id, text, rating_val, dt))
 
-        sent_label = preds[i]
-        conf = float(probs[i][class_indices[sent_label]])
+        if has_ml:
+            sent_label = preds[i]
+            conf = float(probs[i][class_indices[sent_label]])
+        else:
+            if rating_val >= 4:
+                sent_label = "positive"
+                conf = 0.85
+            elif rating_val <= 2:
+                sent_label = "negative"
+                conf = 0.80
+            else:
+                sent_label = "neutral"
+                conf = 0.70
 
         lowered = text.lower()
         aspect_hits = []
