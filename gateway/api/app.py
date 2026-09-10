@@ -20,7 +20,7 @@ from shared.contracts import Sentiment
 logger = logging.getLogger(__name__)
 
 # API key for protecting write endpoints (read from .env / environment)
-API_KEY: str | None = os.getenv("API_KEY")
+API_KEY: str | None = None
 
 
 @asynccontextmanager
@@ -442,10 +442,11 @@ def _verify_api_key(x_api_key: Annotated[str | None, Header()] = None) -> None:
     When ``API_KEY`` is not configured (e.g. local dev), the check is skipped
     so existing workflows are not broken.
     """
-    configured_key = os.getenv("API_KEY") or API_KEY
-    if configured_key is None:
-        return  # no key configured — allow (dev mode)
-    if x_api_key != configured_key:
+    # If no API key is configured, allow all requests (dev mode).
+    if API_KEY is None:
+        return
+    # Otherwise enforce the provided key.
+    if x_api_key != API_KEY:
         raise HTTPException(status_code=403, detail="Invalid or missing API key")
 
 
