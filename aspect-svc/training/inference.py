@@ -57,7 +57,8 @@ def _predict_keyword_stub(texts: list[str]) -> list[list[AspectHit]]:
                 )
         if not hits:
             hits.append(
-                AspectHit(aspect="other", polarity=_guess_polarity(text), confidence=0.3)  # type: ignore[arg-type]
+                AspectHit(aspect="other", polarity=_guess_polarity(
+                    text), confidence=0.3)  # type: ignore[arg-type]
             )
         all_hits.append(hits)
     return all_hits
@@ -92,13 +93,17 @@ def _predict_multilabel(texts: list[str]) -> list[list[AspectHit]]:
                     hits.append(
                         AspectHit(
                             aspect=aspect,  # type: ignore[arg-type]
-                            polarity=polarities[polarity_pred[j].item()],  # type: ignore[arg-type]
+                            # type: ignore[arg-type]
+                            polarity=polarities[polarity_pred[j].item()],
                             confidence=round(presence_probs[j].item(), 3),
                         )
                     )
             if not hits:
                 hits.append(
-                    AspectHit(aspect="other", polarity="neutral", confidence=0.3)  # type: ignore[arg-type]
+                    AspectHit(
+                        aspect="other",
+                        polarity="neutral",
+                        confidence=0.3)  # type: ignore[arg-type]
                 )
             all_hits.append(hits)
     return all_hits

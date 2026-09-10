@@ -1,24 +1,3 @@
-"""
-aspect-svc — multi-label aspect + polarity klassifikatorini o'qitish skripti.
-
-Ishga tushirish (aspect-svc/ papkasidan):
-    python training/train.py
-
-Ixtiyoriy parametrlar:
-    python training/train.py --epochs 8 --seed 42 \
-        --gold-path gold_set.jsonl \
-        --sentiment-csv uzbek_balanced.csv \
-        --output-dir models/aspect_model_v1
-
-Bu skript quyidagilarni bajaradi (4-kun Colab notebook bilan bir xil mantiq):
-  1. gold_set.jsonl'ni yuklaydi, train/dev/test(LOCKED) ga bo'ladi (60/200/40 emas,
-     aniqrog'i: 60 test-locked, qolgani train/dev)
-  2. Majority va keyword baseline'larni hisoblaydi
-  3. (Ixtiyoriy) katta sentiment datasetda backbone'ni oldindan isitadi
-  4. Ikki boshli (presence + polarity) modelni pos_weight bilan o'qitadi
-  5. Dev to'plamda threshold-tuned F1 hisoblaydi, baseline'lar bilan solishtiradi
-  6. Modelni + model_info.json'ni --output-dir'ga saqlaydi
-"""
 
 import argparse
 import json
@@ -36,7 +15,6 @@ from torch.optim import AdamW
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModel, AutoTokenizer
 
-# aspect-svc/ ni sys.path'ga qo'shamiz, shunda models.model_loader import qilinadi
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from models.model_loader import AspectMultiTaskModel
 
@@ -123,8 +101,6 @@ class AspectDataset(Dataset):
 
 
 class SentimentDataset(Dataset):
-    """Ixtiyoriy oraliq isitish uchun (backbone'ni katta sentiment korpusida moslashtirish)."""
-
     def __init__(self, df, tokenizer, max_len, label_to_idx):
         self.texts = df["text"].tolist()
         self.labels = df["label_str"].map(label_to_idx).tolist()
@@ -226,7 +202,6 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Qurilma: {device}")
 
-    # 1) Ma'lumotni yuklash va bo'lish (60 ta test-locked, qolgani train/dev)
     gold = load_jsonl(args.gold_path)
     assert len(gold) == 300, f"Kutilgan 300 ta emas, {len(gold)} ta topildi"
     random.Random(args.seed).shuffle(gold)
@@ -249,7 +224,6 @@ def main():
             for r in records:
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
 
-    # 2) Baseline'lar
     y_dev = presence_matrix(dev, ASPECTS)
     y_train = presence_matrix(train, ASPECTS)
 
@@ -269,7 +243,6 @@ def main():
         kw = baseline_keyword_f1[aspect]
         print(f"  {aspect:12s}: majority={maj:.3f}  keyword={kw:.3f}")
 
-    # 3) (Ixtiyoriy) oraliq isitish
     backbone_source = args.model_name
     if args.sentiment_csv:
         backbone_source = pretrain_backbone(
@@ -281,9 +254,8 @@ def main():
             seed=args.seed,
         )
     else:
-        print("\n(Oraliq isitish o'tkazib yuborildi — --sentiment-csv berilmadi)")
+        print("\n(Oraliq isitish o'tkazib yuborildi - --sentiment-csv berilmadi)")
 
-    # 4) Model va dataset
     tokenizer = AutoTokenizer.from_pretrained(backbone_source)
     combined_train = [{"text": r["text"], "aspects": r["aspects"], "weight": 1.0} for r in train]
     random.Random(args.seed).shuffle(combined_train)
@@ -297,7 +269,6 @@ def main():
 
     model = AspectMultiTaskModel(backbone_source, len(ASPECTS), len(POLARITIES)).to(device)
 
-    # 5) pos_weight (class imbalance)
     aspect_counts = Counter()
     for r in combined_train:
         for a in {item["aspect"] for item in r["aspects"]}:
@@ -311,7 +282,6 @@ def main():
     for a, w in zip(ASPECTS, pos_weights, strict=True):
         print(f"  {a:12s}: musbat={aspect_counts[a]}  vazn={w:.2f}")
 
-    # 6) O'qitish
     train_loader = DataLoader(
         train_dataset,
         batch_size=args.batch_size,
@@ -355,7 +325,6 @@ def main():
             f"Epoch {epoch + 1}/{args.epochs} - o'rtacha loss: {total_loss / len(train_loader):.4f}"
         )
 
-    # 7) Baholash — threshold tuning
     dev_loader = DataLoader(dev_dataset, batch_size=args.batch_size, shuffle=False)
     model.eval()
     all_presence_prob, all_presence_true = [], []
@@ -396,7 +365,6 @@ def main():
     )
     print(comparison.to_string(index=False))
 
-    # 8) Saqlash
     os.makedirs(args.output_dir, exist_ok=True)
     torch.save(model.state_dict(), os.path.join(args.output_dir, "pytorch_model.bin"))
     tokenizer.save_pretrained(args.output_dir)
