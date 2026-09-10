@@ -51,8 +51,8 @@ source .venv/bin/activate
 # Baza jadvallarini yaratish (agar kerak bo'lsa):
 python3 -c "from gateway.database.connection import init_db; init_db()"
 
-# Gateway API serverini ishga tushirish:
-DATABASE_URL=sqlite:///./uzum_reviews.db uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
+# Gateway API serverini ishga tushirish (PostgreSQL orqali):
+uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 2. Dashboard UI ni ishga tushirish:

@@ -19,6 +19,11 @@ export const ProductList: React.FC<ProductListProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'reviews' | 'rating' | 'positive'>('reviews');
+  const [visibleCount, setVisibleCount] = useState(36);
+
+  React.useEffect(() => {
+    setVisibleCount(36);
+  }, [searchQuery, selectedCategory, sortBy]);
 
   // Extract unique categories
   const categories = useMemo(() => {
@@ -157,15 +162,28 @@ export const ProductList: React.FC<ProductListProps> = ({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredProducts.map((prod) => (
-            <ProductCard
-              key={prod.id}
-              product={prod}
-              onSelect={onSelectProduct}
-              isSelected={selectedProductId === prod.id}
-            />
-          ))}
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filteredProducts.slice(0, visibleCount).map((prod) => (
+              <ProductCard
+                key={prod.id}
+                product={prod}
+                onSelect={onSelectProduct}
+                isSelected={selectedProductId === prod.id}
+              />
+            ))}
+          </div>
+
+          {visibleCount < filteredProducts.length && (
+            <div className="text-center pt-4">
+              <button
+                onClick={() => setVisibleCount((prev) => prev + 36)}
+                className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs rounded-xl shadow-sm hover:shadow transition"
+              >
+                Yana ko'rsatish ({filteredProducts.length - visibleCount} ta qoldi)
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -19,8 +19,8 @@ services:
 
   sentiment-svc:
     build:
-      context: ./sentiment-svc
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: sentiment-svc/Dockerfile
     image: ${SENTIMENT_IMAGE:-sentiment-svc:v1}
     container_name: uri-sentiment-svc
     restart: unless-stopped
@@ -31,7 +31,7 @@ services:
       MODEL_TYPE: ${MODEL_TYPE:-tfidf}
       MODEL_VERSION: ${MODEL_VERSION:-sentiment-v1}
     volumes:
-      - ./sentiment-svc/models:/app/models
+      - ./sentiment-svc/models:/workspace/sentiment-svc/models
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8001/health\")' || exit 1"]
       interval: 10s
@@ -83,6 +83,21 @@ services:
       timeout: 5s
       retries: 3
       start_period: 5s
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    image: uri-dashboard:latest
+    container_name: uri-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      VITE_API_URL: http://gateway:8000
+    depends_on:
+      gateway:
+        condition: service_started
 
 volumes:
   postgres_data:

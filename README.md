@@ -131,7 +131,7 @@ Before setting up the repository, verify that your local environment meets the f
 - *If running natively outside Docker:*
   - **Python 3.11** or **3.12**
   - **Node.js (v18+)** and **npm (v9+)**
-  - **PostgreSQL 16** (or SQLite for lightweight local testing)
+  - **PostgreSQL 16** (running in Docker or local)
   - **Git**
 
 ---
@@ -218,11 +218,9 @@ pip install -r requirements-dev.txt
 pip install -r sentiment-svc/requirements.txt
 ```
 
-#### 2. Initialize Database:
-If running against PostgreSQL or an in-process SQLite instance:
+#### 2. Initialize Database (Docker PostgreSQL):
 ```bash
-# SQLite quick-start:
-export DATABASE_URL="sqlite:///./uzum_reviews.db"
+docker compose up -d postgres
 python3 -c "from gateway.database.connection import init_db; init_db()"
 ```
 
