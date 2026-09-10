@@ -76,16 +76,16 @@ export const ProductList: React.FC<ProductListProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Mahsulotlar katalogi
+            Product Catalog
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Uzum Market tovarlarining tahliliy reytingi, sharhlari va sun'iy intellekt xulosalari
+            Analytical ratings, reviews, and AI insights for Uzum Market products
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-uzum-50 border border-uzum-100 text-uzum-700 w-fit">
           <Layers className="w-4 h-4" />
-          <span>Jami: {products.length} ta mahsulot</span>
+          <span>Total: {products.length} products</span>
         </div>
       </div>
 
@@ -96,7 +96,7 @@ export const ProductList: React.FC<ProductListProps> = ({
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Mahsulot nomi yoki ID bo'yicha qidirish..."
+            placeholder="Search by product name or ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 transition"
@@ -112,7 +112,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full pl-8 pr-8 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 appearance-none text-slate-700 cursor-pointer"
             >
-              <option value="all">Barcha toifalar</option>
+              <option value="all">All categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -129,9 +129,9 @@ export const ProductList: React.FC<ProductListProps> = ({
               onChange={(e) => setSortBy(e.target.value as any)}
               className="w-full pl-8 pr-8 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 appearance-none text-slate-700 cursor-pointer"
             >
-              <option value="reviews">Eng ko'p sharhlar</option>
-              <option value="rating">Eng yuqori reyting</option>
-              <option value="positive">Eng ijobiy tovarlar</option>
+              <option value="reviews">Most reviews</option>
+              <option value="rating">Highest rating</option>
+              <option value="positive">Most positive products</option>
             </select>
           </div>
         </div>
@@ -156,9 +156,9 @@ export const ProductList: React.FC<ProductListProps> = ({
         </div>
       ) : filteredProducts.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <p className="text-base font-semibold text-slate-700">Hech qanday mahsulot topilmadi</p>
+          <p className="text-base font-semibold text-slate-700">No products found</p>
           <p className="text-xs text-slate-400 mt-1">
-            Qidiruv so'rovingizni yoki tanlangan toifani o'zgartirib ko'ring
+            Try adjusting your search query or selected category
           </p>
         </div>
       ) : (
@@ -180,7 +180,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 onClick={() => setVisibleCount((prev) => prev + 36)}
                 className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs rounded-xl shadow-sm hover:shadow transition"
               >
-                Yana ko'rsatish ({filteredProducts.length - visibleCount} ta qoldi)
+                Show more ({filteredProducts.length - visibleCount} remaining)
               </button>
             </div>
           )}

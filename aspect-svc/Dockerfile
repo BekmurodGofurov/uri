@@ -21,6 +21,4 @@ ENV PYTHONPATH=/app \
     MODEL_VERSION=aspect-stub-v0.1 \
     MODEL_TYPE=keyword_stub
 
-EXPOSE 8002
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${ASPECT_PORT:-${PORT:?ASPECT_PORT yoki PORT muhit o'zgaruvchisi ko'rsatilishi shart}}"]

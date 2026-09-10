@@ -4,15 +4,16 @@ services:
     container_name: uri-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-uzum_reviews}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER must be set in .env file}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env file}
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB must be set in .env file}
+      PGPORT: ${POSTGRES_PORT:?POSTGRES_PORT must be set in .env file}
     ports:
-      - "${POSTGRES_PORT:-5433}:5432"
+      - "${POSTGRES_PORT:?POSTGRES_PORT must be set in .env file}:${POSTGRES_PORT:?POSTGRES_PORT must be set in .env file}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d uzum_reviews"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${PGPORT}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -25,15 +26,18 @@ services:
     container_name: uri-sentiment-svc
     restart: unless-stopped
     ports:
-      - "${SENTIMENT_PORT:-8001}:8001"
+      - "${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}:${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}"
     environment:
+      PORT: ${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}
+      SENTIMENT_PORT: ${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}
       MODEL_PATH: ${MODEL_PATH:-models/tfidf_v1.joblib}
       MODEL_TYPE: ${MODEL_TYPE:-tfidf}
       MODEL_VERSION: ${MODEL_VERSION:-sentiment-v1}
+    command: ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}"]
     volumes:
       - ./sentiment-svc/models:/workspace/sentiment-svc/models
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8001/health\")' || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}/health\")' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -47,9 +51,13 @@ services:
     container_name: uri-aspect-svc
     restart: unless-stopped
     ports:
-      - "${ASPECT_PORT:-8002}:8002"
+      - "${ASPECT_PORT:?ASPECT_PORT must be set in .env file}:${ASPECT_PORT:?ASPECT_PORT must be set in .env file}"
+    environment:
+      PORT: ${ASPECT_PORT:?ASPECT_PORT must be set in .env file}
+      ASPECT_PORT: ${ASPECT_PORT:?ASPECT_PORT must be set in .env file}
+    command: ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${ASPECT_PORT:?ASPECT_PORT must be set in .env file}"]
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8002/health\")' || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:${ASPECT_PORT:?ASPECT_PORT must be set in .env file}/health\")' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -63,13 +71,16 @@ services:
     container_name: uri-gateway
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}:${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}"
     environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-uzum_reviews}
-      SENTIMENT_SVC_URL: http://sentiment-svc:8001
-      ASPECT_SVC_URL: http://aspect-svc:8002
-      API_KEY: ${API_KEY:-changeme-your-secret-key-here}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      PORT: ${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}
+      GATEWAY_PORT: ${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:?POSTGRES_USER must be set in .env file}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env file}@postgres:${POSTGRES_PORT:?POSTGRES_PORT must be set in .env file}/${POSTGRES_DB:?POSTGRES_DB must be set in .env file}
+      SENTIMENT_SVC_URL: http://sentiment-svc:${SENTIMENT_PORT:?SENTIMENT_PORT must be set in .env file}
+      ASPECT_SVC_URL: http://aspect-svc:${ASPECT_PORT:?ASPECT_PORT must be set in .env file}
+      API_KEY: ${API_KEY:?API_KEY must be set in .env file}
+      CORS_ORIGINS: ${CORS_ORIGINS:?CORS_ORIGINS must be set in .env file}
+    command: ["sh", "-c", "uvicorn gateway.api.app:app --host 0.0.0.0 --port ${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,12 +89,31 @@ services:
       aspect-svc:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:8000/api/health\")' || exit 1"]
+      test: ["CMD-SHELL", "python -c 'import urllib.request; urllib.request.urlopen(\"http://localhost:${GATEWAY_PORT:?GATEWAY_PORT must be set in .env file}/api/health\")' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 5s
 
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: uri-dashboard
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:?FRONTEND_PORT must be set in .env file}:${FRONTEND_PORT:?FRONTEND_PORT must be set in .env file}"
+    environment:
+      FRONTEND_PORT: ${FRONTEND_PORT:?FRONTEND_PORT must be set in .env file}
+      VITE_PORT: ${FRONTEND_PORT:?FRONTEND_PORT must be set in .env file}
+      VITE_API_URL: ${VITE_API_URL:?VITE_API_URL must be set in .env file}
+    depends_on:
+      gateway:
+        condition: service_started
+
 volumes:
   postgres_data:
+
+
+
 

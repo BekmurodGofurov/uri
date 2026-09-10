@@ -12,7 +12,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
   const formatDate = (isoStr: string) => {
     try {
       const d = new Date(isoStr);
-      return d.toLocaleDateString('uz-UZ', {
+      return d.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -26,20 +26,20 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
     switch (label) {
       case 'positive':
         return {
-          text: 'Ijobiy',
+          text: 'Positive',
           bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
           icon: CheckCircle2,
         };
       case 'negative':
         return {
-          text: 'Salbiy',
+          text: 'Negative',
           bg: 'bg-rose-50 text-rose-700 border-rose-200',
           icon: AlertCircle,
         };
       case 'neutral':
       default:
         return {
-          text: 'Neytral',
+          text: 'Neutral',
           bg: 'bg-amber-50 text-amber-700 border-amber-200',
           icon: HelpCircle,
         };
@@ -82,13 +82,13 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
         "{text}"
       </p>
 
-      {/* AI Intelligence Block (AI xulosalari va MODEL_VERSION) */}
+      {/* AI Intelligence Block (AI predictions and MODEL_VERSION) */}
       {prediction ? (
         <div className="pt-3 border-t border-slate-100 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             {/* Sentiment label and confidence */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-500">AI Xulosasi:</span>
+              <span className="text-xs font-semibold text-slate-500">AI Prediction:</span>
               <div
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold border ${sentimentInfo?.bg}`}
               >
@@ -103,7 +103,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
             {/* MANDATORY: Model Version Tag */}
             <div
               className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-purple-50 text-uzum-700 border border-uzum-200 shadow-sm"
-              title="Ushbu xulosani chiqargan AI model versiyasi"
+              title="AI model version that produced this prediction"
             >
               <Bot className="w-3.5 h-3.5 text-uzum-600 shrink-0" />
               <span className="text-uzum-500 font-sans font-semibold">Model:</span>
@@ -115,7 +115,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
           {prediction.aspects && prediction.aspects.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5 pt-1">
               <span className="text-xs text-slate-400 font-medium mr-1 flex items-center gap-1">
-                <Tag className="w-3 h-3" /> Jihatlar:
+                <Tag className="w-3 h-3" /> Aspects:
               </span>
               {prediction.aspects.map((asp, idx) => {
                 const isPos = asp.polarity === 'positive';
@@ -133,7 +133,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
                   >
                     <span className="capitalize">{asp.aspect}</span>
                     <span className="text-[9px] opacity-75">
-                      ({isPos ? 'ijobiy' : isNeg ? 'salbiy' : 'neytral'})
+                      ({isPos ? 'positive' : isNeg ? 'negative' : 'neutral'})
                     </span>
                   </span>
                 );
@@ -144,7 +144,7 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({ review }) => {
       ) : (
         <div className="pt-2 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-400">
           <Sparkles className="w-3.5 h-3.5 text-slate-300" />
-          <span>Ushbu sharh hali AI tomonidan baholanmagan</span>
+          <span>This review has not been scored by AI yet</span>
         </div>
       )}
     </div>

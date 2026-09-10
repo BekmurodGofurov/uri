@@ -22,32 +22,32 @@ const ASPECT_CONFIG: Record<
   { label: string; icon: React.FC<{ className?: string }>; color: string }
 > = {
   quality: {
-    label: 'Mahsulot sifati',
+    label: 'Product Quality',
     icon: Package,
     color: 'text-indigo-600 bg-indigo-50 border-indigo-100',
   },
   delivery: {
-    label: 'Yetkazib berish',
+    label: 'Delivery',
     icon: Truck,
     color: 'text-blue-600 bg-blue-50 border-blue-100',
   },
   price: {
-    label: 'Narx va qiymat',
+    label: 'Price & Value',
     icon: DollarSign,
     color: 'text-emerald-600 bg-emerald-50 border-emerald-100',
   },
   seller: {
-    label: 'Sotuvchi xizmati',
+    label: 'Seller Service',
     icon: UserCheck,
     color: 'text-purple-600 bg-purple-50 border-purple-100',
   },
   packaging: {
-    label: 'Qadoqlanish holati',
+    label: 'Packaging Condition',
     icon: Box,
     color: 'text-amber-600 bg-amber-50 border-amber-100',
   },
   other: {
-    label: 'Boshqa jihatlar',
+    label: 'Other Aspects',
     icon: HelpCircle,
     color: 'text-slate-600 bg-slate-50 border-slate-100',
   },
@@ -65,9 +65,9 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
         <BarChart3 className="w-8 h-8 text-slate-300 mb-2" />
-        <p className="text-sm font-semibold text-slate-600">Jihatlar tahlili mavjud emas</p>
+        <p className="text-sm font-semibold text-slate-600">Aspect analysis not available</p>
         <p className="text-xs text-slate-400 mt-1">
-          Hozircha jihatlar bo'yicha tahlil qilingan sharhlar topilmadi
+          No reviews analyzed by aspects found yet
         </p>
       </div>
     );
@@ -82,17 +82,17 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">
-              Jihatlar tahlili (Aspect Breakdown)
+              Aspect Breakdown
             </h3>
             <p className="text-xs text-slate-500">
-              Sifat, yetkazib berish, narx va qadoqlash bo'yicha xaridorlar munosabati
+              Customer sentiment across quality, delivery, price, and packaging
             </p>
           </div>
         </div>
 
         {isStubbed && (
           <span className="text-xs px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 font-semibold border border-amber-200 self-start sm:self-auto shrink-0">
-            ⚠️ Demo ma'lumot — aspect model hali tayyor emas
+            ⚠️ Demo data — aspect model is not yet loaded
           </span>
         )}
       </div>
@@ -125,7 +125,7 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
                     <div>
                       <h4 className="font-bold text-slate-800 text-sm">{config.label}</h4>
                       <span className="text-[11px] text-slate-400 font-medium">
-                        {total} ta sharhda tilga olingan
+                        Mentioned in {total} reviews
                       </span>
                     </div>
                   </div>
@@ -139,7 +139,7 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
                         : 'bg-amber-100 text-amber-800'
                     }`}
                   >
-                    {posPct}% ijobiy
+                    {posPct}% positive
                   </span>
                 </div>
 
@@ -148,17 +148,17 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
                   <div
                     style={{ width: `${posPct}%` }}
                     className="bg-emerald-500 transition-all duration-300"
-                    title={`Ijobiy: ${item.positive} ta (${posPct}%)`}
+                    title={`Positive: ${item.positive} (${posPct}%)`}
                   />
                   <div
                     style={{ width: `${neuPct}%` }}
                     className="bg-amber-400 transition-all duration-300"
-                    title={`Neytral: ${item.neutral} ta (${neuPct}%)`}
+                    title={`Neutral: ${item.neutral} (${neuPct}%)`}
                   />
                   <div
                     style={{ width: `${negPct}%` }}
                     className="bg-rose-500 transition-all duration-300"
-                    title={`Salbiy: ${item.negative} ta (${negPct}%)`}
+                    title={`Negative: ${item.negative} (${negPct}%)`}
                   />
                 </div>
               </div>
@@ -166,11 +166,11 @@ export const AspectBreakdown: React.FC<AspectBreakdownProps> = ({
               {/* Detailed tallies */}
               <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-200/60 text-slate-500 font-medium">
                 <span className="flex items-center gap-1 text-emerald-700 font-semibold">
-                  <ThumbsUp className="w-3 h-3" /> {item.positive} ijobiy
+                  <ThumbsUp className="w-3 h-3" /> {item.positive} positive
                 </span>
-                <span className="text-amber-700 font-semibold">{item.neutral} neytral</span>
+                <span className="text-amber-700 font-semibold">{item.neutral} neutral</span>
                 <span className="flex items-center gap-1 text-rose-700 font-semibold">
-                  <ThumbsDown className="w-3 h-3" /> {item.negative} salbiy
+                  <ThumbsDown className="w-3 h-3" /> {item.negative} negative
                 </span>
               </div>
             </div>

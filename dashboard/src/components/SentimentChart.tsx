@@ -23,7 +23,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-slate-900/95 text-white p-3 rounded-xl shadow-xl border border-slate-700 text-xs backdrop-blur-sm min-w-[160px]">
         <div className="font-bold border-b border-slate-800 pb-1.5 mb-2 text-slate-300 flex items-center justify-between">
           <span>{label}</span>
-          <span className="text-[10px] text-slate-400 font-mono">Jami: {total}</span>
+          <span className="text-[10px] text-slate-400 font-mono">Total: {total}</span>
         </div>
         <div className="space-y-1.5">
           {payload.map((item: any) => (
@@ -35,10 +35,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 />
                 <span className="capitalize text-slate-300">
                   {item.dataKey === 'positive'
-                    ? 'Ijobiy'
+                    ? 'Positive'
                     : item.dataKey === 'neutral'
-                    ? 'Neytral'
-                    : 'Salbiy'}
+                    ? 'Neutral'
+                    : 'Negative'}
                 </span>
               </div>
               <span className="font-bold font-mono text-white">{item.value}</span>
@@ -57,10 +57,10 @@ export const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
       <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center flex flex-col items-center justify-center min-h-[300px]">
         <Calendar className="w-8 h-8 text-slate-300 mb-2" />
         <p className="text-sm font-semibold text-slate-600">
-          Vaqt bo'yicha kayfiyat ma'lumotlari mavjud emas
+          No sentiment over time data available
         </p>
         <p className="text-xs text-slate-400 mt-1">
-          Hozircha vaqt kesimida tahlil qilingan sharhlar soni kam
+          Not enough time-series analyzed reviews available yet
         </p>
       </div>
     );
@@ -81,10 +81,10 @@ export const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
           </div>
           <div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">
-              Vaqt bo'yicha kayfiyat o'zgarishi
+              Sentiment Trend Over Time
             </h3>
             <p className="text-xs text-slate-500">
-              Sharhlarning kunlar bo'yicha ijobiy, neytral va salbiy dinamikasi
+              Daily positive, neutral, and negative dynamics of reviews
             </p>
           </div>
         </div>
@@ -130,10 +130,10 @@ export const SentimentChart: React.FC<SentimentChartProps> = ({ data }) => {
               wrapperStyle={{ paddingBottom: '12px', fontSize: '11px', fontWeight: 600 }}
               formatter={(value) =>
                 value === 'positive'
-                  ? 'Ijobiy'
+                  ? 'Positive'
                   : value === 'neutral'
-                  ? 'Neytral'
-                  : 'Salbiy'
+                  ? 'Neutral'
+                  : 'Negative'
               }
             />
 

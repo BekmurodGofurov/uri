@@ -26,6 +26,6 @@ import os; \
 from huggingface_hub import snapshot_download; \
 snapshot_download(repo_id=os.environ['HF_MODEL_REPO'], local_dir=os.environ['MODEL_PATH'], token=os.environ.get('HF_TOKEN'))"
 
-EXPOSE 8002
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${ASPECT_PORT:-${PORT:?ASPECT_PORT yoki PORT muhit o'zgaruvchisi ko'rsatilishi shart}}"]
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002"]
+

@@ -25,8 +25,8 @@ export const Header: React.FC<HeaderProps> = ({
     activeModelVersions.length > 0
       ? activeModelVersions.join(' • ')
       : apiStatus.online
-      ? "Mahsulot tanlanganda ko'rinadi"
-      : "Gateway API ga ulanish kutilmoqda";
+      ? "Visible when product is selected"
+      : "Waiting for Gateway API connection";
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-500 font-medium hidden md:block">
-                O'zbek tili uchun sun'iy intellekt tahlil platformasi
+                AI Review Intelligence Platform for Uzbek Language
               </p>
             </div>
           </div>
@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="hidden lg:flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-medium text-slate-700 shadow-inner">
               <Bot className="w-4 h-4 text-uzum-600" />
-              <span className="text-slate-500">Faol Model:</span>
+              <span className="text-slate-500">Active Model:</span>
               <span
                 className="font-mono font-bold text-uzum-700 max-w-xs truncate"
                 title={displayModel}
@@ -87,14 +87,14 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={onResetSelection}
                 className="px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-uzum-700 hover:bg-slate-100 rounded-lg transition"
               >
-                ← Barcha mahsulotlar
+                ← All Products
               </button>
             )}
 
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
-              title="Yangilash"
+              title="Refresh"
               className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-uzum-600' : ''}`} />
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-uzum-600 to-uzum-700 hover:from-uzum-700 hover:to-uzum-800 shadow-md shadow-uzum-500/25 active:scale-95 transition"
             >
               <Activity className="w-4 h-4" />
-              <span>Jonli Tahlil</span>
+              <span>Live Scorer</span>
             </button>
           </div>
         </div>

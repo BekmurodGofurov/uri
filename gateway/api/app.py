@@ -40,15 +40,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_cors_origins_raw = os.getenv("CORS_ORIGINS")
+_cors_origins = (
+    [orig.strip() for orig in _cors_origins_raw.split(",") if orig.strip()]
+    if _cors_origins_raw
+    else []
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(
-        ","
-    ),
+    allow_origins=_cors_origins,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "X-API-Key", "Authorization", "Accept"],
 )
+
 
 
 def get_db():
@@ -521,3 +527,14 @@ def score_reviews_endpoint(
         scored_count=len(results),
         predictions=results,
     )
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port_val = os.getenv("GATEWAY_PORT") or os.getenv("PORT")
+    if not port_val:
+        raise RuntimeError("GATEWAY_PORT or PORT environment variable must be set in .env file")
+    uvicorn.run("gateway.api.app:app", host="0.0.0.0", port=int(port_val))
+
+
