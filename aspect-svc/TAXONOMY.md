@@ -3,7 +3,7 @@
 This document defines 6 aspect categories and provides explicit definitions and examples for each.
 Refer to these definitions when performing manual annotations for `gold_set.jsonl` or writing prompts for LLMs. Ambiguity in these definitions guarantees lower inter-annotator agreement (low Kappa score).
 
-> **Status:** ✅ Approved (non-draft). 100+ reviews reviewed, 300 gold samples fully annotated, and definitions refined based on real disagreement cases identified during a two-stage Cohen's Kappa evaluation (see below). Further modifications require explicit team agreement under Rule R1.
+> **Status:** ✅ Approved (non-draft). 100+ reviews reviewed, 300 gold samples fully annotated, and definitions refined based on real disagreement cases identified during a two-stage Cohen's Kappa evaluation (see below). Further modifications require explicit team agreement (see project rules on frozen artifacts).
 
 ---
 
@@ -70,7 +70,7 @@ Refer to these definitions when performing manual annotations for `gold_set.json
 2. "When asked about the warranty, the seller avoided responsibility."
 3. "It has been a week since I submitted a complaint, still no response."
 
-> ⚠️ **Edge Case: `seller` vs. `delivery`** — During Kappa verification, this pair exhibited the highest confusion (Kappa = 0.479). Rule: **If the order did not arrive or was lost, and no culprit is explicitly mentioned in the text, tag strictly as `delivery`.** Include `seller` only if there is explicit mention of **direct seller communication** (messaging, waiting for a response) or **warranty/replacement policies**.
+> ⚠️ **Edge Case: `seller` vs. `delivery`** — `seller` showed the lowest self-agreement in the Kappa verification (Kappa = 0.479). Manual review of the disagreement cases revealed the confusion was primarily with `delivery`. Rule: **If the order did not arrive or was lost, and no culprit is explicitly mentioned in the text, tag strictly as `delivery`.** Include `seller` only if there is explicit mention of **direct seller communication** (messaging, waiting for a response) or **warranty/replacement policies**.
 >
 > Example: *"I paid for it, but my order wasn't delivered"* → `delivery` only (responsibility unclear).  
 > Example: *"I wrote to the seller, but they didn't reply"* → `delivery` + `seller` (communication explicitly noted).
@@ -131,6 +131,6 @@ Example: *"Delivery was fast, but product quality was poor"* → `delivery: posi
 | seller | 0.479 | Low — guideline refined |
 | other | 0.440 | Low — guideline refined |
 
-**Stage 2 (20 targeted samples for `seller`/`other` edge cases):** Raw agreement score appeared low (seller=0.219, other=0.259). Manual analysis revealed this was caused by systematic re-annotations under updated guidelines rather than taxonomy ambiguity (7 samples correctly shifted from `other` to `quality`).
+**Stage 2 (20 targeted samples for `seller`/`other` edge cases):** Raw agreement score appeared low (seller=0.219, other=0.259). Manual analysis revealed this was caused by systematic re-annotations under updated guidelines rather than taxonomy ambiguity (7 samples correctly shifted from `other` to `quality`). Note: because the annotation standard was deliberately changed between Stage 1 and Stage 2, this comparison is not a strict repeat-annotation agreement test — a kappa drop here was expected and does not by itself indicate remaining ambiguity.
 
 **Conclusion:** The taxonomy definitions are sufficiently precise and consistent for modeling and annotation pipelines.
