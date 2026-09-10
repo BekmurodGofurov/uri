@@ -43,34 +43,51 @@ FastAPI Gateway API (`gateway/api/app.py`) bilan integratsiya qilingan.
 
 ## Ishga tushirish (Getting Started)
 
-### 1. Gateway API va Ma'lumotlar bazasini ishga tushirish:
+### 1. Backend Xizmatlarni ishga tushirish (Docker orqali):
+Backend mikroxizmatlari (`postgres`, `sentiment-svc`, `aspect-svc`, `gateway`) Docker orqali ishga tushiriladi:
 ```bash
 # Loyiha ildizida (root directory):
-source .venv/bin/activate
-
-# Baza jadvallarini yaratish (agar kerak bo'lsa):
-python3 -c "from gateway.database.connection import init_db; init_db()"
-
-# Gateway API serverini ishga tushirish (PostgreSQL orqali):
-uvicorn gateway.api.app:app --host 0.0.0.0 --port 8000 --reload
+docker compose up -d
 ```
+Backend Gateway `http://localhost:8000` manzilida ishlaydi.
 
-### 2. Dashboard UI ni ishga tushirish:
+---
+
+### 2. Dashboard Muhit Sozlamasi (.env - Majburiy):
+Dashboard barcha API so'rovlarini faqat `.env` faylida ko'rsatilgan `VITE_API_URL` manziliga yuboradi.
+
+`dashboard/.env` faylini yarating yoki mavjudligini tekshiring:
 ```bash
 cd dashboard
-
-# Bog'liqliklarni o'rnatish (agar o'rnatilmagan bo'lsa):
-npm install
-
-# Ishchi rejimda ishga tushirish:
-npm run dev
+cp .env.example .env
 ```
 
-Brauzerda ochish: `http://localhost:5173`
+`dashboard/.env` ichida:
+```env
+# Backend Gateway API manzili (majburiy)
+VITE_API_URL=http://localhost:8000
+```
+> **Muhim:** Agar `VITE_API_URL` ko'rsatilmasa, ilova xatolik beradi va API ga ulanmaydi.
 
-### 3. Production Build:
+---
+
+### 3. Qo'lda Build qilish va Ishga tushirish:
+
+Dashboard Docker orqali emas, faqat qo'lda build va run qilinadi:
+
+#### A) Ishchi rejimda (Development - Hot Reload):
 ```bash
 cd dashboard
-npm run build
-npm run preview
+npm install       # Faqat birinchi marta
+npm run dev       # Veb serverni ishga tushirish (port 3000)
 ```
+Brauzerda ochish: [http://localhost:3000](http://localhost:3000)
+
+#### B) Ishlab chiqarish rejimida (Production Build & Run):
+```bash
+cd dashboard
+npm run build     # TypeScript va Vite orqali dist/ papkasiga yig'ish
+npm run preview   # Yig'ilgan production versiyani ishga tushirish (port 3000)
+```
+Brauzerda ochish: [http://localhost:3000](http://localhost:3000)
+
