@@ -34,7 +34,11 @@ CATEGORIES = {
     "food": {
         "name": "Kofe va Choy Mahsulotlari",
         "category": "Oziq-ovqat",
-        "keywords": ["kofe", "qahva", "kofeni", "espresso", "shokolad", "shirinlik", "konfet", "mazali", "choy", "choyni", "kok choy", "qora choy", "damlama", "giyoh"],
+        "keywords": [
+            "kofe", "qahva", "kofeni", "espresso", "shokolad", "shirinlik",
+            "konfet", "mazali", "choy", "choyni", "kok choy", "qora choy",
+            "damlama", "giyoh",
+        ],
         "templates": [
             "Tchibo Gold Selection Kofe 100g",
             "Tabiiy Tog' Ko'k Choyi va Giyohlar",
@@ -46,7 +50,10 @@ CATEGORIES = {
     "jacket": {
         "name": "Qishki va Kuzgi Ustki Kiyimlar",
         "category": "Kiyim-kechak",
-        "keywords": ["kurtka", "kurtkani", "kurtkasi", "kurtkalar", "palto", "vetrovka", "kastyum", "jilet", "kapshon"],
+        "keywords": [
+            "kurtka", "kurtkani", "kurtkasi", "kurtkalar", "palto",
+            "vetrovka", "kastyum", "jilet", "kapshon",
+        ],
         "templates": [
             "Erkaklar Qishki Qalin Issiq Kurtkasi",
             "Kuzgi Klassik Erkaklar Paltosi",
@@ -58,7 +65,11 @@ CATEGORIES = {
     "case": {
         "name": "Silikon G'ilof va Aksessuarlar",
         "category": "Elektronika",
-        "keywords": ["chexol", "chixol", "chexolni", "chexoli", "steklo", "shisha", "oyna", "silikon", "kamerali", "redmi", "samsung", "iphone", "fleshka", "xotira", "shnur", "kabel", "zaryadnik", "zaryad"],
+        "keywords": [
+            "chexol", "chixol", "chexolni", "chexoli", "steklo", "shisha",
+            "oyna", "silikon", "kamerali", "redmi", "samsung", "iphone",
+            "fleshka", "xotira", "shnur", "kabel", "zaryadnik", "zaryad",
+        ],
         "templates": [
             "Samsung Galaxy A54 Silikon G'ilof",
             "iPhone 13 Pro Max Shaffof Chexol",
@@ -72,7 +83,10 @@ CATEGORIES = {
     "audio": {
         "name": "Simsiz Naushnik va Audio",
         "category": "Elektronika",
-        "keywords": ["naushnik", "naushnikni", "naushniki", "naushniklar", "quloqchin", "ovoz", "bas", "bluetooth", "blutuz", "keys", "mikrofon"],
+        "keywords": [
+            "naushnik", "naushnikni", "naushniki", "naushniklar", "quloqchin",
+            "ovoz", "bas", "bluetooth", "blutuz", "keys", "mikrofon",
+        ],
         "templates": [
             "Simsiz Bluetooth Naushnik Pro",
             "TWS Quloqchin Zaryadlash Qutisi bilan",
@@ -84,7 +98,10 @@ CATEGORIES = {
     "skincare": {
         "name": "Yuz va Teri Parvarishi",
         "category": "Go'zallik va parvarish",
-        "keywords": ["krem", "kremni", "zardob", "yuzga", "shampun", "maska", "ajin", "namlantiruvchi"],
+        "keywords": [
+            "krem", "kremni", "zardob", "yuzga", "shampun", "maska",
+            "ajin", "namlantiruvchi",
+        ],
         "templates": [
             "Organik Yuz Kremi va Zardobi",
             "Gialuron Kislotali Namlantiruvchi Zardob",
@@ -96,7 +113,10 @@ CATEGORIES = {
     "cosmetics": {
         "name": "Lab Bo'yog'i va Pardoz Vositalari",
         "category": "Go'zallik va parvarish",
-        "keywords": ["pomada", "pamada", "pomadani", "boyoq", "buyog", "labga", "lab buyog", "upal", "kosmetika", "tonal", "lab boyogi"],
+        "keywords": [
+            "pomada", "pamada", "pomadani", "boyoq", "buyog", "labga",
+            "lab buyog", "upal", "kosmetika", "tonal", "lab boyogi",
+        ],
         "templates": [
             "Matoviy Lab Bo'yog'i To'plami 6 talik",
             "Velvet Suyuq Pomada Uzoq Saqlanuvchi",
@@ -108,7 +128,11 @@ CATEGORIES = {
     "shoes": {
         "name": "Poyabzallar va Krossovkalar",
         "category": "Poyabzallar",
-        "keywords": ["krossovka", "krasovka", "krosovka", "krasovki", "krosovki", "poyabzal", "oyoq kiyim", "keta", "tufli", "tagcharmi", "etik", "razmer", "razmeri", "oyoqqa"],
+        "keywords": [
+            "krossovka", "krasovka", "krosovka", "krasovki", "krosovki",
+            "poyabzal", "oyoq kiyim", "keta", "tufli", "tagcharmi", "etik",
+            "razmer", "razmeri", "oyoqqa",
+        ],
         "templates": [
             "Erkaklar Kundalik Sport Krossovkasi",
             "Ayollar Yugurish Krossovkasi Yengil",
@@ -120,7 +144,11 @@ CATEGORIES = {
     "gadget": {
         "name": "Smart Gadjetlar va Avtotovarlar",
         "category": "Elektronika",
-        "keywords": ["smartwatch", "braslet", "puls", "qadam", "soatni", "soat", "avtomobil", "salon", "derjatel", "tutqich", "polik", "magnitola", "pult", "pulti", "akkumulyator"],
+        "keywords": [
+            "smartwatch", "braslet", "puls", "qadam", "soatni", "soat",
+            "avtomobil", "salon", "derjatel", "tutqich", "polik",
+            "magnitola", "pult", "pulti", "akkumulyator",
+        ],
         "templates": [
             "Smart Soat va Fitnes Braslet Ultra",
             "Avtomobil uchun Telefon Tutqich (Holder)",
@@ -229,24 +257,28 @@ def main():
                 break
         category_buckets[cat_key].append(i)
 
-    for k, l in category_buckets.items():
-        print(f"  {k}: {len(l):,} reviews")
+    for cat_name, bucket in category_buckets.items():
+        print(f"  {cat_name}: {len(bucket):,} reviews")
 
     # Partition each category into products of at most 60 reviews
     print("\nCreating products (max 60 reviews per product)...")
     products = []
     review_product_map = {}
 
-    order = ["food", "jacket", "case", "audio", "skincare", "cosmetics", "shoes", "gadget", "general"]
-    now_dt = datetime.datetime.now(datetime.timezone.utc)
+    order = [
+        "food", "jacket", "case", "audio", "skincare",
+        "cosmetics", "shoes", "gadget", "general",
+    ]
+    now_dt = datetime.datetime.now(datetime.UTC)
 
     for cat_key in order:
         idxs = category_buckets[cat_key]
         templates = CATEGORIES[cat_key]["templates"]
         category_name = CATEGORIES[cat_key]["category"]
 
-        prod_sub_idx = 0
-        for chunk_start in range(0, len(idxs), MAX_REVIEWS_PER_PRODUCT):
+        for prod_sub_idx, chunk_start in enumerate(
+            range(0, len(idxs), MAX_REVIEWS_PER_PRODUCT)
+        ):
             chunk = idxs[chunk_start:chunk_start + MAX_REVIEWS_PER_PRODUCT]
             tmpl = templates[prod_sub_idx % len(templates)]
             variant_num = (prod_sub_idx // len(templates)) + 1
@@ -257,7 +289,6 @@ def main():
             products.append((prod_id, title, category_name, now_dt))
             for r_idx in chunk:
                 review_product_map[r_idx] = prod_id
-            prod_sub_idx += 1
 
     print(f"Total products created: {len(products):,}")
     print(f"Total reviews assigned: {len(review_product_map):,} (100% of data)")
@@ -297,7 +328,7 @@ def main():
         rev_id = f"uzum_{i+1:06d}"
 
         row_time = base_timestamp + (i * time_increment) + random.randint(-1800, 1800)
-        dt = datetime.datetime.fromtimestamp(row_time, datetime.timezone.utc)
+        dt = datetime.datetime.fromtimestamp(row_time, datetime.UTC)
 
         reviews_rows.append((rev_id, prod_id, text, rating_val, dt))
 
@@ -306,14 +337,23 @@ def main():
 
         lowered = text.lower()
         aspect_hits = []
+        if rating_val >= 4:
+            polarity_val = "positive"
+        elif rating_val <= 2:
+            polarity_val = "negative"
+        else:
+            polarity_val = "neutral"
+
         for asp, kws in ASPECT_KEYWORDS.items():
             if any(kw in lowered for kw in kws):
-                pol = "positive" if rating_val >= 4 else ("negative" if rating_val <= 2 else "neutral")
-                aspect_hits.append({"aspect": asp, "polarity": pol, "confidence": 0.55})
+                aspect_hits.append(
+                    {"aspect": asp, "polarity": polarity_val, "confidence": 0.55}
+                )
 
         if not aspect_hits:
-            pol = "positive" if rating_val >= 4 else ("negative" if rating_val <= 2 else "neutral")
-            aspect_hits.append({"aspect": "other", "polarity": pol, "confidence": 0.30})
+            aspect_hits.append(
+                {"aspect": "other", "polarity": polarity_val, "confidence": 0.30}
+            )
 
         predictions_rows.append((
             rev_id,
@@ -338,22 +378,34 @@ def main():
     # Streaming COPY for predictions
     print("Streaming COPY into PostgreSQL 'predictions' table...")
     t_copy_pred = time.time()
-    with cur.copy("COPY predictions (review_id, sentiment_label, sentiment_confidence, aspects, model_version, created_at) FROM STDIN") as copy:
+    copy_pred_sql = (
+        "COPY predictions (review_id, sentiment_label, sentiment_confidence, "
+        "aspects, model_version, created_at) FROM STDIN"
+    )
+    with cur.copy(copy_pred_sql) as copy:
         for row in predictions_rows:
             copy.write_row(row)
     conn.commit()
-    print(f"Finished COPY for {len(predictions_rows):,} predictions in {time.time()-t_copy_pred:.2f}s.")
+    elapsed_pred = time.time() - t_copy_pred
+    print(f"Finished COPY for {len(predictions_rows):,} predictions in {elapsed_pred:.2f}s.")
 
     # Create Indexes
     print("Creating/verifying PostgreSQL indexes...")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_reviews_product_id ON reviews(product_id);")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_reviews_created_at ON reviews(created_at);")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_predictions_review_id ON predictions(review_id);")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_predictions_model_version ON predictions(model_version);")
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_predictions_model_version ON predictions(model_version);"
+    )
     conn.commit()
 
     conn.close()
-    print(f"\nSUCCESS: All {n_rows:,} reviews ingested into PostgreSQL across {len(products):,} products (max {MAX_REVIEWS_PER_PRODUCT} reviews per product) in {time.time()-t0:.2f}s total!")
+    elapsed_total = time.time() - t0
+    print(
+        f"\nSUCCESS: All {n_rows:,} reviews ingested into PostgreSQL across "
+        f"{len(products):,} products (max {MAX_REVIEWS_PER_PRODUCT} reviews per product) "
+        f"in {elapsed_total:.2f}s total!"
+    )
 
 
 if __name__ == "__main__":
