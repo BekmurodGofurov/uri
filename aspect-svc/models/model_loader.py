@@ -15,7 +15,7 @@ _ASPECTS = ["delivery", "quality", "price", "seller", "packaging", "other"]
 _POLARITIES = ["negative", "neutral", "positive"]
 
 
-class AspectMultiTaskModel:
+class AspectMultiTaskModel:  # pragma: no cover -- needs torch/transformers
     """4-kun notebook'idagi arxitekturaning aynan nusxasi (import qilinadi)."""
 
     def __new__(cls, *args, **kwargs):
@@ -69,7 +69,7 @@ def load_model():
         _model = "keyword_stub"
         logger.info("Stub aspect model ready.")
 
-    elif _type == "multilabel":
+    elif _type == "multilabel":  # pragma: no cover -- needs torch + real model artifact
         import torch
         from transformers import AutoTokenizer
 

@@ -1,0 +1,4 @@
+[run]
+omit =
+    training/train.py
+    training/evaluate_locked_test.py

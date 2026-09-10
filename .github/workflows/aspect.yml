@@ -36,4 +36,4 @@ jobs:
       - name: Run tests with coverage
         env:
           PYTHONPATH: .
-        run: pytest -c /dev/null -o addopts="" tests/ --cov=app --cov=models --cov=training --cov-report=term-missing --cov-fail-under=60
+        run: pytest -c /dev/null -o addopts="" tests/ --cov=app --cov=models --cov=training --cov-report=term-missing --cov-fail-under=60 --cov-config=.coveragerc
