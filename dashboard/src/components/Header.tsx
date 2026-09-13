@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16 sm:h-20 gap-4 sm:gap-6">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
           {/* Left: Brand Logo & Subtitle */}
           <a
             href="/"
@@ -145,22 +145,21 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </a>
 
-          {/* Divider */}
-          <div className="h-6 w-px bg-slate-200" />
-
-          {/* About Navigation Link (Placed on the Left) */}
-          <a
-            href="/about"
-            onClick={handleAboutClick}
-            className={`px-3 py-2 text-xs sm:text-sm font-semibold rounded-xl transition inline-flex items-center gap-1.5 ${
-              isAboutPage
-                ? 'bg-uzum-50 text-uzum-700 font-bold border border-uzum-200 shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Info className="w-4 h-4" />
-            <span>About</span>
-          </a>
+          {/* Right: About Navigation Link */}
+          <div>
+            <a
+              href="/about"
+              onClick={handleAboutClick}
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl transition inline-flex items-center gap-1.5 ${
+                isAboutPage
+                  ? 'bg-uzum-50 text-uzum-700 font-bold border border-uzum-200 shadow-xs'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'
+              }`}
+            >
+              <Info className="w-4 h-4" />
+              <span>About</span>
+            </a>
+          </div>
         </div>
       </div>
     </header>
