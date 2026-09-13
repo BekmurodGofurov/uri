@@ -5,6 +5,15 @@
  */
 
 /**
+ * Checks if current location is the /about page.
+ */
+export function isAboutPath(): boolean {
+  if (typeof window === 'undefined') return false;
+  const pathname = window.location.pathname;
+  return pathname === '/about' || pathname === '/about/';
+}
+
+/**
  * Extracts product ID from current browser location.
  * Supports:
  * - Path formats: /products/:id or /product/:id
@@ -12,6 +21,9 @@
  */
 export function getProductIdFromUrl(): string | null {
   if (typeof window === 'undefined') return null;
+
+  // If on about page, there is no product id
+  if (isAboutPath()) return null;
 
   // 1. Check path format: /products/<id> or /product/<id>
   const pathname = window.location.pathname;
@@ -43,7 +55,16 @@ export function getProductUrl(productId: string): string {
 export function navigateToProduct(productId: string): void {
   const targetUrl = getProductUrl(productId);
   if (window.location.pathname !== targetUrl) {
-    window.history.pushState({ productId }, '', targetUrl);
+    window.history.pushState({ productId, page: 'product' }, '', targetUrl);
+  }
+}
+
+/**
+ * Navigates to the About page using HTML5 History API.
+ */
+export function navigateToAbout(): void {
+  if (window.location.pathname !== '/about') {
+    window.history.pushState({ page: 'about' }, '', '/about');
   }
 }
 
@@ -52,7 +73,7 @@ export function navigateToProduct(productId: string): void {
  */
 export function navigateToHome(): void {
   if (window.location.pathname !== '/' || window.location.search) {
-    window.history.pushState({ productId: null }, '', '/');
+    window.history.pushState({ productId: null, page: 'home' }, '', '/');
   }
 }
 
