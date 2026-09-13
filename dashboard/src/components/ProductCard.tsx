@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, MessageSquare, ArrowRight, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { ProductListItem } from '../types/api';
+import { getProductUrl, isModifiedClick } from '../utils/route';
 
 interface ProductCardProps {
   product: ProductListItem;
@@ -14,6 +15,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isSelected = false,
 }) => {
   const { id, title, category, review_count, avg_rating, sentiment_summary } = product;
+  const productUrl = getProductUrl(id);
 
   // Calculate sentiment percentages
   const totalSentiments =
@@ -28,10 +30,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const negPct =
     totalSentiments > 0 ? 100 - posPct - neuPct : 0;
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isModifiedClick(e)) {
+      return; // Allow native browser action (new tab/window)
+    }
+    e.preventDefault();
+    onSelect(id);
+  };
+
   return (
-    <div
-      onClick={() => onSelect(id)}
-      className={`group relative bg-white rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden p-5 flex flex-col justify-between ${
+    <a
+      href={productUrl}
+      onClick={handleClick}
+      className={`group relative bg-white rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden p-5 flex flex-col justify-between block text-inherit no-underline ${
         isSelected
           ? 'border-uzum-600 ring-2 ring-uzum-500/20 shadow-lg shadow-uzum-500/10'
           : 'border-slate-200 hover:border-uzum-300 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5'
@@ -110,6 +121,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <span>View analysis & reviews</span>
         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </div>
-    </div>
+    </a>
   );
 };

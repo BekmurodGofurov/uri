@@ -13,10 +13,15 @@ import {
 } from './services/api';
 import { ProductListItem } from './types/api';
 import { ShieldCheck } from 'lucide-react';
+import {
+  getProductIdFromUrl,
+  navigateToProduct,
+  navigateToHome,
+} from './utils/route';
 
 export const App: React.FC = () => {
   const [products, setProducts] = useState<ProductListItem[]>([]);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(() => getProductIdFromUrl());
   const [activeModelVersions, setActiveModelVersions] = useState<string[]>([]);
   const [apiStatus, setApiStatus] = useState<ApiStatus>({ online: false });
   const [isLiveScorerOpen, setIsLiveScorerOpen] = useState<boolean>(false);
@@ -60,12 +65,25 @@ export const App: React.FC = () => {
     return () => clearInterval(interval);
   }, [loadData]);
 
+  // Synchronize state with browser Back/Forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const currentIdFromUrl = getProductIdFromUrl();
+      setSelectedProductId(currentIdFromUrl);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   const handleSelectProduct = (id: string) => {
+    navigateToProduct(id);
     setSelectedProductId(id);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleResetSelection = () => {
+    navigateToHome();
     setSelectedProductId(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

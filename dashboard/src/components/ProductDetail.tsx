@@ -15,6 +15,7 @@ import {
   Sentiment,
 } from '../types/api';
 import { fetchProductDetail, fetchProductReviews } from '../services/api';
+import { isModifiedClick } from '../utils/route';
 import { SentimentChart } from './SentimentChart';
 import { AspectBreakdown } from './AspectBreakdown';
 import { ReviewDrillDown } from './ReviewDrillDown';
@@ -36,6 +37,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const [detailError, setDetailError] = useState<string | null>(null);
+
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isModifiedClick(e)) return;
+    e.preventDefault();
+    onBack();
+  };
 
   const onUpdateActiveModelsRef = useRef(onUpdateActiveModels);
   useEffect(() => {
@@ -98,13 +105,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   if (detailError) {
     return (
       <div className="space-y-4">
-        <button
-          onClick={onBack}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition"
+        <a
+          href="/"
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition text-inherit no-underline"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to all products</span>
-        </button>
+        </a>
         <div className="p-6 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800">
           <p className="font-bold text-sm">Failed to load product details</p>
           <p className="text-xs mt-1">{detailError}</p>
@@ -153,13 +161,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   return (
     <div className="space-y-6">
       {/* Back button and breadcrumb */}
-      <button
-        onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition group"
+      <a
+        href="/"
+        onClick={handleBack}
+        className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition group text-inherit no-underline"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
         <span>Back to all products</span>
-      </button>
+      </a>
 
       {/* Top Header Card */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
