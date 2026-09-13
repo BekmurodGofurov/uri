@@ -3,12 +3,10 @@ import { Header } from './components/Header';
 import { ProductList } from './components/ProductList';
 import { ProductDetail } from './components/ProductDetail';
 import { AboutPage } from './components/AboutPage';
-import { LiveScorerModal } from './components/LiveScorerModal';
 import {
   checkGatewayHealth,
   fetchProducts,
   BASE_URL,
-  DEFAULT_PRODUCT_ID,
   errorMessage,
 } from './services/api';
 import { ProductListItem } from './types/api';
@@ -24,7 +22,6 @@ export const App: React.FC = () => {
   const [products, setProducts] = useState<ProductListItem[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(() => getProductIdFromUrl());
   const [isAbout, setIsAbout] = useState<boolean>(() => isAboutPath());
-  const [isLiveScorerOpen, setIsLiveScorerOpen] = useState<boolean>(false);
   const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true);
   const [apiError, setApiError] = useState<string | null>(null);
 
@@ -98,7 +95,6 @@ export const App: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-uzum-500 selection:text-white">
       {/* Top Navigation */}
       <Header
-        onOpenLiveScorer={() => setIsLiveScorerOpen(true)}
         onResetSelection={handleResetSelection}
         isAboutPage={isAbout}
         onNavigateAbout={handleNavigateAbout}
@@ -165,14 +161,6 @@ export const App: React.FC = () => {
           </div>
         </div>
       </footer>
-
-      {/* Interactive Scoring Modal */}
-      <LiveScorerModal
-        isOpen={isLiveScorerOpen}
-        onClose={() => setIsLiveScorerOpen(false)}
-        productId={selectedProductId || products[0]?.id || DEFAULT_PRODUCT_ID}
-        onSuccess={loadData}
-      />
     </div>
   );
 };
