@@ -1,5 +1,6 @@
 import { Bot, Sparkles, Activity, RefreshCw } from 'lucide-react';
 import { ApiStatus } from '../services/api';
+import { isModifiedClick } from '../utils/route';
 
 interface HeaderProps {
   apiStatus: ApiStatus;
@@ -28,12 +29,22 @@ export const Header: React.FC<HeaderProps> = ({
       ? "Visible when product is selected"
       : "Waiting for Gateway API connection";
 
+  const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isModifiedClick(e)) return;
+    e.preventDefault();
+    onResetSelection();
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-4">
           {/* Brand Logo & Title */}
-          <div className="flex items-center space-x-3 cursor-pointer" onClick={onResetSelection}>
+          <a
+            href="/"
+            onClick={handleHomeClick}
+            className="flex items-center space-x-3 cursor-pointer text-inherit no-underline"
+          >
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-uzum-500 to-uzum-700 flex items-center justify-center text-white shadow-md shadow-uzum-500/20 ring-2 ring-uzum-400/30">
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" />
             </div>
@@ -50,7 +61,7 @@ export const Header: React.FC<HeaderProps> = ({
                 AI Review Intelligence Platform for Uzbek Language
               </p>
             </div>
-          </div>
+          </a>
 
           {/* Model Version Badge & Status Bar (MANDATORY REQUIREMENT) */}
           <div className="hidden lg:flex items-center gap-3">
@@ -83,12 +94,13 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Actions */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {selectedProductId && (
-              <button
-                onClick={onResetSelection}
-                className="px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-uzum-700 hover:bg-slate-100 rounded-lg transition"
+              <a
+                href="/"
+                onClick={handleHomeClick}
+                className="px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 hover:text-uzum-700 hover:bg-slate-100 rounded-lg transition inline-flex items-center text-inherit no-underline"
               >
                 ← All Products
-              </button>
+              </a>
             )}
 
             <button
