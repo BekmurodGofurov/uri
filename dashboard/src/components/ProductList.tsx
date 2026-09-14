@@ -210,7 +210,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-uzum-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:hover:text-slate-600 transition"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -230,7 +230,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                     onClick={() => setPage(n)}
                     className={`min-w-[2.25rem] px-3 py-1.5 rounded-xl text-xs font-bold transition ${
                       n === page
-                        ? 'bg-slate-900 text-white shadow-sm'
+                        ? 'bg-uzum-600 text-white shadow-sm shadow-uzum-500/20'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
@@ -242,7 +242,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
-                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-uzum-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:hover:text-slate-600 transition"
                 aria-label="Next page"
               >
                 <ChevronRight className="w-4 h-4" />
