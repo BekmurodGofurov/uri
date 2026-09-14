@@ -15,6 +15,19 @@ export interface ProductListItem {
   sentiment_summary: SentimentSummary;
 }
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface ProductListResponse {
+  items: ProductListItem[];
+  pagination: PaginationMeta;
+  categories: string[];
+}
+
 export interface AspectPolaritySummary {
   aspect: string;
   positive: number;
