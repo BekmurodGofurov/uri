@@ -1,10 +1,12 @@
 import {
-  ProductListItem,
+  ProductListResponse,
   ProductDetailResponse,
   ProductReviewsResponse,
   PreviewScoreResponse,
   Sentiment,
 } from '../types/api';
+
+export type ProductSortBy = 'reviews' | 'rating' | 'positive';
 
 const rawApiUrl = import.meta.env.VITE_API_URL;
 
@@ -70,15 +72,27 @@ export async function checkGatewayHealth(): Promise<ApiStatus> {
   }
 }
 
-export async function fetchProducts(): Promise<ProductListItem[]> {
+export async function fetchProducts(params?: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+  sortBy?: ProductSortBy;
+}): Promise<ProductListResponse> {
   const baseUrl = requireApiUrl();
-  const res = await fetch(`${baseUrl}/api/products`);
+  const query = new URLSearchParams();
+  if (params?.page) query.set('page', String(params.page));
+  if (params?.pageSize) query.set('page_size', String(params.pageSize));
+  if (params?.search) query.set('search', params.search);
+  if (params?.category && params.category !== 'all') query.set('category', params.category);
+  if (params?.sortBy) query.set('sort_by', params.sortBy);
+
+  const res = await fetch(`${baseUrl}/api/products?${query.toString()}`);
   if (!res.ok) {
     const errText = await res.text();
     throw new Error(`Failed to load products (${res.status}): ${errText}`);
   }
-  const data = await res.json();
-  return Array.isArray(data) ? data : [];
+  return res.json();
 }
 
 export async function fetchProductDetail(productId: string): Promise<ProductDetailResponse> {
