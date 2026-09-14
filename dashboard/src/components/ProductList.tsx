@@ -12,11 +12,11 @@ interface ProductListProps {
 const PAGE_SIZE = 18;
 const SEARCH_DEBOUNCE_MS = 300;
 
-/** First 2, last 2, and the current page, with "…" filling any real gap
- *  (a single skipped page is shown directly instead of a "…"). Keeps the
- *  pager to ~5 number buttons regardless of how many pages there are. */
+/** First 2, last 2, and the current page with one neighbor on each side,
+ *  with "…" filling any real gap (a single skipped page is shown directly
+ *  instead of a "…"). E.g. page 10 of 327 -> 1 2 … 9 10 11 … 326 327. */
 function getPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
-  const pages = new Set<number>([1, 2, total - 1, total, current]);
+  const pages = new Set<number>([1, 2, total - 1, total, current - 1, current, current + 1]);
   const sorted = Array.from(pages)
     .filter((p) => p >= 1 && p <= total)
     .sort((a, b) => a - b);
