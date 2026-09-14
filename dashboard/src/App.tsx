@@ -5,11 +5,9 @@ import { ProductDetail } from './components/ProductDetail';
 import { AboutPage } from './components/AboutPage';
 import {
   checkGatewayHealth,
-  fetchProducts,
   BASE_URL,
   errorMessage,
 } from './services/api';
-import { ProductListItem } from './types/api';
 import {
   getProductIdFromUrl,
   navigateToProduct,
@@ -19,13 +17,11 @@ import {
 } from './utils/route';
 
 export const App: React.FC = () => {
-  const [products, setProducts] = useState<ProductListItem[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(() => getProductIdFromUrl());
   const [isAbout, setIsAbout] = useState<boolean>(() => isAboutPath());
-  const [isLoadingProducts, setIsLoadingProducts] = useState<boolean>(true);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Load products and health status
+  // Check gateway health status
   const loadData = useCallback(async () => {
     setApiError(null);
     try {
@@ -35,14 +31,9 @@ export const App: React.FC = () => {
           `Could not connect to Gateway API (${BASE_URL || "URL not specified"}). Please ensure the backend service is running.`
         );
       }
-
-      const prods = await fetchProducts();
-      setProducts(prods);
     } catch (e: unknown) {
-      console.error('Failed to load dashboard data:', e);
-      setApiError(errorMessage(e, "Failed to load products from Gateway API"));
-    } finally {
-      setIsLoadingProducts(false);
+      console.error('Failed to check Gateway API health:', e);
+      setApiError(errorMessage(e, "Failed to connect to Gateway API"));
     }
   }, []);
 
@@ -127,10 +118,8 @@ export const App: React.FC = () => {
           />
         ) : (
           <ProductList
-            products={products}
             selectedProductId={selectedProductId}
             onSelectProduct={handleSelectProduct}
-            isLoading={isLoadingProducts}
           />
         )}
       </main>
