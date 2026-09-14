@@ -12,6 +12,31 @@ interface ProductListProps {
 const PAGE_SIZE = 18;
 const SEARCH_DEBOUNCE_MS = 300;
 
+/** First 2, last 2, and the current page, with "…" filling any real gap
+ *  (a single skipped page is shown directly instead of a "…"). Keeps the
+ *  pager to ~5 number buttons regardless of how many pages there are. */
+function getPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
+  const pages = new Set<number>([1, 2, total - 1, total, current]);
+  const sorted = Array.from(pages)
+    .filter((p) => p >= 1 && p <= total)
+    .sort((a, b) => a - b);
+
+  const result: (number | 'ellipsis')[] = [];
+  let prev = 0;
+  for (const p of sorted) {
+    if (prev) {
+      if (p - prev === 2) {
+        result.push(prev + 1);
+      } else if (p - prev > 2) {
+        result.push('ellipsis');
+      }
+    }
+    result.push(p);
+    prev = p;
+  }
+  return result;
+}
+
 export const ProductList: React.FC<ProductListProps> = ({
   selectedProductId,
   onSelectProduct,
@@ -191,19 +216,28 @@ export const ProductList: React.FC<ProductListProps> = ({
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setPage(n)}
-                  className={`min-w-[2.25rem] px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                    n === page
-                      ? 'bg-slate-900 text-white shadow-sm'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
+              {getPageNumbers(page, totalPages).map((n, idx) =>
+                n === 'ellipsis' ? (
+                  <span
+                    key={`ellipsis-${idx}`}
+                    className="px-1.5 text-xs font-bold text-slate-400 select-none"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={`min-w-[2.25rem] px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                      n === page
+                        ? 'bg-slate-900 text-white shadow-sm'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                )
+              )}
 
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
