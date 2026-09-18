@@ -166,7 +166,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack }) => {
   // Row 2: 3 Engineering members (2 ML, 1 Backend)
   const members: TeamMember[] = [
     {
-      name: 'Hayotbek',
+      name: 'Muhammadayub Jamolov',
       tag: 'ML Engineer',
       about: 'Uzbek text preprocessing, morphological tokenization, sentiment classification modeling, TF-IDF baseline and transformer benchmarking.',
       image: 'https://media.licdn.com/dms/image/v2/D4D35AQH6L_OHsag3Qg/profile-framedphoto-shrink_800_800/B4DZ37cafcGcAg-/0/1778040023307?e=1789905600&v=beta&t=lnO3t0b_7pfqvBrxIPm_-F4dlUgZ2hIek7kagT8P69w',
