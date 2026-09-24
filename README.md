@@ -450,5 +450,22 @@ The project was developed under strict collaborative rules (R1–R7) with isolat
 
 ---
 
-### 📄 License
+## 13. Documentation & Agent Guides
+
+Comprehensive project documentation is maintained in the `docs/` directory:
+
+- [System Architecture](file:///d:/IncTec/TestProject/uri/docs/architecture.md): Service topologies, microservices communication, and data contracts.
+- [Local Development Setup](file:///d:/IncTec/TestProject/uri/docs/setup.md): Environment variables, dependencies, and local startup.
+- [Production Deployment Guide](file:///d:/IncTec/TestProject/uri/docs/deployment.md): Docker Compose, Nginx reverse proxy, and SSL configuration.
+- [Development Workflow](file:///d:/IncTec/TestProject/uri/docs/development-workflow.md): Branching, review policies, and coverage gates.
+- [Machine Learning Components](file:///d:/IncTec/TestProject/uri/docs/ml-components.md): Dataset splits, Macro-F1 baselines, and model governance.
+- [API Reference](file:///d:/IncTec/TestProject/uri/docs/api.md): Complete REST endpoint specifications.
+
+### AI Agent Configuration
+- [AGENTS.md](file:///d:/IncTec/TestProject/uri/AGENTS.md): Monorepo rules, architecture boundaries, and command references.
+- [CLAUDE.md](file:///d:/IncTec/TestProject/uri/CLAUDE.md): Quality checklist and execution instructions for Claude Code sessions.
+
+---
+
+### License
 Distributed under the MIT License. Developed for research and educational purposes.
