@@ -1,74 +1,101 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Filter, Layers, SlidersHorizontal } from 'lucide-react';
-import { ProductListItem } from '../types/api';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Layers, SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ProductListResponse } from '../types/api';
+import { fetchProducts, errorMessage, ProductSortBy } from '../services/api';
 import { ProductCard } from './ProductCard';
 
 interface ProductListProps {
-  products: ProductListItem[];
   selectedProductId: string | null;
   onSelectProduct: (id: string) => void;
-  isLoading: boolean;
+}
+
+const PAGE_SIZE = 18;
+const SEARCH_DEBOUNCE_MS = 300;
+
+/** First 2, last 2, and the current page with one neighbor on each side,
+ *  with "…" filling any real gap (a single skipped page is shown directly
+ *  instead of a "…"). E.g. page 10 of 327 -> 1 2 … 9 10 11 … 326 327. */
+function getPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
+  const pages = new Set<number>([1, 2, total - 1, total, current - 1, current, current + 1]);
+  const sorted = Array.from(pages)
+    .filter((p) => p >= 1 && p <= total)
+    .sort((a, b) => a - b);
+
+  const result: (number | 'ellipsis')[] = [];
+  let prev = 0;
+  for (const p of sorted) {
+    if (prev) {
+      if (p - prev === 2) {
+        result.push(prev + 1);
+      } else if (p - prev > 2) {
+        result.push('ellipsis');
+      }
+    }
+    result.push(p);
+    prev = p;
+  }
+  return result;
 }
 
 export const ProductList: React.FC<ProductListProps> = ({
-  products,
   selectedProductId,
   onSelectProduct,
-  isLoading,
 }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'reviews' | 'rating' | 'positive'>('reviews');
-  const [visibleCount, setVisibleCount] = useState(36);
+  const [sortBy, setSortBy] = useState<ProductSortBy>('reviews');
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState<ProductListResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  React.useEffect(() => {
-    setVisibleCount(36);
-  }, [searchQuery, selectedCategory, sortBy]);
+  // Debounce the raw search input before it drives a network request.
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(searchInput), SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
-  // Extract unique categories
-  const categories = useMemo(() => {
-    const cats = new Set<string>();
-    products.forEach((p) => {
-      if (p.category) cats.add(p.category);
-    });
-    return Array.from(cats);
-  }, [products]);
+  // Any filter/sort change starts back at page 1.
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, selectedCategory, sortBy]);
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    return products
-      .filter((p) => {
-        const matchesSearch =
-          (p.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.id.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCat = selectedCategory === 'all' || p.category === selectedCategory;
-        return matchesSearch && matchesCat;
+  // Fetch the current page from the gateway whenever a param changes.
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    setError(null);
+
+    fetchProducts({
+      page,
+      pageSize: PAGE_SIZE,
+      search: debouncedSearch || undefined,
+      category: selectedCategory,
+      sortBy,
+    })
+      .then((res) => {
+        if (isMounted) {
+          setData(res);
+          setIsLoading(false);
+        }
       })
-      .sort((a, b) => {
-        if (sortBy === 'reviews') {
-          return b.review_count - a.review_count;
+      .catch((err: unknown) => {
+        if (isMounted) {
+          setError(errorMessage(err, 'Failed to load products'));
+          setIsLoading(false);
         }
-        if (sortBy === 'rating') {
-          return (b.avg_rating || 0) - (a.avg_rating || 0);
-        }
-        if (sortBy === 'positive') {
-          const aTotal =
-            (a.sentiment_summary?.positive || 0) +
-            (a.sentiment_summary?.neutral || 0) +
-            (a.sentiment_summary?.negative || 0);
-          const aPos = aTotal > 0 ? (a.sentiment_summary?.positive || 0) / aTotal : 0;
-
-          const bTotal =
-            (b.sentiment_summary?.positive || 0) +
-            (b.sentiment_summary?.neutral || 0) +
-            (b.sentiment_summary?.negative || 0);
-          const bPos = bTotal > 0 ? (b.sentiment_summary?.positive || 0) / bTotal : 0;
-
-          return bPos - aPos;
-        }
-        return 0;
       });
-  }, [products, searchQuery, selectedCategory, sortBy]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [page, debouncedSearch, selectedCategory, sortBy]);
+
+  const products = data?.items ?? [];
+  const categories = data?.categories ?? [];
+  const totalPages = data?.pagination.total_pages ?? 0;
+  const totalCount = data?.pagination.total ?? 0;
 
   return (
     <div className="space-y-6">
@@ -76,16 +103,16 @@ export const ProductList: React.FC<ProductListProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            Mahsulotlar katalogi
+            Product Catalog
           </h2>
           <p className="text-sm text-slate-500 mt-1">
-            Uzum Market tovarlarining tahliliy reytingi, sharhlari va sun'iy intellekt xulosalari
+            Analytical ratings, reviews, and AI insights for Uzum Market products
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-xl bg-uzum-50 border border-uzum-100 text-uzum-700 w-fit">
           <Layers className="w-4 h-4" />
-          <span>Jami: {products.length} ta mahsulot</span>
+          <span>Total: {totalCount} products</span>
         </div>
       </div>
 
@@ -96,9 +123,9 @@ export const ProductList: React.FC<ProductListProps> = ({
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Mahsulot nomi yoki ID bo'yicha qidirish..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by product name or ID..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 transition"
           />
         </div>
@@ -112,7 +139,7 @@ export const ProductList: React.FC<ProductListProps> = ({
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full pl-8 pr-8 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 appearance-none text-slate-700 cursor-pointer"
             >
-              <option value="all">Barcha toifalar</option>
+              <option value="all">All categories</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -126,12 +153,12 @@ export const ProductList: React.FC<ProductListProps> = ({
             <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as ProductSortBy)}
               className="w-full pl-8 pr-8 py-2 text-xs font-medium bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-uzum-500/20 focus:border-uzum-500 appearance-none text-slate-700 cursor-pointer"
             >
-              <option value="reviews">Eng ko'p sharhlar</option>
-              <option value="rating">Eng yuqori reyting</option>
-              <option value="positive">Eng ijobiy tovarlar</option>
+              <option value="reviews">Most reviews</option>
+              <option value="rating">Highest rating</option>
+              <option value="positive">Most positive products</option>
             </select>
           </div>
         </div>
@@ -154,17 +181,21 @@ export const ProductList: React.FC<ProductListProps> = ({
             </div>
           ))}
         </div>
-      ) : filteredProducts.length === 0 ? (
+      ) : error ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <p className="text-base font-semibold text-slate-700">Hech qanday mahsulot topilmadi</p>
+          <p className="text-base font-semibold text-rose-600">{error}</p>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+          <p className="text-base font-semibold text-slate-700">No products found</p>
           <p className="text-xs text-slate-400 mt-1">
-            Qidiruv so'rovingizni yoki tanlangan toifani o'zgartirib ko'ring
+            Try adjusting your search query or selected category
           </p>
         </div>
       ) : (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {filteredProducts.slice(0, visibleCount).map((prod) => (
+            {products.map((prod) => (
               <ProductCard
                 key={prod.id}
                 product={prod}
@@ -174,13 +205,47 @@ export const ProductList: React.FC<ProductListProps> = ({
             ))}
           </div>
 
-          {visibleCount < filteredProducts.length && (
-            <div className="text-center pt-4">
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-1.5 pt-4 flex-wrap">
               <button
-                onClick={() => setVisibleCount((prev) => prev + 36)}
-                className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs rounded-xl shadow-sm hover:shadow transition"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1}
+                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-uzum-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:hover:text-slate-600 transition"
+                aria-label="Previous page"
               >
-                Yana ko'rsatish ({filteredProducts.length - visibleCount} ta qoldi)
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              {getPageNumbers(page, totalPages).map((n, idx) =>
+                n === 'ellipsis' ? (
+                  <span
+                    key={`ellipsis-${idx}`}
+                    className="px-1.5 text-xs font-bold text-slate-400 select-none"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={n}
+                    onClick={() => setPage(n)}
+                    className={`min-w-[2.25rem] px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                      n === page
+                        ? 'bg-uzum-600 text-white shadow-sm shadow-uzum-500/20'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {n}
+                  </button>
+                )
+              )}
+
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page >= totalPages}
+                className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-uzum-600 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-100 disabled:hover:text-slate-600 transition"
+                aria-label="Next page"
+              >
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}

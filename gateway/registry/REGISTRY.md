@@ -35,8 +35,8 @@ Active version is now: sentiment-v1
 ```
 
 > [!IMPORTANT]
-> **Rollback haqida muhim eslatma:**
-> Rollback buyrug'i faqat `current` pointer faylini yangilaydi. Ishlab turgan `sentiment-svc` modeli yangilanishi uchun xizmat yangi `MODEL_PATH` bilan qayta ishga tushirilishi (restart) kerak:
+> **Important note about rollback:**
+> The rollback command only updates the `current` pointer file. To update the running `sentiment-svc` model, restart the service with the new `MODEL_PATH`:
 > ```bash
 > docker compose restart sentiment-svc
 > ```

@@ -11,16 +11,29 @@ from shared.contracts import AspectResponse, ReviewIn, ScoreRequest, SentimentRe
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_SENTIMENT_SVC_URL = os.getenv("SENTIMENT_SVC_URL", "http://localhost:8001")
-DEFAULT_ASPECT_SVC_URL = os.getenv("ASPECT_SVC_URL", "http://localhost:8002")
+
+def get_sentiment_svc_url() -> str:
+    url = os.getenv("SENTIMENT_SVC_URL")
+    if url:
+        return url
+    port = os.getenv("SENTIMENT_PORT", "8001")
+    return f"http://localhost:{port}"
+
+
+def get_aspect_svc_url() -> str:
+    url = os.getenv("ASPECT_SVC_URL")
+    if url:
+        return url
+    port = os.getenv("ASPECT_PORT", "8002")
+    return f"http://localhost:{port}"
 
 
 def score_only_batch(
     reviews: list[dict[str, str]],
     sentiment_client: httpx.Client,
     aspect_client: httpx.Client,
-    sentiment_url: str = DEFAULT_SENTIMENT_SVC_URL,
-    aspect_url: str = DEFAULT_ASPECT_SVC_URL,
+    sentiment_url: str | None = None,
+    aspect_url: str | None = None,
 ) -> list[dict[str, Any]]:
     """Score reviews via ML services and return results WITHOUT saving to DB.
 
@@ -29,6 +42,9 @@ def score_only_batch(
     """
     if not reviews:
         return []
+
+    sentiment_url = sentiment_url or get_sentiment_svc_url()
+    aspect_url = aspect_url or get_aspect_svc_url()
 
     items = [ReviewIn(id=r["id"], text=r["text"]) for r in reviews]
     request = ScoreRequest(reviews=items)
@@ -69,12 +85,15 @@ def score_and_store_batch(
     reviews: list[Review],
     sentiment_client: httpx.Client,
     aspect_client: httpx.Client,
-    sentiment_url: str = DEFAULT_SENTIMENT_SVC_URL,
-    aspect_url: str = DEFAULT_ASPECT_SVC_URL,
+    sentiment_url: str | None = None,
+    aspect_url: str | None = None,
 ) -> list[Prediction]:
     """Score a batch of reviews against both ML services and store predictions in DB."""
     if not reviews:
         return []
+
+    sentiment_url = sentiment_url or get_sentiment_svc_url()
+    aspect_url = aspect_url or get_aspect_svc_url()
 
     # Prepare ScoreRequest
     items = [ReviewIn(id=r.id, text=r.text) for r in reviews]
@@ -125,6 +144,8 @@ def process_unscored_reviews(
     sentiment_client: httpx.Client,
     aspect_client: httpx.Client,
     batch_size: int = 32,
+    sentiment_url: str | None = None,
+    aspect_url: str | None = None,
 ) -> int:
     """Find reviews without predictions and process them in batches."""
     stmt = (
@@ -137,5 +158,7 @@ def process_unscored_reviews(
     if not unscored:
         return 0
 
-    saved = score_and_store_batch(session, unscored, sentiment_client, aspect_client)
+    saved = score_and_store_batch(
+        session, unscored, sentiment_client, aspect_client, sentiment_url, aspect_url
+    )
     return len(saved)

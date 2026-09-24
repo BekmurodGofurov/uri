@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, MessageSquare, ArrowRight, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
 import { ProductListItem } from '../types/api';
+import { getProductUrl, isModifiedClick } from '../utils/route';
 
 interface ProductCardProps {
   product: ProductListItem;
@@ -14,6 +15,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isSelected = false,
 }) => {
   const { id, title, category, review_count, avg_rating, sentiment_summary } = product;
+  const productUrl = getProductUrl(id);
 
   // Calculate sentiment percentages
   const totalSentiments =
@@ -28,10 +30,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const negPct =
     totalSentiments > 0 ? 100 - posPct - neuPct : 0;
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isModifiedClick(e)) {
+      return; // Allow native browser action (new tab/window)
+    }
+    e.preventDefault();
+    onSelect(id);
+  };
+
   return (
-    <div
-      onClick={() => onSelect(id)}
-      className={`group relative bg-white rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden p-5 flex flex-col justify-between ${
+    <a
+      href={productUrl}
+      onClick={handleClick}
+      className={`group relative bg-white rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden p-5 flex flex-col justify-between block text-inherit no-underline ${
         isSelected
           ? 'border-uzum-600 ring-2 ring-uzum-500/20 shadow-lg shadow-uzum-500/10'
           : 'border-slate-200 hover:border-uzum-300 hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-0.5'
@@ -41,7 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {/* Category & ID */}
         <div className="flex items-center justify-between gap-2 mb-3">
           <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 uppercase tracking-wider">
-            {category || 'Umumiy tovar'}
+            {category || 'General Product'}
           </span>
           <span className="text-[11px] font-mono text-slate-400 font-medium truncate max-w-[120px]">
             {id}
@@ -50,7 +61,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Product Title */}
         <h3 className="font-bold text-slate-900 text-base leading-snug line-clamp-2 group-hover:text-uzum-700 transition">
-          {title || `Mahsulot ${id}`}
+          {title || `Product ${id}`}
         </h3>
 
         {/* Rating & Review Count */}
@@ -63,14 +74,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
           <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium">
             <MessageSquare className="w-4 h-4 text-slate-400" />
-            <span>{review_count} ta sharh</span>
+            <span>{review_count} reviews</span>
           </div>
         </div>
 
-        {/* Sentiment Ratio Bar (Ijobiy / Neytral / Salbiy nisbati) */}
+        {/* Sentiment Ratio Bar (Positive / Neutral / Negative ratio) */}
         <div className="mt-4">
           <div className="flex items-center justify-between text-xs mb-1.5 font-semibold">
-            <span className="text-slate-600">Kayfiyat nisbati:</span>
+            <span className="text-slate-600">Sentiment ratio:</span>
             <div className="flex items-center gap-2 text-[11px]">
               <span className="text-emerald-600 font-bold flex items-center gap-0.5">
                 <ThumbsUp className="w-3 h-3" /> {posPct}%
@@ -89,17 +100,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             <div
               style={{ width: `${posPct}%` }}
               className="bg-emerald-500 transition-all duration-500"
-              title={`Ijobiy: ${sentiment_summary?.positive || 0} ta (${posPct}%)`}
+              title={`Positive: ${sentiment_summary?.positive || 0} (${posPct}%)`}
             />
             <div
               style={{ width: `${neuPct}%` }}
               className="bg-amber-400 transition-all duration-500"
-              title={`Neytral: ${sentiment_summary?.neutral || 0} ta (${neuPct}%)`}
+              title={`Neutral: ${sentiment_summary?.neutral || 0} (${neuPct}%)`}
             />
             <div
               style={{ width: `${negPct}%` }}
               className="bg-rose-500 transition-all duration-500"
-              title={`Salbiy: ${sentiment_summary?.negative || 0} ta (${negPct}%)`}
+              title={`Negative: ${sentiment_summary?.negative || 0} (${negPct}%)`}
             />
           </div>
         </div>
@@ -107,9 +118,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Card Footer */}
       <div className="mt-5 pt-3 flex items-center justify-between text-xs font-semibold text-uzum-600 group-hover:text-uzum-700">
-        <span>Tahlil va sharhlarni ko'rish</span>
+        <span>View analysis & reviews</span>
         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </div>
-    </div>
+    </a>
   );
 };

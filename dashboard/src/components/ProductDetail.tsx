@@ -15,6 +15,7 @@ import {
   Sentiment,
 } from '../types/api';
 import { fetchProductDetail, fetchProductReviews } from '../services/api';
+import { isModifiedClick } from '../utils/route';
 import { SentimentChart } from './SentimentChart';
 import { AspectBreakdown } from './AspectBreakdown';
 import { ReviewDrillDown } from './ReviewDrillDown';
@@ -36,6 +37,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
   const [isLoadingReviews, setIsLoadingReviews] = useState(true);
   const [detailError, setDetailError] = useState<string | null>(null);
+
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isModifiedClick(e)) return;
+    e.preventDefault();
+    onBack();
+  };
 
   const onUpdateActiveModelsRef = useRef(onUpdateActiveModels);
   useEffect(() => {
@@ -60,7 +67,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
       })
       .catch((err) => {
         if (isMounted) {
-          setDetailError(err.message || "Tafsilotlarni yuklab bo'lmadi");
+          setDetailError(err.message || "Failed to load details");
           setIsLoadingDetail(false);
         }
       });
@@ -98,15 +105,16 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   if (detailError) {
     return (
       <div className="space-y-4">
-        <button
-          onClick={onBack}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition"
+        <a
+          href="/"
+          onClick={handleBack}
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition text-inherit no-underline"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Barcha mahsulotlarga qaytish</span>
-        </button>
+          <span>Back to all products</span>
+        </a>
         <div className="p-6 bg-rose-50 border border-rose-200 rounded-2xl text-rose-800">
-          <p className="font-bold text-sm">Mahsulot ma'lumotlarini yuklab bo'lmadi</p>
+          <p className="font-bold text-sm">Failed to load product details</p>
           <p className="text-xs mt-1">{detailError}</p>
         </div>
       </div>
@@ -153,13 +161,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
   return (
     <div className="space-y-6">
       {/* Back button and breadcrumb */}
-      <button
-        onClick={onBack}
-        className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition group"
+      <a
+        href="/"
+        onClick={handleBack}
+        className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-600 hover:text-uzum-600 transition group text-inherit no-underline"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-        <span>Barcha mahsulotlarga qaytish</span>
-      </button>
+        <span>Back to all products</span>
+      </a>
 
       {/* Top Header Card */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-5">
@@ -167,12 +176,12 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
           <div className="space-y-1.5 flex-1">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 uppercase tracking-wider">
-                {category || 'Umumiy tovar'}
+                {category || 'General Product'}
               </span>
               <span className="text-xs font-mono text-slate-400 font-medium">ID: {id}</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              {title || `Mahsulot ${id}`}
+              {title || `Product ${id}`}
             </h1>
           </div>
 
@@ -183,7 +192,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
                 <span>{avg_rating !== null && avg_rating !== undefined ? avg_rating.toFixed(1) : '—'}</span>
               </div>
-              <span className="text-[11px] text-slate-500 font-medium">O'rtacha reyting</span>
+              <span className="text-[11px] text-slate-500 font-medium">Average Rating</span>
             </div>
 
             <div className="px-3 text-center">
@@ -191,7 +200,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <MessageSquare className="w-5 h-5 text-uzum-600" />
                 <span>{review_count}</span>
               </div>
-              <span className="text-[11px] text-slate-500 font-medium">Jami sharhlar</span>
+              <span className="text-[11px] text-slate-500 font-medium">Total Reviews</span>
             </div>
           </div>
         </div>
@@ -205,14 +214,14 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
-                  Tahlil qiluvchi AI Modellar:
+                  Analyzing AI Models:
                 </span>
                 <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-uzum-100 text-uzum-800">
-                  <ShieldCheck className="w-3 h-3 mr-0.5 text-uzum-600" /> Verifikatsiya qilingan
+                  <ShieldCheck className="w-3 h-3 mr-0.5 text-uzum-600" /> Verified
                 </span>
               </div>
               <p className="text-xs text-slate-600 font-medium mt-0.5">
-                Ushbu tovarning barcha sharh va jihatlari quyidagi model versiyasi tomonidan qayta ishlangan
+                All reviews and aspects of this product were processed by the following model version
               </p>
             </div>
           </div>
@@ -243,7 +252,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <ThumbsUp className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-xs text-emerald-800 font-medium">Ijobiy sharhlar</span>
+                <span className="text-xs text-emerald-800 font-medium">Positive reviews</span>
                 <div className="font-extrabold text-lg text-emerald-950">
                   {sentiment_summary?.positive || 0}{' '}
                   <span className="text-xs font-semibold font-mono">({posPct}%)</span>
@@ -258,7 +267,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <Minus className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-xs text-amber-800 font-medium">Neytral sharhlar</span>
+                <span className="text-xs text-amber-800 font-medium">Neutral reviews</span>
                 <div className="font-extrabold text-lg text-amber-950">
                   {sentiment_summary?.neutral || 0}{' '}
                   <span className="text-xs font-semibold font-mono">({neuPct}%)</span>
@@ -273,7 +282,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
                 <ThumbsDown className="w-4 h-4" />
               </div>
               <div>
-                <span className="text-xs text-rose-800 font-medium">Salbiy sharhlar</span>
+                <span className="text-xs text-rose-800 font-medium">Negative reviews</span>
                 <div className="font-extrabold text-lg text-rose-950">
                   {sentiment_summary?.negative || 0}{' '}
                   <span className="text-xs font-semibold font-mono">({negPct}%)</span>

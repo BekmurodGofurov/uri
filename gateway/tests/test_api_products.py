@@ -46,7 +46,10 @@ def test_list_products_empty(client):
     test_client, _ = client
     res = test_client.get("/api/products")
     assert res.status_code == 200
-    assert res.json() == []
+    data = res.json()
+    assert data["items"] == []
+    assert data["pagination"] == {"total": 0, "page": 1, "page_size": 18, "total_pages": 0}
+    assert data["categories"] == []
 
 
 def test_list_products_with_data(client):
@@ -82,8 +85,11 @@ def test_list_products_with_data(client):
     res = test_client.get("/api/products")
     assert res.status_code == 200
     data = res.json()
-    assert len(data) == 1
-    p = data[0]
+    assert data["pagination"]["total"] == 1
+    assert data["categories"] == ["Aksessuarlar"]
+    items = data["items"]
+    assert len(items) == 1
+    p = items[0]
     assert p["id"] == "prod_1"
     assert p["title"] == "Himoya oynasi 9D"
     assert p["category"] == "Aksessuarlar"
@@ -92,6 +98,136 @@ def test_list_products_with_data(client):
     assert p["sentiment_summary"]["positive"] == 1
     assert p["sentiment_summary"]["negative"] == 1
     assert p["sentiment_summary"]["neutral"] == 0
+
+
+def _seed_product(db, product_id, title, category=None, ratings=()):
+    """Create a product plus one review (with a positive prediction) per rating."""
+    prod = Product(id=product_id, title=title, category=category)
+    db.add(prod)
+    db.commit()
+    for idx, rating in enumerate(ratings):
+        rev_id = f"{product_id}_r{idx}"
+        db.add(Review(id=rev_id, product_id=product_id, text="Review text", rating=rating))
+        db.commit()
+        label = "positive" if rating >= 4 else "negative" if rating <= 2 else "neutral"
+        db.add(
+            Prediction(
+                review_id=rev_id,
+                sentiment_label=label,
+                sentiment_confidence=0.9,
+                aspects=[],
+                model_version="v1",
+            )
+        )
+        db.commit()
+
+
+def test_list_products_pagination_boundaries(client):
+    test_client, db = client
+    for i in range(20):
+        _seed_product(db, f"prod_{i:02d}", f"Product {i:02d}")
+
+    res_page1 = test_client.get("/api/products?page=1&page_size=18")
+    assert res_page1.status_code == 200
+    data1 = res_page1.json()
+    assert len(data1["items"]) == 18
+    assert data1["pagination"] == {"total": 20, "page": 1, "page_size": 18, "total_pages": 2}
+
+    res_page2 = test_client.get("/api/products?page=2&page_size=18")
+    data2 = res_page2.json()
+    assert len(data2["items"]) == 2
+    assert data2["pagination"]["page"] == 2
+
+
+def test_list_products_default_page_size_is_18(client):
+    test_client, db = client
+    for i in range(25):
+        _seed_product(db, f"prod_{i:02d}", f"Product {i:02d}")
+
+    res = test_client.get("/api/products")
+    assert res.status_code == 200
+    data = res.json()
+    assert len(data["items"]) == 18
+    assert data["pagination"]["page_size"] == 18
+
+
+def test_list_products_search_by_title(client):
+    test_client, db = client
+    _seed_product(db, "prod_phone", "Smartfon X")
+    _seed_product(db, "prod_shoes", "Krossovka")
+
+    res = test_client.get("/api/products?search=smartfon")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["pagination"]["total"] == 1
+    assert data["items"][0]["id"] == "prod_phone"
+
+
+def test_list_products_search_by_id(client):
+    test_client, db = client
+    _seed_product(db, "prod_unique_id", "Generic title")
+    _seed_product(db, "prod_other", "Another title")
+
+    res = test_client.get("/api/products?search=unique_id")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["pagination"]["total"] == 1
+    assert data["items"][0]["id"] == "prod_unique_id"
+
+
+def test_list_products_filter_by_category(client):
+    test_client, db = client
+    _seed_product(db, "prod_a", "Product A", category="Telefonlar")
+    _seed_product(db, "prod_b", "Product B", category="Aksessuarlar")
+
+    res = test_client.get("/api/products?category=Telefonlar")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["pagination"]["total"] == 1
+    assert data["items"][0]["id"] == "prod_a"
+    # Categories facet always reflects the whole catalog, not just the filtered subset.
+    assert sorted(data["categories"]) == ["Aksessuarlar", "Telefonlar"]
+
+
+def test_list_products_sort_by_rating(client):
+    test_client, db = client
+    _seed_product(db, "prod_low", "Low rated", ratings=[1, 2])
+    _seed_product(db, "prod_high", "High rated", ratings=[5, 5])
+
+    res = test_client.get("/api/products?sort_by=rating")
+    assert res.status_code == 200
+    ids = [item["id"] for item in res.json()["items"]]
+    assert ids == ["prod_high", "prod_low"]
+
+
+def test_list_products_sort_by_positive(client):
+    test_client, db = client
+    _seed_product(db, "prod_mixed", "Mixed sentiment", ratings=[5, 1])
+    _seed_product(db, "prod_allpos", "All positive", ratings=[5, 5])
+
+    res = test_client.get("/api/products?sort_by=positive")
+    assert res.status_code == 200
+    ids = [item["id"] for item in res.json()["items"]]
+    assert ids == ["prod_allpos", "prod_mixed"]
+
+
+def test_list_products_out_of_range_page(client):
+    test_client, db = client
+    _seed_product(db, "prod_only", "Only product")
+
+    res = test_client.get("/api/products?page=999")
+    assert res.status_code == 200
+    data = res.json()
+    assert data["items"] == []
+    assert data["pagination"]["total"] == 1
+    assert data["pagination"]["total_pages"] == 1
+
+
+def test_list_products_invalid_page_rejected(client):
+    test_client, _ = client
+    assert test_client.get("/api/products?page=0").status_code == 422
+    assert test_client.get("/api/products?page_size=0").status_code == 422
+    assert test_client.get("/api/products?page_size=101").status_code == 422
 
 
 def test_get_product_detail_not_found(client):

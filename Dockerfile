@@ -8,9 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY gateway/ ./gateway/
 COPY shared/ ./shared/
 
-ENV PYTHONPATH=/app \
-    PORT=8000
+CMD ["sh", "-c", "exec uvicorn gateway.api.app:app --host 0.0.0.0 --port ${GATEWAY_PORT:-${PORT:?GATEWAY_PORT or PORT environment variable must be set}}"]
 
-EXPOSE 8000
 
-CMD ["uvicorn", "gateway.api.app:app", "--host", "0.0.0.0", "--port", "8000"]

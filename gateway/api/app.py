@@ -3,13 +3,13 @@ import os
 import uuid
 from collections.abc import Generator
 from contextlib import asynccontextmanager
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
 from gateway.database.connection import get_session
@@ -40,11 +40,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_cors_origins_raw = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
+_cors_origins = [orig.strip() for orig in _cors_origins_raw.split(",") if orig.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000").split(
-        ","
-    ),
+    allow_origins=_cors_origins,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "X-API-Key", "Authorization", "Accept"],
@@ -78,30 +79,93 @@ class ProductListItem(BaseModel):
     sentiment_summary: SentimentSummary
 
 
+class PaginationMeta(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+
+
+class ProductListResponse(BaseModel):
+    items: list[ProductListItem]
+    pagination: PaginationMeta
+    categories: list[str]
+
+
+ProductSortBy = Literal["reviews", "rating", "positive"]
+
+DEFAULT_PRODUCTS_PAGE_SIZE = 18
+
+
+def _product_sort_key(item: ProductListItem, sort_by: ProductSortBy) -> float:
+    if sort_by == "rating":
+        return item.avg_rating or 0.0
+    if sort_by == "positive":
+        s = item.sentiment_summary
+        total = s.positive + s.neutral + s.negative
+        return (s.positive / total) if total > 0 else 0.0
+    return float(item.review_count)
+
+
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "gateway"}
 
 
-@app.get("/api/products", response_model=list[ProductListItem])
-def list_products(db: Annotated[Session, Depends(get_db)]) -> list[ProductListItem]:
-    products = list(db.scalars(select(Product).order_by(Product.id)).all())
-    if not products:
-        return []
+@app.get("/api/products", response_model=ProductListResponse)
+def list_products(
+    db: Annotated[Session, Depends(get_db)],
+    page: Annotated[int, Query(ge=1)] = 1,
+    page_size: Annotated[int, Query(ge=1, le=100)] = DEFAULT_PRODUCTS_PAGE_SIZE,
+    search: Annotated[str | None, Query(max_length=200)] = None,
+    category: Annotated[str | None, Query(max_length=200)] = None,
+    sort_by: Annotated[ProductSortBy, Query()] = "reviews",
+) -> ProductListResponse:
+    # Distinct categories across the WHOLE catalog, independent of the active
+    # search/category filter, so the dropdown stays stable while paginating.
+    categories = sorted(
+        c
+        for c in db.scalars(
+            select(Product.category).where(Product.category.is_not(None)).distinct()
+        ).all()
+        if c
+    )
 
-    # 1 query for all review counts and averages, grouped by product (resolves N+1)
+    stmt = select(Product)
+    if search:
+        like = f"%{search}%"
+        stmt = stmt.where(or_(Product.title.ilike(like), Product.id.ilike(like)))
+    if category:
+        stmt = stmt.where(Product.category == category)
+
+    total = db.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+    total_pages = (total + page_size - 1) // page_size
+
+    if total == 0:
+        return ProductListResponse(
+            items=[],
+            pagination=PaginationMeta(total=0, page=page, page_size=page_size, total_pages=0),
+            categories=categories,
+        )
+
+    products = list(db.scalars(stmt.order_by(Product.id)).all())
+    product_ids = [p.id for p in products]
+
+    # 1 query for review counts/averages, grouped by product (resolves N+1),
+    # scoped to the filtered product ids so the aggregation cost tracks the
+    # search/category filter rather than the whole catalog.
     stats = db.execute(
         select(Review.product_id, func.count(Review.id), func.avg(Review.rating))
-        .where(Review.product_id.is_not(None))
+        .where(Review.product_id.in_(product_ids))
         .group_by(Review.product_id)
     ).all()
     stats_map = {pid: (cnt, avg) for pid, cnt, avg in stats}
 
-    # 1 query for all sentiment counts, grouped by product and label
+    # 1 query for sentiment counts, grouped by product and label
     sentiment_rows = db.execute(
         select(Review.product_id, Prediction.sentiment_label, func.count(Prediction.id))
         .join(Prediction, Prediction.review_id == Review.id)
-        .where(Review.product_id.is_not(None))
+        .where(Review.product_id.in_(product_ids))
         .group_by(Review.product_id, Prediction.sentiment_label)
     ).all()
     sent_map: dict[str, dict[str, int]] = {}
@@ -110,7 +174,7 @@ def list_products(db: Annotated[Session, Depends(get_db)]) -> list[ProductListIt
             sent_map[pid] = {}
         sent_map[pid][label] = count
 
-    items: list[ProductListItem] = []
+    all_items: list[ProductListItem] = []
     for prod in products:
         rev_count, avg_rat = stats_map.get(prod.id, (0, None))
         rounded_avg = round(float(avg_rat), 2) if avg_rat is not None else None
@@ -122,7 +186,7 @@ def list_products(db: Annotated[Session, Depends(get_db)]) -> list[ProductListIt
             negative=prod_sent.get("negative", 0),
         )
 
-        items.append(
+        all_items.append(
             ProductListItem(
                 id=prod.id,
                 title=prod.title,
@@ -133,7 +197,18 @@ def list_products(db: Annotated[Session, Depends(get_db)]) -> list[ProductListIt
             )
         )
 
-    return items
+    all_items.sort(key=lambda item: _product_sort_key(item, sort_by), reverse=True)
+
+    start = (page - 1) * page_size
+    page_items = all_items[start : start + page_size]
+
+    return ProductListResponse(
+        items=page_items,
+        pagination=PaginationMeta(
+            total=total, page=page, page_size=page_size, total_pages=total_pages
+        ),
+        categories=categories,
+    )
 
 
 class AspectPolaritySummary(BaseModel):

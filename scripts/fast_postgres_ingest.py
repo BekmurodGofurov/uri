@@ -24,14 +24,17 @@ ARROW_PATH = os.path.expanduser(
     "default/0.0.0/fedc41d40ece1062e9ad026a35a065fb07ef08ba/uzbek-sentiment-analysis-train.arrow"
 )
 MODEL_PATH = os.path.abspath("sentiment-svc/models/tfidf_v1.joblib")
-DB_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5434/uzum_reviews")
+DB_URL = os.getenv("DATABASE_URL")
+if not DB_URL:
+    raise RuntimeError("DATABASE_URL must be set in .env file")
 if "+psycopg" in DB_URL:
     DB_URL = DB_URL.replace("+psycopg", "")
 
+
 CATEGORIES = {
     "food": {
-        "name": "Kofe va Choy Mahsulotlari",
-        "category": "Oziq-ovqat",
+        "name": "Coffee and Tea Products",
+        "category": "Food",
         "keywords": [
             "kofe",
             "qahva",
@@ -57,8 +60,8 @@ CATEGORIES = {
         ],
     },
     "jacket": {
-        "name": "Qishki va Kuzgi Ustki Kiyimlar",
-        "category": "Kiyim-kechak",
+        "name": "Winter and Autumn Outerwear",
+        "category": "Clothing",
         "keywords": [
             "kurtka",
             "kurtkani",
@@ -79,8 +82,8 @@ CATEGORIES = {
         ],
     },
     "case": {
-        "name": "Silikon G'ilof va Aksessuarlar",
-        "category": "Elektronika",
+        "name": "Silicone Cases and Accessories",
+        "category": "Electronics",
         "keywords": [
             "chexol",
             "chixol",
@@ -112,8 +115,8 @@ CATEGORIES = {
         ],
     },
     "audio": {
-        "name": "Simsiz Naushnik va Audio",
-        "category": "Elektronika",
+        "name": "Wireless Earphones and Audio",
+        "category": "Electronics",
         "keywords": [
             "naushnik",
             "naushnikni",
@@ -136,8 +139,8 @@ CATEGORIES = {
         ],
     },
     "skincare": {
-        "name": "Yuz va Teri Parvarishi",
-        "category": "Go'zallik va parvarish",
+        "name": "Facial and Skin Care",
+        "category": "Beauty & Personal Care",
         "keywords": [
             "krem",
             "kremni",
@@ -157,8 +160,8 @@ CATEGORIES = {
         ],
     },
     "cosmetics": {
-        "name": "Lab Bo'yog'i va Pardoz Vositalari",
-        "category": "Go'zallik va parvarish",
+        "name": "Lipstick and Makeup Products",
+        "category": "Beauty & Personal Care",
         "keywords": [
             "pomada",
             "pamada",
@@ -181,8 +184,8 @@ CATEGORIES = {
         ],
     },
     "shoes": {
-        "name": "Poyabzallar va Krossovkalar",
-        "category": "Poyabzallar",
+        "name": "Shoes and Sneakers",
+        "category": "Footwear",
         "keywords": [
             "krossovka",
             "krasovka",
@@ -208,8 +211,8 @@ CATEGORIES = {
         ],
     },
     "gadget": {
-        "name": "Smart Gadjetlar va Avtotovarlar",
-        "category": "Elektronika",
+        "name": "Smart Gadgets and Auto Accessories",
+        "category": "Electronics",
         "keywords": [
             "smartwatch",
             "braslet",
@@ -236,8 +239,8 @@ CATEGORIES = {
         ],
     },
     "general": {
-        "name": "Uy-ro'zg'or va Universal Mahsulotlar",
-        "category": "Uy-ro'zg'or",
+        "name": "Household and Universal Products",
+        "category": "Household",
         "keywords": [],
         "templates": [
             "Bambukli Hammom Sochiqlari To'plami",
